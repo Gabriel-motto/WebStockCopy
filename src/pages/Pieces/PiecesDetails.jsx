@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useSelectedPiece } from "@/hooks/usePieces";
 import { PieChart, Pie, Tooltip, Legend, Cell } from "recharts";
 import { COLOR } from "@/utils/consts";
+import { CustomLink } from "@/utils/Link";
+import supabase from "@/utils/supabase";
 
 export default function PiecesDetails({ data }) {
     const pieceData = useSelectedPiece(data.name);
@@ -24,7 +26,7 @@ export default function PiecesDetails({ data }) {
             <div className="container-box">
                 <Image
                     className="image-dialog"
-                    src={"assets/GNK_logo_azul.png"}
+                    src={"/assets/GNK_logo_azul.png"}
                     alt={`Producto con referencia: ${data.name}`}
                 />
                 <div className="content-box">
@@ -66,7 +68,7 @@ export default function PiecesDetails({ data }) {
                     )}
                 </div>
                 <div className="charts">
-                    <Heading>Stock máquinas/almacén</Heading>
+                    <Heading>Stock total en máquinas/almacén: {totalStock}</Heading>
                     <PieChart
                         width={350}
                         height={200}
@@ -104,13 +106,16 @@ export default function PiecesDetails({ data }) {
             />
             <div className="stock-body">
                 <div className="general-stock-info">
-                    <Text textStyle="lg" >Total de piezas:</Text>
-                    <Text textStyle="7xl" fontWeight="bold">{totalStock}</Text>
+                    <Text textStyle="lg">Total de piezas:</Text>
+                    <Text
+                        textStyle="7xl"
+                        fontWeight="bold"
+                    >
+                        {totalStock}
+                    </Text>
                 </div>
                 <div className="machines-list">
-                    <Heading
-                        size="xl"
-                    >
+                    <Heading size="xl">
                         Máquinas que contienen esta pieza
                     </Heading>
                     {machinesWithPiece === 0 ? (
@@ -121,11 +126,14 @@ export default function PiecesDetails({ data }) {
                         <ul>
                             {pieceData.machineStock.map((m) => (
                                 <li key={m.machine}>
-                                    <Text textStyle="lg" >
-                                        <span>{m.machine}</span>:{" "} {m.amount}
-                                        {m.amount > 1
-                                            ? " piezas"
-                                            : " pieza"}
+                                    <Text textStyle="lg">
+                                        <CustomLink
+                                            to={`/machines/${m.machine}`}
+                                        >
+                                            {m.machine}
+                                        </CustomLink>
+                                        : {m.amount}
+                                        {m.amount > 1 ? " piezas" : " pieza"}
                                     </Text>
                                 </li>
                             ))}

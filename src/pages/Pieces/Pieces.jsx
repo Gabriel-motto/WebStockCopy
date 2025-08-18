@@ -12,13 +12,12 @@ import { TabComponent } from "../../components/ui/tab-component.jsx";
 import DialogComponent from "../../components/dialog/Dialog.jsx";
 import { usePieces } from "../../hooks/usePieces";
 import "./Pieces.css";
-import PiecesDialog from "./PiecesDetails.jsx";
+import PiecesDetails from "./PiecesDetails.jsx";
 import PaginationControls from "@/components/ui/Pagination/Pagination";
 import { IoSearch } from "react-icons/io5";
 import { useDebounce } from "@uidotdev/usehooks";
 import { EmptyError } from "@/components/ui/EmptyStates.jsx";
 import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx";
-import { EVENTS } from "@/utils/consts.js";
 import { navigateTo } from "@/utils/Link.jsx";
 
 const tabData = [
@@ -185,7 +184,7 @@ function PiecesPage({ params = {} }) {
     // Open dialog if params.name is present
     useEffect(() => {
         if (params.name) {
-            const found = pieces.find(p => p.name === params.name);
+            const found = pieces.find((p) => p.name === params.name);
             if (found) {
                 setSelectedCardData(found);
                 setShowDetailsDialog(true);
@@ -284,7 +283,7 @@ function PiecesPage({ params = {} }) {
                                 onClick={() => handleOnClickCard(piece)}
                                 key={index}
                                 title={piece.name}
-                                image="assets/GNK_logo_azul.png"
+                                image="/assets/GNK_logo_azul.png"
                                 description={piece.description}
                                 footer={piece.brand}
                                 haveImage
@@ -301,14 +300,14 @@ function PiecesPage({ params = {} }) {
                     />
                 </Suspense>
             ) : search !== "" ? (
-                <EmptyError description="No hay piezas coincidiendo con la búsqueda" />
+                <EmptyError description="No hay piezas que coincidan con la búsqueda" />
             ) : null}
             <DialogComponent
                 size="cover"
                 scrollBehavior="inside"
                 title="Detalles de la pieza"
                 content={
-                    selectedCardData && <PiecesDialog data={selectedCardData} />
+                    selectedCardData && <PiecesDetails data={selectedCardData} />
                 }
                 open={showDetailsDialog}
                 close={handleCloseDialog}

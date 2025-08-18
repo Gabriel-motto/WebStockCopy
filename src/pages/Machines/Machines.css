@@ -16,10 +16,6 @@
     width: 100%;
 }
 
-SelectAssemblyLine {
-    width: 70%;
-}
-
 .fallback {
     display: "flex";
     justify-content: "center";

@@ -4,10 +4,9 @@ export const EVENTS = {
 }
 
 
-import HomePage from "../pages/Home.jsx";
+import HomePage from "../pages/Home/Home.jsx";
 import MachinesPage from "../pages/Machines/Machines.jsx";
 import PiecesPage from "../pages/Pieces/Pieces.jsx";
-import PiecesDialog from "../pages/Pieces/PiecesDetails.jsx";
 import SummaryPage from "../pages/Summary.jsx";
 export const ROUTES = [
     {
@@ -16,6 +15,10 @@ export const ROUTES = [
     },
     {
         path: "/machines",
+        Component: MachinesPage
+    },
+    {
+        path: "/machines/:name",
         Component: MachinesPage
     },
     {
@@ -29,7 +32,7 @@ export const ROUTES = [
     {
         path: "/summary",
         Component: SummaryPage
-    }
+    },
 ]
 
 export const COLOR = {

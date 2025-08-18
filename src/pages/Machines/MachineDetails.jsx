@@ -6,6 +6,7 @@ import { useState, useMemo, useRef } from "react";
 import PaginationControls from "@/components/ui/Pagination/Pagination.jsx";
 import { TabComponent } from "@/components/ui/tab-component";
 import { EmptyError } from "@/components/ui/EmptyStates";
+import { navigateTo } from "@/utils/Link";
 
 const tabData = [
     {
@@ -44,45 +45,80 @@ function PieceInfoTable({ pieces }) {
     const pageDetails = details.slice(start, end);
     const pageAmounts = pieces.slice(start, end).map((p) => p.amount);
 
-    return (
-        <>
-            <Table.Root stickyHeader>
-                <Table.ColumnGroup>
-                    <Table.Column htmlWidth="10%" />
-                    <Table.Column htmlWidth="2%" />
-                    <Table.Column/>
-                </Table.ColumnGroup>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.ColumnHeader>Referencia</Table.ColumnHeader>
-                        <Table.ColumnHeader>Cantidad</Table.ColumnHeader>
-                        <Table.ColumnHeader>Descripción</Table.ColumnHeader>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {pageDetails.map((piece, idx) => (
-                        <Table.Row key={piece.id}>
-                            <Table.Cell>{piece.name}</Table.Cell>
-                            <Table.Cell>
-                                <Text textStyle="xl">{pageAmounts[idx]}</Text>
-                            </Table.Cell>
-                            <Table.Cell>
-                                {piece.description || "Sin descripción"}
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table.Root>
+    // On row click, navigate to piece details
+    const handleClick = (piece) => {
+        navigateTo(`/pieces/${piece.name}`);
+    };
 
-            <PaginationControls
-                currentPage={currentPage}
-                totalPages={totalPages}
-                pageSize={pageSize}
-                onPageChange={setCurrentPage}
-                onPageSizeChange={handleSizeChange}
-                siblingCount={siblings}
+    return (
+        <div className="piece-related-content">
+            <div className="title">Piezas en la máquina</div>
+            <div className="piece-body">
+                <Table.Root
+                    stickyHeader
+                    interactive
+                >
+                    <Table.ColumnGroup>
+                        <Table.Column htmlWidth="10%" />
+                        <Table.Column htmlWidth="2%" />
+                        <Table.Column />
+                    </Table.ColumnGroup>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.ColumnHeader>Referencia</Table.ColumnHeader>
+                            <Table.ColumnHeader>Cantidad</Table.ColumnHeader>
+                            <Table.ColumnHeader>Descripción</Table.ColumnHeader>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {pageDetails.map((piece, idx) => (
+                            <Table.Row
+                                key={idx}
+                                onClick={() => handleClick(piece)}
+                                _hover={{ cursor: "pointer" }}
+                            >
+                                <Table.Cell>{piece.name}</Table.Cell>
+                                <Table.Cell>
+                                    <Text textStyle="xl">
+                                        {pageAmounts[idx]}
+                                    </Text>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {piece.description || "Sin descripción"}
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table.Root>
+
+                <PaginationControls
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    pageSize={pageSize}
+                    onPageChange={setCurrentPage}
+                    onPageSizeChange={handleSizeChange}
+                    siblingCount={siblings}
+                />
+            </div>
+            <div className="additional-content"></div>
+        </div>
+    );
+}
+
+function Summary({ data }) {
+    return (
+        <div className="machine-related-content">
+            <div className="title">{data.name}</div>
+            <Separator
+                orientation="vertical"
+                size="md"
             />
-        </>
+            <div className="body">
+                <div className="description">{data.description}</div>
+                <div className="assembly-line">{data.aLine}</div>
+                <div className="additional-content"></div>
+            </div>
+        </div>
     );
 }
 
@@ -103,28 +139,9 @@ export default function MachineDetails({ data }) {
             />
             <main className="container">
                 {selectedTab === "summary" ? (
-                    <div className="machine-related-content">
-                        <div className="title">{data.name}</div>
-                        <Separator
-                            orientation="vertical"
-                            size="md"
-                        />
-                        <div className="body">
-                            <div className="description">
-                                {data.description}
-                            </div>
-                            <div className="assembly-line">{data.aLine}</div>
-                            <div className="additional-content"></div>
-                        </div>
-                    </div>
+                    <Summary data={data} />
                 ) : (
-                    <div className="piece-related-content">
-                        <div className="title">Piezas en la máquina</div>
-                        <div className="piece-body">
-                            <PieceInfoTable pieces={pieces} />
-                        </div>
-                        <div className="additional-content"></div>
-                    </div>
+                    <PieceInfoTable pieces={pieces} />
                 )}
             </main>
         </>

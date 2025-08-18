@@ -1,20 +1,14 @@
 import { useState, lazy, Suspense, useRef, useEffect } from "react";
 import PaginationControls from "@/components/ui/Pagination/Pagination.jsx";
 import { IoSearch } from "react-icons/io5";
-import {
-    Input,
-    InputGroup,
-    Table,
-    CloseButton,
-} from "@chakra-ui/react";
+import { Input, InputGroup, Table, CloseButton } from "@chakra-ui/react";
 import { SelectAssemblyLine } from "../../components/ui/Select/Select.jsx";
 import MachineDetails from "./MachineDetails.jsx";
 import { useMachines } from "../../hooks/useMachines";
 import { useDebounce } from "@uidotdev/usehooks";
 import { EmptyError } from "@/components/ui/EmptyStates";
 import "./Machines.css";
-import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx"
-
+import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx";
 
 const DialogComponent = lazy(() =>
     import("../../components/dialog/Dialog.jsx")
@@ -47,7 +41,7 @@ function MachinesTable({ machines, handleClick }) {
     );
 }
 
-export default function MachinesPage() {
+export default function MachinesPage({ params = {} }) {
     const [showDetailsDialog, setShowDetailsDialog] = useState(false);
     const [selectedMachineData, setSelectedMachineData] = useState();
     const [selectedALines, setSelectedAlines] = useState([]);
@@ -75,13 +69,32 @@ export default function MachinesPage() {
         setSelectedAlines(value);
     };
 
+    // Open dialog if params.name is present
+    useEffect(() => {
+        if (params.name) {
+            const found = machines.find((m) => m.name === params.name);
+            if (found) {
+                setSelectedMachineData(found);
+                setShowDetailsDialog(true);
+            }
+        } else {
+            setShowDetailsDialog(false);
+        }
+    }, [params.name, machines]);
+
+    // On row click, navigate to /machines/:name
     const handleOnClickMachine = (data) => {
         setSelectedMachineData(data);
         setShowDetailsDialog(true);
+        navigateTo(`/machines/${encodeURIComponent(data.name)}`);
     };
 
+    // When dialog closes, go back to /machines
     const handleCloseDialog = () => {
         setShowDetailsDialog(false);
+        if (params.name) {
+            navigateTo("/machines");
+        }
     };
 
     const handleSearch = (e) => {
@@ -143,11 +156,7 @@ export default function MachinesPage() {
             ) : search !== "" ? (
                 <EmptyError description="Ninguna máquina coincide con la busqueda" />
             ) : null}
-            <Suspense
-                fallback={
-                    <LoadingScreenHelix/>
-                }
-            >
+            <Suspense fallback={<LoadingScreenHelix />}>
                 <DialogComponent
                     scrollBehavior="inside"
                     size="cover"
@@ -159,6 +168,7 @@ export default function MachinesPage() {
                     }
                     open={showDetailsDialog}
                     close={handleCloseDialog}
+                    lazyMount
                     placement="center"
                     motionPreset="slide-in-bottom"
                 />
