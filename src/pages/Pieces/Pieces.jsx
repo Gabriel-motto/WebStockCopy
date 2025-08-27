@@ -196,6 +196,7 @@ function PiecesPage({ params = {} }) {
 
     // On card click, navigate to /pieces/:name
     const handleOnClickCard = (data) => {
+        console.log(data);
         setSelectedCardData(data);
         setShowDetailsDialog(true);
         navigateTo(`/pieces/${encodeURIComponent(data.name)}`);

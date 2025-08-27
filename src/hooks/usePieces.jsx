@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-    getPieces,
-    getStockPiece,
-} from "../services/pieces";
+import { getPieces, getStockPiece } from "../services/pieces";
 
 export function usePieces(options = {}) {
     const {

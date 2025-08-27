@@ -1,14 +1,14 @@
 import { useMemo } from "react";
 
 export function usePagination({ totalPages, currentPage, siblingCount = 1 }) {
-    // Símbolo elipsis
+    // Simbolo elipsis
     const DOTS = "...";
 
     return useMemo(() => {
-        // Número máximo de slots que caben en el paginador
+        // Numero maximo de slots que caben en el paginador
         const totalSlots = siblingCount * 2 + 5;
 
-        // Sin elipsis si hay menos páginas que el total de slots
+        // Sin elipsis si hay menos paginas que el total de slots
         if (totalPages <= totalSlots) {
             return Array.from({ length: totalPages }, (_, i) => i + 1);
         }
@@ -23,7 +23,7 @@ export function usePagination({ totalPages, currentPage, siblingCount = 1 }) {
 
         const pages = [];
 
-        // Siempre incluye primera página
+        // Siempre incluye primera pagina
         pages.push(1);
 
         // Mostrar elipsis izquierdo si necesario
@@ -49,7 +49,7 @@ export function usePagination({ totalPages, currentPage, siblingCount = 1 }) {
             }
         }
 
-        // Siempre incluye la última página
+        // Siempre incluye la ultima pagina
         pages.push(totalPages);
 
         return pages;
