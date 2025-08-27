@@ -15,5 +15,7 @@ export async function getRecentPieceMovements(machine, piece, warehouse) {
         query = query.in("warehouse", warehouse);
     }
 
+    console.log(query)
+
     return await query;
 }

@@ -1,102 +1,96 @@
-.container-box {
-    padding: 10px;
+.critical-badge {
     display: flex;
-    height: 20vh;
-    margin-top: 5vh;
+    align-items: center;
+    background-color: red;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-size: x-large;
+    position: absolute;
+    top: 1rem;
+    left: 15rem;
 }
 
-.image-dialog {
-    width: auto;
-    height: 150px;
+.summary-body {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
 }
 
-.content-box {
-    width: 50%;
+.left-side,
+.right-side {
+    flex: 1;
+    padding: 1rem;
+}
+
+.left-side {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    margin: 0 auto;
-    padding-left: 1.5rem;
 }
 
-.title-dialog {
+.right-side {
     display: flex;
-    flex-direction: row;
-    gap: 25px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.workshop-badge {
-    align-self: end;
-}
-
-.separator-dialog {
-    margin-top: 5%;
-    margin-bottom: 5%;
-}
-
-.stock-body {
+.data-boxes {
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.data-boxes > * {
+    flex: 1 100%;
+}
+
+.data-box {
+    border: solid 2px #000;
+    border-radius: .25rem;
+}
+
+.name-box,
+.brand-box,
+.type-box {
+    flex: 1;
+}
+
+.supplier-box,
+.buy-price,
+.repair-price {
+    flex: 1;
+}
+
+.label {
+    font-weight: bold;
+    font-size: 1rem;
+    margin: .25rem 0 0 .5rem;
+}
+
+.value {
+    margin: 0 0 .25rem .75rem;
 }
 
 .charts {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: 1.5rem;
+    gap: 1.5rem;
 }
 
-.general-stock-info {
-    width: 45%;
-    margin-top: 4%;
-    margin-bottom: 2%;
+.image-dialog {
+    max-width: 40%;
+    height: auto;
+}
+
+.image-separator {
+    width: 90%;
+}
+
+.popover-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-}
-.machines-list {
-    width: 45%;
-    margin-top: 4%;
-    margin-bottom: 2%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-@media screen and (max-width: 1380px) {
-    .container-box {
-        width: 100%;
-        height: 45%;
-        gap: 25px;
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .image-dialog {
-        width: 45%;
-        height: 20%;
-        align-self: flex-start;
-        flex-grow: 1;
-    }
-    .content-box {
-        width: 45%;
-        align-self: center;
-        gap: 15px;
-        flex-grow: 1;
-    }
-    .charts {
-        width: 100%;
-        align-items: center;
-        margin-left: 0;
-    }
-}
-
-@media screen and (max-width: 825px) {
-    .content-box {
-        width: 90%;
-        gap: 15px;
-    }
-    .title-dialog {
-        flex-direction: column;
-        gap: 10px;
-    }
+    gap: 0.5rem;
 }
