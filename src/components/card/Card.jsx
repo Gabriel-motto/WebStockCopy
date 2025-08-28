@@ -1,18 +1,22 @@
 import { Card, Button, Image, Text } from "@chakra-ui/react";
 import "./Card.css";
+import { IoWarningOutline } from "react-icons/io5";
 
 export function CardText({ title, description, footer, ...props }) {
     return (
         <Card.Root
             className="content-card"
-            {...props}>
+            {...props}
+        >
             <Card.Body
                 gap="2"
-                className="body">
+                className="body"
+            >
                 <Card.Title className="title">{title}</Card.Title>
                 <Card.Description
                     className="description"
-                    lineClamp="3">
+                    lineClamp="3"
+                >
                     {description}
                 </Card.Description>
             </Card.Body>
@@ -21,7 +25,8 @@ export function CardText({ title, description, footer, ...props }) {
                     className="footer"
                     textStyle="2xl"
                     letterSpacing="tight"
-                    mt="2">
+                    mt="2"
+                >
                     {footer}
                 </Text>
             </Card.Footer>
@@ -34,12 +39,14 @@ export function CardImage({
     image,
     description,
     footer,
+    isCritical,
     ...props
 }) {
     return (
         <Card.Root
             className="content-card"
-            {...props}>
+            {...props}
+        >
             <Image
                 src={image}
                 alt={`Producto con referencia: ${title}`}
@@ -47,32 +54,43 @@ export function CardImage({
             />
             <Card.Body
                 gap="2"
-                className="body">
+                className="body"
+            >
                 <Card.Title
                     className="title"
-                    fontWeight="medium">
+                    fontWeight="medium"
+                >
                     {title}
                 </Card.Title>
                 <Card.Description
                     className="description"
-                    lineClamp="3">
+                    lineClamp="3"
+                >
                     {description}
                 </Card.Description>
             </Card.Body>
             <Card.Footer>
-                <Text
-                    className="brand"
-                    textStyle="2xl"
-                    letterSpacing="tight"
-                    mt="2">
+                <div className="footer">
                     {footer}
-                </Text>
+                    {isCritical && (
+                        <div className="critical-badge-card">
+                            <IoWarningOutline />
+                        </div>
+                    )}
+                </div>
             </Card.Footer>
         </Card.Root>
     );
 }
 
-export default function CardComponent({ haveImage, image, title, description, footer, ...props }) {
+export default function CardComponent({
+    haveImage,
+    image,
+    title,
+    description,
+    footer,
+    ...props
+}) {
     return haveImage ? (
         <CardImage
             title={title}
@@ -88,5 +106,5 @@ export default function CardComponent({ haveImage, image, title, description, fo
             footer={footer}
             {...props}
         />
-    )
+    );
 }

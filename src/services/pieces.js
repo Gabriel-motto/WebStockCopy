@@ -17,7 +17,7 @@ export async function getPieces(workshop, search, multiple) {
         );
     }
 
-    const { data: pieces } = await query;
+    const { data: pieces } = await query.order("is_critical", { ascending: false });
 
     return pieces?.map((piece) => ({
         id: piece.id,
@@ -30,7 +30,10 @@ export async function getPieces(workshop, search, multiple) {
         addInfo: piece.additional_info,
         supplier: piece.supplier,
         buyPrice: piece.buy_price,
-        repairPrice: piece.repair_price
+        repairPrice: piece.repair_price,
+        avaliability: piece.avaliability,
+        minStock: piece.min_stock,
+        altPiece: piece.alternative_piece
     }));
 }
 

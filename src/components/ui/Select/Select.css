@@ -1,3 +1,8 @@
+.select-assembly-line {
+    display: flex;
+    width: 100%;
+}
+
 .custom-select {
     position: relative;
     display: inline-block;
@@ -86,6 +91,12 @@
 }
 
 @media screen and (max-width: 768px) {
+    .select-assembly-line {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+
     .grid-item-filter {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));

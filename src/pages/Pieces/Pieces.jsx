@@ -196,7 +196,6 @@ function PiecesPage({ params = {} }) {
 
     // On card click, navigate to /pieces/:name
     const handleOnClickCard = (data) => {
-        console.log(data);
         setSelectedCardData(data);
         setShowDetailsDialog(true);
         navigateTo(`/pieces/${encodeURIComponent(data.name)}`);
@@ -287,6 +286,7 @@ function PiecesPage({ params = {} }) {
                                 image="/assets/GNK_logo_azul.png"
                                 description={piece.description}
                                 footer={piece.brand}
+                                isCritical={piece.isCritical}
                                 haveImage
                             />
                         ))}

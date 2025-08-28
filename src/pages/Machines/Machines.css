@@ -27,13 +27,17 @@
 @media screen and (max-width: 768px) {
     .search-bar {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         justify-content: space-between;
         flex-direction: column-reverse;
         gap: 5px;
     }
-    .search-input-machines {
+    
+    .search-bar > * {
         width: 100%;
+    }
+
+    .search-input-machines {
         max-width: 250px;
     }
 }

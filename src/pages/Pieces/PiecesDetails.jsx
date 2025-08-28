@@ -24,14 +24,21 @@ export default function PiecesDetails({ data }) {
         { name: "En almacén", value: totalInWarehouse },
     ];
 
+    console.log(data);
+
     return (
         <>
-            {data?.isCritical === true && (
-                <div className="critical-badge">
-                    <IoWarningOutline />
-                    &nbsp;Crítica
-                </div>
-            )}
+            <div className="warning-badges">
+                {data?.isCritical === true && (
+                    <div className="critical-badge">
+                        <IoWarningOutline />
+                        &nbsp;Crítico
+                    </div>
+                )}
+                {data?.avaliability === "spare_part" && (
+                    <div className="spare-badge">Descatalogado</div>
+                )}
+            </div>
             <div className="summary-body">
                 <div className="left-side">
                     <div className="data-boxes">
@@ -63,16 +70,6 @@ export default function PiecesDetails({ data }) {
                                     : "No hay descripción"}
                             </Text>
                         </div>
-                        <div className="data-box supplier-box">
-                            <Text className="label supplier-label">
-                                Proveedor
-                            </Text>
-                            <Text className="value supplier-value">
-                                {data?.supplier
-                                    ? data.supplier
-                                    : "No hay proveedor asignado"}
-                            </Text>
-                        </div>
                         <div className="data-box buy-price">
                             <Text className="label buy-price-label">
                                 Precio de compra
@@ -101,6 +98,26 @@ export default function PiecesDetails({ data }) {
                                 {data?.last_movements
                                     ? data.last_movements.join(", ")
                                     : "No hay últimos movimientos"}
+                            </Text>
+                        </div>
+                        <div className="data-box supplier-box">
+                            <Text className="label supplier-label">
+                                Proveedor
+                            </Text>
+                            <Text className="value supplier-value">
+                                {data?.supplier
+                                    ? data.supplier
+                                    : "No hay proveedor asignado"}
+                            </Text>
+                        </div>
+                        <div className="data-box alt-piece">
+                            <Text className="label alt-piece-label">
+                                Pieza alternativa
+                            </Text>
+                            <Text className="value alt-piece-value">
+                                {data?.altPiece
+                                    ? data.altPiece
+                                    : "No hay pieza alternativa"}
                             </Text>
                         </div>
                         <div className="data-box additional-info-box">
@@ -193,7 +210,12 @@ export default function PiecesDetails({ data }) {
                 <div className="right-side">
                     <Image
                         className="image-dialog piece-image"
-                        src={supabase.storage.from("pieces").getPublicUrl(`${data.name}.webp`).data.publicUrl}
+                        src={
+                            supabase.storage
+                                .from("pieces")
+                                .getPublicUrl(`${data.name}.webp`).data
+                                .publicUrl
+                        }
                         alt={`Producto con referencia: ${data.name}`}
                     />
                     <Separator
@@ -202,7 +224,12 @@ export default function PiecesDetails({ data }) {
                     />
                     <Image
                         className="image-dialog data-card-image"
-                        src={supabase.storage.from("pieces").getPublicUrl(`${data.name}-data-card.webp`).data.publicUrl}
+                        src={
+                            supabase.storage
+                                .from("pieces")
+                                .getPublicUrl(`${data.name}-data-card.webp`)
+                                .data.publicUrl
+                        }
                         alt={`Producto con referencia: ${data.name}`}
                     />
                 </div>

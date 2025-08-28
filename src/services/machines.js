@@ -11,7 +11,7 @@ export async function getMachines(selectedALines, search) {
     query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
   }
 
-  const { data: machines } = await query;
+  const { data: machines } = await query.order("assembly_line", { ascending: true });
 
   return machines?.map((machine) => ({
     id: machine.id,

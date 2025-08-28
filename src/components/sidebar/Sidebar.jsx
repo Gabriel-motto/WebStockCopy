@@ -16,7 +16,7 @@ export default function Sidebar({}) {
                 <Tooltip
                     openDelay="500"
                     closeDelay="250"
-                    content="Home"
+                    content="Inicio"
                     positioning={{ placement: "right" }}
                 >
                     <Button
@@ -27,7 +27,7 @@ export default function Sidebar({}) {
                     >
                         <CustomLink to="/">
                             <IoHomeOutline className="button-icon" />
-                            <span className="button-text">Home</span>
+                            <span className="button-text">Inicio</span>
                         </CustomLink>
                     </Button>
                 </Tooltip>

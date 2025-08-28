@@ -1,3 +1,11 @@
+.warning-badges {
+    position: absolute;
+    top: 1rem;
+    left: 16rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
 .critical-badge {
     display: flex;
     align-items: center;
@@ -6,9 +14,16 @@
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     font-size: x-large;
-    position: absolute;
-    top: 1rem;
-    left: 15rem;
+}
+
+.spare-badge {
+    display: flex;
+    align-items: center;
+    background-color: orange;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-size: x-large;
 }
 
 .summary-body {
@@ -20,7 +35,6 @@
 .left-side,
 .right-side {
     flex: 1;
-    padding: 1rem;
 }
 
 .left-side {
@@ -57,9 +71,13 @@
     flex: 1;
 }
 
-.supplier-box,
 .buy-price,
 .repair-price {
+    flex: 1;
+}
+
+.supplier-box,
+.alt-piece {
     flex: 1;
 }
 

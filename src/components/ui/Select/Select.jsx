@@ -75,7 +75,7 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
     };
 
     return (
-        <Stack direction={{ base: "column", md: "row" }}>
+        <div className="select-assembly-line">
             <div
                 ref={ref}
                 className="custom-select"
@@ -120,6 +120,6 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
                       ))
                     : null}
             </div>
-        </Stack>
+        </div>
     );
 }
