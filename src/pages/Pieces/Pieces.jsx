@@ -1,13 +1,5 @@
 import { useState, lazy, Suspense, useRef, useEffect } from "react";
-import {
-    Button,
-    Fieldset,
-    Field,
-    Input,
-    ButtonGroup,
-    InputGroup,
-    CloseButton,
-} from "@chakra-ui/react";
+import { Button, Input, InputGroup, CloseButton } from "@chakra-ui/react";
 import { TabComponent } from "../../components/ui/tab-component.jsx";
 import DialogComponent from "../../components/dialog/Dialog.jsx";
 import { usePieces } from "../../hooks/usePieces";
@@ -19,6 +11,8 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { EmptyError } from "@/components/ui/EmptyStates.jsx";
 import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx";
 import { navigateTo } from "@/utils/Link.jsx";
+import { Toaster, toaster } from "@/components/ui/toaster.jsx";
+import supabase from "@/utils/supabase.js";
 
 const tabData = [
     {
@@ -36,117 +30,251 @@ const tabData = [
 ];
 
 function NewPiece({ handleCancel }) {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const formData = Object.fromEntries(new FormData(event.target));
-        console.log(formData);
-    };
-    // useEffect(() => {
-    //     async function insertPiece() {
-    //         const { data, error } = await supabase
-    //             .from("Pieces")
-    //             .insert([{
-    //                 name: formData.get("name"),
-    //                 description: formData.get("description"),
-    //                 type: formData.get("type"),
-    //                 brand: formData.get("brand"),
-    //                 workshop: formData.get("workshop"),
-    //             }])
-    //             .select()
-    //     }
-    //     insertPiece();
-    // }, []);
+    const [values, setValues] = useState({
+        name: null,
+        brand: null,
+        type: null,
+        workshop: null,
+        description: null,
+        repairPrice: null,
+        buyPrice: null,
+        amount: null,
+        supplier: null,
+        altPiece: null,
+        additionalInfo: null,
+        locationType: "machine",
+        location: null,
+    });
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        // insertPiece();
+        handleCancel();
+    }
+
+    function handleFormChange(e) {
+        setValues({
+            ...values,
+            [e.target.name]: e.target.value.toUpperCase(),
+        });
+    }
+
+    async function insertPiece() {
+        const promiseToaster = toaster.create({
+            title: "Añadiendo pieza...",
+            description: "Por favor, espera mientras se añade la pieza.",
+            type: "loading",
+        });
+        try {
+            const { data, error } = await supabase
+            .from("Pieces")
+            .insert([
+                {
+                    name: values.name,
+                    brand: values.brand,
+                    type: values.type,
+                    workshop: values.workshop,
+                    description: values.description,
+                    buy_price: values.buyPrice,
+                    repair_price: values.repairPrice,
+                    supplier: values.supplier,
+                    alternative_piece: values.altPiece,
+                    additional_info: values.additionalInfo,
+                },
+            ]).throwOnError();
+            toaster.dismiss(promiseToaster.id);
+            toaster.create({
+                title: "Pieza añadida",
+                description: "La pieza se ha añadido correctamente.",
+                type: "success",
+            });
+        } catch (error) {
+            toaster.dismiss(promiseToaster.id);
+            toaster.create({
+                title: `Error ${error.code} al añadir pieza`,
+                description: `${error.code === "23505" ? "La pieza ya existe." : "Ha ocurrido un error al añadir la pieza."}`,
+                type: "error",
+            });
+        }
+    }
 
     return (
-        <form action={handleSubmit}>
-            <Fieldset.Root>
-                <Fieldset.Content>
-                    <Field.Root>
-                        <Field.Label>Referencia</Field.Label>
-                        <Input
-                            name="name"
-                            className="input-form name-form"
-                        />
-                    </Field.Root>
-
-                    <Field.Root>
-                        <Field.Label>Tipo</Field.Label>
-                        <Input
-                            name="type"
-                            className="input-form type-form"
-                        />
-                    </Field.Root>
-
-                    <Field.Root>
-                        <Field.Label>Marca</Field.Label>
-                        <Input
-                            name="brand"
-                            className="input-form brand-form"
-                        />
-                    </Field.Root>
-
-                    <Field.Root>
-                        <Field.Label>Descripcion</Field.Label>
-                        <Input
-                            name="description"
-                            className="input-form description-form"
-                        />
-                    </Field.Root>
-
-                    <Field.Root>
-                        <Field.Label>Tipo de repuesto</Field.Label>
-                        <Input
+        <div className="form-container">
+            <form
+                onSubmit={handleSubmit}
+                className="form"
+            >
+                <div className="cell name-cell">
+                    <label htmlFor="name">Nombre</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell brand-cell">
+                    <label htmlFor="brand">Marca</label>
+                    <input
+                        type="text"
+                        id="brand"
+                        name="brand"
+                        required
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell type-cell">
+                    <label htmlFor="type">Tipo</label>
+                    <input
+                        type="text"
+                        id="type"
+                        name="type"
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell workshop-cell">
+                    <label htmlFor="workshop">Taller</label>
+                    <select
+                        id="workshop"
+                        name="workshop"
+                        required
+                        defaultValue=""
+                        onChange={handleFormChange}
+                    >
+                        <option
+                            value=""
+                            disabled
+                        ></option>
+                        <option
                             name="workshop"
-                            className="input-form workshop-form"
+                            value="Mecánica"
+                        >
+                            Mecánica
+                        </option>
+                        <option
+                            name="workshop"
+                            value="Electrónica"
+                        >
+                            Electrónica
+                        </option>
+                    </select>
+                </div>
+                <div className="cell description-cell">
+                    <label htmlFor="description">Descripción</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell repairPrice-cell">
+                    <label htmlFor="repairPrice">Precio de reparación</label>
+                    <input
+                        type="number"
+                        id="repairPrice"
+                        name="repairPrice"
+                        required
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell buyPrice-cell">
+                    <label htmlFor="buyPrice">Precio de compra</label>
+                    <input
+                        type="number"
+                        id="buyPrice"
+                        name="buyPrice"
+                        required
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell amount-cell">
+                    <label htmlFor="amount">Cantidad</label>
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        required
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell supplier-cell">
+                    <label htmlFor="supplier">Proveedor</label>
+                    <input
+                        type="text"
+                        id="supplier"
+                        name="supplier"
+                        required
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell altPiece-cell">
+                    <label htmlFor="altPiece">Pieza alternativa</label>
+                    <input
+                        type="text"
+                        id="altPiece"
+                        name="altPiece"
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell additionalInfo-cell">
+                    <label htmlFor="additionalInfo">
+                        Información adicional
+                    </label>
+                    <textarea
+                        id="additionalInfo"
+                        name="additionalInfo"
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell location-cell">
+                    <label htmlFor="location">
+                        Ubicación
+                        <input
+                            className="location-radio"
+                            type="radio"
+                            name="locationType"
+                            id="machine"
+                            value="machine"
+                            onChange={handleFormChange}
                         />
-                    </Field.Root>
-
-                    <Field.Root>
-                        <Field.Label>Cantidad</Field.Label>
-                        <Input
-                            name="amount"
-                            className="input-form amount-form"
+                        <label htmlFor="machine">Máquina</label>
+                        <input
+                            className="location-radio"
+                            type="radio"
+                            name="locationType"
+                            id="warehouse"
+                            value="warehouse"
+                            onChange={handleFormChange}
                         />
-                    </Field.Root>
-
-                    <Field.Root>
-                        <Field.Label>Localizacion</Field.Label>
-                        <Input
-                            name="location"
-                            className="input-form location-form"
-                        />
-                    </Field.Root>
-
-                    <Field.Root>
-                        <Field.Label>Máquina</Field.Label>
-                        <Input
-                            name="machine"
-                            className="input-form machine-form"
-                        />
-                    </Field.Root>
-                </Fieldset.Content>
-
-                <ButtonGroup
-                    variant="outline"
-                    className="buttons-form"
-                >
+                        <label htmlFor="warehouse">Almacén</label>
+                    </label>
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        required
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell form-buttons">
                     <Button
-                        className="btn btn-add"
                         colorPalette="blue"
+                        variant="outline"
                         type="submit"
                     >
                         Añadir
                     </Button>
                     <Button
-                        className="btn btn-cancel"
                         colorPalette="red"
-                        onClick={handleCancel}
+                        variant="outline"
+                        type="cancel"
                     >
                         Cancelar
                     </Button>
-                </ButtonGroup>
-            </Fieldset.Root>
-        </form>
+                </div>
+            </form>
+        </div>
     );
 }
 
@@ -234,6 +362,7 @@ function PiecesPage({ params = {} }) {
 
     return (
         <div className="container">
+            <Toaster />
             <DialogComponent
                 size="xl"
                 title="Añadir pieza"
@@ -308,7 +437,9 @@ function PiecesPage({ params = {} }) {
                 scrollBehavior="inside"
                 title="Detalles de la pieza"
                 content={
-                    selectedCardData && <PiecesDetails data={selectedCardData} />
+                    selectedCardData && (
+                        <PiecesDetails data={selectedCardData} />
+                    )
                 }
                 open={showDetailsDialog}
                 close={handleCloseDialog}

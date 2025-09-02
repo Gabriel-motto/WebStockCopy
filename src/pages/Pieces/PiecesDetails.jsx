@@ -24,8 +24,6 @@ export default function PiecesDetails({ data }) {
         { name: "En almacén", value: totalInWarehouse },
     ];
 
-    console.log(data);
-
     return (
         <>
             <div className="warning-badges">
