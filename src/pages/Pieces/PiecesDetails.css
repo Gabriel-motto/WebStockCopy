@@ -26,6 +26,14 @@
     font-size: x-large;
 }
 
+.actions-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 5rem;
+    font-size: large;
+    height: fit-content;
+}
+
 .summary-body {
     display: flex;
     justify-content: space-between;
@@ -99,7 +107,9 @@
 }
 
 .image-dialog {
-    max-width: 40%;
+    width: 40%;
+    min-width: 150px;
+    max-width: 350px;
     height: auto;
 }
 

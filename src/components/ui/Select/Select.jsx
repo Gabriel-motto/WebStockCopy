@@ -4,7 +4,6 @@ import { IoSearch } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
 import { IoIosClose } from "react-icons/io";
 import {
-    Stack,
     HStack,
     Separator,
     Input,
@@ -18,6 +17,7 @@ import { useAssemblyLines } from "@/hooks/useALine";
 export function SelectAssemblyLine({ dataFromChild, ...props }) {
     const [selectedValues, setSelectedValues] = useState([]);
     const [search, setSearch] = useState("");
+    const [showOptions, setShowOptions] = useState(false);
     const assemblyLines = useAssemblyLines(search);
 
     const addSelectedValues = (newValue) => {
@@ -28,12 +28,6 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
         setSelectedValues((prevValues) =>
             prevValues.filter((value) => value !== valueToRemove)
         );
-    };
-
-    // Opens select menu
-    const handleOpenSelect = () => {
-        const options = document.querySelector(".options");
-        options.classList.toggle("options--active");
     };
 
     // Set selected item to filter data
@@ -52,8 +46,7 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
     }, [selectedValues]);
 
     const ref = useClickAway(() => {
-        const options = document.querySelector(".options");
-        options.classList.remove("options--active");
+        setShowOptions(false);
     });
 
     const SelectList = () => {
@@ -63,7 +56,8 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
                     <div
                         className="item"
                         onClick={() => handleSelectClick(value.name)}
-                        key={index}>
+                        key={index}
+                    >
                         {value.name}
                         {selectedValues.includes(value.name) ? (
                             <FaCheck className="selected-icon" />
@@ -79,10 +73,12 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
             <div
                 ref={ref}
                 className="custom-select"
-                {...props}>
+                {...props}
+            >
                 <HStack
                     className="selector"
-                    onClick={handleOpenSelect}>
+                    onClick={() => setShowOptions(!showOptions)}
+                >
                     <Text className="text-selected">Selecciona una línea</Text>
                     <HStack className="separator-icon">
                         <Separator
@@ -93,10 +89,11 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
                         <IoIosArrowDown />
                     </HStack>
                 </HStack>
-                <div className="options">
+                <div className={`options ${showOptions ? "show" : ""}`}>
                     <InputGroup
                         startElement={<IoSearch className="search-icon" />}
-                        className="search-input-group">
+                        className="search-input-group"
+                    >
                         <Input
                             className="search-input"
                             placeholder="Buscar..."
@@ -113,7 +110,8 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
                           <div
                               key={value}
                               className="item-filter"
-                              onClick={() => handleFilterClose(value)}>
+                              onClick={() => handleFilterClose(value)}
+                          >
                               <Text truncate>{value}</Text>
                               <IoIosClose className="item-filter-icon" />
                           </div>
@@ -121,5 +119,53 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
                     : null}
             </div>
         </div>
+    );
+}
+
+export function CustomSelect({ dataFromChild, content, ...props }) {
+    const [showOptions, setShowOptions] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(null);
+
+    useEffect(() => {
+        dataFromChild(selectedValue);
+    }, [selectedValue]);
+
+    const ref = useClickAway(() => {
+        setShowOptions(false);
+    });
+
+    return (
+            <div
+                ref={ref}
+                className="custom-select-container"
+                {...props}
+                onClick={() => setShowOptions(!showOptions)}
+            >
+                <div
+                    className="custom-selector"
+                >
+                    <p className="selector-label">Selecciona una opción</p>
+                        <Separator
+                            orientation="vertical"
+                            height="5"
+                            size="md"
+                        />
+                        <IoIosArrowDown />
+                </div>
+                <div className={`${showOptions ? "custom-options show" : "custom-options"}`}>
+                    {content.map((item, index) => (
+                        <div
+                            className={`${item.value === "delete" ? "custom-item delete" : "custom-item"}`}
+                            key={index}
+                            onClick={() => {
+                                setSelectedValue(item.value);
+                                setShowOptions(false);
+                            }}
+                        >
+                            {item.label}
+                        </div>
+                    ))}
+                </div>
+            </div>
     );
 }
