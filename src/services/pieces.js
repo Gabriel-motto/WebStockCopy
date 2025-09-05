@@ -17,7 +17,9 @@ export async function getPieces(workshop, search, multiple) {
         );
     }
 
-    const { data: pieces } = await query.order("is_critical", { ascending: false });
+    const { data: pieces } = await query.order("is_critical", {
+        ascending: false,
+    });
 
     return pieces?.map((piece) => ({
         id: piece.id,
@@ -33,7 +35,7 @@ export async function getPieces(workshop, search, multiple) {
         repairPrice: piece.repair_price,
         avaliability: piece.avaliability,
         minStock: piece.min_stock,
-        altPiece: piece.alternative_piece
+        altPiece: piece.alternative_piece,
     }));
 }
 
@@ -43,7 +45,7 @@ export async function getStockPiece(piece) {
         .select()
         .ilike("piece", `${piece}`);
     let warehouseStock = await supabase
-        .from("Warehouse")
+        .from("warehouse_pieces")
         .select()
         .ilike("piece", `${piece}`);
 

@@ -3,6 +3,7 @@ import supabase from "@/utils/supabase";
 import { Button } from "@chakra-ui/react";
 import React, { useState } from "react";
 import "./NewPiece.css";
+import { insertPiece } from "@/hooks/usePieces";
 
 export default function NewPiece({ handleCancel }) {
     const [values, setValues] = useState({
@@ -23,7 +24,7 @@ export default function NewPiece({ handleCancel }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        // insertPiece();
+        insertPiece({values});
         handleCancel();
     }
 
@@ -32,107 +33,6 @@ export default function NewPiece({ handleCancel }) {
             ...values,
             [e.target.name]: e.target.value.toUpperCase(),
         });
-    }
-
-    async function insertPiece() {
-        const promiseToaster = toaster.create({
-            title: "Añadiendo pieza...",
-            description: "Por favor, espera mientras se añade la pieza.",
-            type: "loading",
-        });
-        
-        try {
-            const { error } = await supabase
-                .from("Pieces")
-                .insert([
-                    {
-                        name: values.name,
-                        brand: values.brand,
-                        type: values.type,
-                        workshop: values.workshop,
-                        description: values.description,
-                        buy_price: values.buyPrice,
-                        repair_price: values.repairPrice,
-                        supplier: values.supplier,
-                        alternative_piece: values.altPiece,
-                        additional_info: values.additionalInfo,
-                    },
-                ])
-                .throwOnError();
-
-            if (values.locationType === "machine") {
-                insertPieceInMachine();
-                const { error } = await supabase
-                    .from("Latest_piece_actions")
-                    .insert([
-                        {
-                            piece: values.name,
-                            machine: values.location,
-                            action: "INSERT",
-                            amount: values.amount,
-                        },
-                    ])
-                    .throwOnError();
-            } else {
-                insertPieceInWarehouse();
-                const { error } = await supabase
-                    .from("Latest_piece_actions")
-                    .insert([
-                        {
-                            piece: values.name,
-                            warehouse: values.location,
-                            action: "INSERT",
-                            amount: values.amount,
-                        },
-                    ])
-                    .throwOnError();
-            }
-
-            toaster.dismiss(promiseToaster.id);
-            toaster.create({
-                title: "Pieza añadida",
-                description: "La pieza se ha añadido correctamente.",
-                type: "success",
-            });
-
-        } catch (error) {
-            toaster.dismiss(promiseToaster.id);
-            toaster.create({
-                title: `Error ${error.code} al añadir pieza`,
-                description: `${
-                    error.code === "23505"
-                        ? "La pieza ya existe."
-                        : "Ha ocurrido un error al añadir la pieza."
-                }`,
-                type: "error",
-            });
-        }
-    }
-
-    async function insertPieceInMachine() {
-        const { error } = await supabase
-            .from("machine_pieces")
-            .insert([
-                {
-                    piece: values.name,
-                    machine: values.location,
-                    amount: values.amount,
-                },
-            ])
-            .throwOnError();
-    }
-
-    async function insertPieceInWarehouse() {
-        const { error } = await supabase
-            .from("Warehouse")
-            .insert([
-                {
-                    piece: values.name,
-                    location: values.location,
-                    amount: values.amount,
-                },
-            ])
-            .throwOnError();
     }
 
     return (
@@ -264,7 +164,7 @@ export default function NewPiece({ handleCancel }) {
                 </div>
                 <div className="cell location-cell">
                     <label htmlFor="location">
-                        Ubicación
+                        <p>Ubicación</p>
                         <input
                             className="location-radio"
                             type="radio"

@@ -3,13 +3,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
 import { IoIosClose } from "react-icons/io";
-import {
-    HStack,
-    Separator,
-    Input,
-    InputGroup,
-    Text,
-} from "@chakra-ui/react";
+import { HStack, Separator, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useAssemblyLines } from "@/hooks/useALine";
@@ -128,6 +122,7 @@ export function CustomSelect({ dataFromChild, content, ...props }) {
 
     useEffect(() => {
         dataFromChild(selectedValue);
+        setSelectedValue(null);
     }, [selectedValue]);
 
     const ref = useClickAway(() => {
@@ -135,37 +130,43 @@ export function CustomSelect({ dataFromChild, content, ...props }) {
     });
 
     return (
-            <div
-                ref={ref}
-                className="custom-select-container"
-                {...props}
-                onClick={() => setShowOptions(!showOptions)}
-            >
-                <div
-                    className="custom-selector"
-                >
-                    <p className="selector-label">Selecciona una opción</p>
-                        <Separator
-                            orientation="vertical"
-                            height="5"
-                            size="md"
-                        />
-                        <IoIosArrowDown />
-                </div>
-                <div className={`${showOptions ? "custom-options show" : "custom-options"}`}>
-                    {content.map((item, index) => (
-                        <div
-                            className={`${item.value === "delete" ? "custom-item delete" : "custom-item"}`}
-                            key={index}
-                            onClick={() => {
-                                setSelectedValue(item.value);
-                                setShowOptions(false);
-                            }}
-                        >
-                            {item.label}
-                        </div>
-                    ))}
-                </div>
+        <div
+            ref={ref}
+            className="custom-select-container"
+            {...props}
+            onClick={() => setShowOptions(!showOptions)}
+        >
+            <div className="custom-selector">
+                <p className="selector-label">Selecciona una opción</p>
+                <Separator
+                    orientation="vertical"
+                    height="5"
+                    size="md"
+                />
+                <IoIosArrowDown />
             </div>
+            <div
+                className={`${
+                    showOptions ? "custom-options show" : "custom-options"
+                }`}
+            >
+                {content.map((item, index) => (
+                    <div
+                        className={`${
+                            item.value === "delete"
+                                ? "custom-item delete"
+                                : "custom-item"
+                        }`}
+                        key={index}
+                        onClick={() => {
+                            setSelectedValue(item.value);
+                            setShowOptions(false);
+                        }}
+                    >
+                        {item.label}
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 }

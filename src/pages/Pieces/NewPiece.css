@@ -52,6 +52,10 @@
     top: 4px;
 }
 
+.location-radio:nth-child(2) {
+    margin-left: 0;
+}
+
 .location-radio:checked {
     border: 6px solid #007bff;
 }

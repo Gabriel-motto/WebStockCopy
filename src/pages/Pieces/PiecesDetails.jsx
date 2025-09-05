@@ -1,12 +1,5 @@
 import "./PiecesDetails.css";
-import {
-    Image,
-    Text,
-    Badge,
-    Separator,
-    Heading,
-    Button,
-} from "@chakra-ui/react";
+import { Image, Text, Separator, Heading, Button } from "@chakra-ui/react";
 import { useSelectedPiece } from "@/hooks/usePieces";
 import { PieChart, Pie, Tooltip, Legend, Cell } from "recharts";
 import { COLOR } from "@/utils/consts";
@@ -15,9 +8,138 @@ import { PopoverComponent } from "@/components/ui/Popover-component";
 import { IoWarningOutline } from "react-icons/io5";
 import supabase from "@/utils/supabase";
 import { CustomSelect } from "@/components/ui/Select/Select";
+import { useState } from "react";
+import DialogComponent from "@/components/dialog/Dialog";
+
+function MoveStockMenu({ piece, handleCancel }) {
+    const [showFiller, setShowFiller] = useState(false);
+    const [formData, setFormData] = useState({
+        piece: "",
+        locationTypeFrom: "",
+        locationFrom: "",
+        locationTypeTo: "",
+        locationTo: "",
+        amount: 1,
+        action: "move",
+    });
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        setShowFiller(false);
+        handleCancel();
+    }
+
+    function handleFormChange(e) {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value.toUpperCase(),
+        });
+    }
+
+    return (
+        <div className="move-stock-container">
+            <div className="body-move-stock">
+                <form
+                    className="move-form"
+                    onSubmit={handleSubmit}
+                >
+                    <div className="cell move-location-cell">
+                        <label htmlFor="locationFrom">
+                            <p className="label-title">De</p>
+                            <input
+                                className="location-radio"
+                                type="radio"
+                                name="locationTypeFrom"
+                                id="machineFrom"
+                                value="machineFrom"
+                                onChange={handleFormChange}
+                                required
+                            />
+                            <label htmlFor="machineFrom">Máquina</label>
+                            <input
+                                className="location-radio"
+                                type="radio"
+                                name="locationTypeFrom"
+                                id="warehouseFrom"
+                                value="warehouseFrom"
+                                onChange={handleFormChange}
+                            />
+                            <label htmlFor="warehouseFrom">Almacén</label>
+                        </label>
+                        <input
+                            className="location-input"
+                            type="text"
+                            id="locationFrom"
+                            name="locationFrom"
+                            required
+                            onChange={handleFormChange}
+                        />
+                        <div
+                            className={`${
+                                showFiller ? "autofiller show" : "autofiller"
+                            }`}
+                        ></div>
+
+                        <label htmlFor="locationTo">
+                            <p className="label-title">A</p>
+                            <input
+                                className="location-radio"
+                                type="radio"
+                                name="locationTypeTo"
+                                id="machineTo"
+                                value="machineTo"
+                                onChange={handleFormChange}
+                                required
+                            />
+                            <label htmlFor="machineTo">Máquina</label>
+                            <input
+                                className="location-radio"
+                                type="radio"
+                                name="locationTypeTo"
+                                id="warehouseTo"
+                                value="warehouseTo"
+                                onChange={handleFormChange}
+                            />
+                            <label htmlFor="warehouseTo">Almacén</label>
+                        </label>
+                        <input
+                            className="location-input"
+                            type="text"
+                            id="locationTo"
+                            name="locationTo"
+                            required
+                            onChange={handleFormChange}
+                        />
+                        <div
+                            className={`${
+                                showFiller ? "autofiller show" : "autofiller"
+                            }`}
+                        ></div>
+                    </div>
+                </form>
+            </div>
+            <div className="footer-move-stock">
+                <Button
+                    colorPalette="blue"
+                    onClick={handleSubmit}
+                >
+                    Aceptar
+                </Button>
+                <Button
+                    colorPalette="red"
+                    onClick={handleCancel}
+                >
+                    Cancelar
+                </Button>
+            </div>
+        </div>
+    );
+}
 
 export default function PiecesDetails({ data }) {
     const pieceData = useSelectedPiece(data.name);
+    const [showDialog, setShowDialog] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(null);
 
     const totalInMachines =
         pieceData?.machineStock.reduce((sum, p) => sum + p.amount, 0) || 0;
@@ -33,12 +155,30 @@ export default function PiecesDetails({ data }) {
     ];
 
     function handleSelectClick(value) {
-        console.log("Opción seleccionada:", value);
-        // Aquí puedes agregar la lógica para manejar la acción seleccionada
+        if (value !== null) {
+            setSelectedValue(value);
+            setShowDialog(true);
+        }
+    }
+
+    function closeDialog() {
+        setShowDialog(false);
     }
 
     return (
         <>
+            <DialogComponent
+                size="sm"
+                scrollBehavior="inside"
+                title={selectedValue === "move" ? "Mover pieza" : selectedValue === "edit" ? "Editar pieza" : selectedValue === "delete" ? "Eliminar pieza" : ""}
+                content={selectedValue === "move" ? (<MoveStockMenu handleCancel={closeDialog} />) : null}
+                open={showDialog}
+                close={closeDialog}
+                lazyMount
+                placement="center"
+                motionPreset="slide-in-bottom"
+            />
+
             <div className="warning-badges">
                 {data?.isCritical === true && (
                     <div className="critical-badge">
@@ -54,7 +194,7 @@ export default function PiecesDetails({ data }) {
                 <CustomSelect
                     dataFromChild={handleSelectClick}
                     content={[
-                        { value: "add", label: "Añadir stock" },
+                        { value: "move", label: "Mover pieza" },
                         { value: "edit", label: "Editar datos" },
                         { value: "delete", label: "Eliminar pieza" },
                     ]}

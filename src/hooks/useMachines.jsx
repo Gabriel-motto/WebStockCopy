@@ -18,3 +18,12 @@ export function useSelectedMachine(name) {
     }, [name])
     return pieces;
 }
+
+export function useSelectedMachineStock(machine, piece) {
+    const [stock, setStock] = useState();
+    
+    useEffect(() => {
+        getStockPieceFromMachine(machine, piece).then(setStock);
+    }, [machine, piece]);
+    return stock;
+}
