@@ -122,30 +122,3 @@
     flex-direction: column;
     gap: 0.5rem;
 }
-
-.move-stock-container {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    width: 100%;
-}
-
-.location-group {
-    display: flex;
-}
-
-.label-title {
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.location-input {
-    margin: .25rem 0 .5rem 0;
-}
-
-.footer-move-stock {
-    display: flex;
-    justify-content: flex-end;
-    gap: .5rem;
-    margin-top: 1rem;
-}

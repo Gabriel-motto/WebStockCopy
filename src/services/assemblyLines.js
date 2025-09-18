@@ -9,9 +9,5 @@ export async function getAssemblyLines( search ) {
 
     const { data: aLines } = await query;
 
-    return aLines?.map((aLine) => ({
-        id: aLine.id,
-        name: aLine.name,
-        description: aLine.description,
-    }));
+    return aLines;
 }

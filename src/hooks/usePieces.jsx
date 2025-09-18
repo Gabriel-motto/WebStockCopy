@@ -159,13 +159,126 @@ export async function insertRecentMovement({ values }) {
 
 export async function movePiece({ values }) {
     const fromStock =
-        values.locationTypeFrom === "machineFrom"
+        values.locationTypeFrom === "MACHINEFROM"
             ? useSelectedMachineStock(values.locationFrom, values.piece)
             : useStockPieceFromWarehouse(values.locationFrom, values.piece);
     const toStock =
-        values.locationTypeTo === "machineTo"
+        values.locationTypeTo === "MACHINETO"
             ? useSelectedMachineStock(values.locationTo, values.piece)
             : useStockPieceFromWarehouse(values.locationTo, values.piece);
 
+    if (values.locationTypeFrom === "MACHINEFROM") {
+        const { error } = await supabase
+            .from("machine_pieces")
+            .update({
+                amount: fromStock[0].amount - 1,
+            })
+            .eq("machine", values.locationFrom)
+            .eq("piece", values.piece)
+            .throwOnError();
+    }
+
+    if (values.locationTypeFrom === "WAREHOUSEFROM") {
+        const { error } = await supabase
+            .from("warehouse_pieces")
+            .update({
+                amount: fromStock[0].amount - 1,
+            })
+            .eq("location", values.locationFrom)
+            .eq("piece", values.piece)
+            .throwOnError();
+    }
+
+    if (values.locationTypeTo === "MACHINETO") {
+        if (toStock.length === 0) {
+            const { error } = await supabase
+                .from("machine_pieces")
+                .insert([
+                    {
+                        piece: values.piece,
+                        machine: values.locationTo,
+                        amount: 1,
+                    },
+                ])
+                .throwOnError();
+        } else {
+            const { error } = await supabase
+                .from("machine_pieces")
+                .update({
+                    amount: toStock[0].amount + 1,
+                })
+                .eq("machine", values.locationTo)
+                .eq("piece", values.piece)
+                .throwOnError();
+        }
+    }
+
+    if (values.locationTypeTo === "WAREHOUSETO") {
+        if (toStock.length === 0) {
+            const { error } = await supabase
+                .from("warehouse_pieces")
+                .insert([
+                    {
+                        piece: values.piece,
+                        location: values.locationTo,
+                        amount: 1,
+                    },
+                ])
+                .throwOnError();
+        } else {
+            const { error } = await supabase
+                .from("warehouse_pieces")
+                .update({
+                    amount: toStock[0].amount + 1,
+                })
+                .eq("location", values.locationTo)
+                .eq("piece", values.piece)
+                .throwOnError();
+        }
+    }
+
     insertRecentMovement(values);
+}
+
+export async function updatePiece({ values }) {
+    const promiseToaster = toaster.create({
+        title: "Modificando pieza...",
+        description: "Por favor, espera mientras se modifica la pieza.",
+        type: "loading",
+    });
+
+    try {
+        const { error } = await supabase
+            .from("Pieces")
+            .update({
+                brand: values.brand,
+                type: values.type,
+                description: values.description,
+                buy_price: values.buyPrice,
+                repair_price: repairPrice,
+                supplier: values.supplier,
+                alternative_piece: values.altPiece,
+                status: values.status,
+                additional_info: values.addInfo,
+            })
+            .throwOnError();
+
+        toaster.dismiss(promiseToaster.id);
+        toaster.create({
+            title: "Pieza modificada",
+            description: "La pieza se ha modificado correctamente.",
+            type: "success",
+        });
+    } catch (error) {
+        toaster.dismiss(promiseToaster.id);
+        toaster.create({
+            title: `Error ${error.code} al añadir pieza`,
+            description: "Ha ocurrido un error al modificar la pieza.",
+            type: "error",
+        });
+    }
+}
+
+export async function addStockMenu({ values }) {
+    
 }

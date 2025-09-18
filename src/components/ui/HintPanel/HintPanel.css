@@ -1,0 +1,18 @@
+.hint-container {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    margin-top: .25rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.hint-item {
+    padding: .25rem;
+}
+
+.hint-item:hover {
+    background-color: #ddd;
+    cursor: pointer;
+    border-radius: 3px;
+}
