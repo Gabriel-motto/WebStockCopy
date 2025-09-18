@@ -10,131 +10,7 @@ import supabase from "@/utils/supabase";
 import { CustomSelect } from "@/components/ui/Select/Select";
 import { useState } from "react";
 import DialogComponent from "@/components/dialog/Dialog";
-
-function MoveStockMenu({ piece, handleCancel }) {
-    const [showFiller, setShowFiller] = useState(false);
-    const [formData, setFormData] = useState({
-        piece: "",
-        locationTypeFrom: "",
-        locationFrom: "",
-        locationTypeTo: "",
-        locationTo: "",
-        amount: 1,
-        action: "move",
-    });
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        setShowFiller(false);
-        handleCancel();
-    }
-
-    function handleFormChange(e) {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value.toUpperCase(),
-        });
-    }
-
-    return (
-        <div className="move-stock-container">
-            <div className="body-move-stock">
-                <form
-                    className="move-form"
-                    onSubmit={handleSubmit}
-                >
-                    <div className="cell move-location-cell">
-                        <label htmlFor="locationFrom">
-                            <p className="label-title">De</p>
-                            <input
-                                className="location-radio"
-                                type="radio"
-                                name="locationTypeFrom"
-                                id="machineFrom"
-                                value="machineFrom"
-                                onChange={handleFormChange}
-                                required
-                            />
-                            <label htmlFor="machineFrom">Máquina</label>
-                            <input
-                                className="location-radio"
-                                type="radio"
-                                name="locationTypeFrom"
-                                id="warehouseFrom"
-                                value="warehouseFrom"
-                                onChange={handleFormChange}
-                            />
-                            <label htmlFor="warehouseFrom">Almacén</label>
-                        </label>
-                        <input
-                            className="location-input"
-                            type="text"
-                            id="locationFrom"
-                            name="locationFrom"
-                            required
-                            onChange={handleFormChange}
-                        />
-                        <div
-                            className={`${
-                                showFiller ? "autofiller show" : "autofiller"
-                            }`}
-                        ></div>
-
-                        <label htmlFor="locationTo">
-                            <p className="label-title">A</p>
-                            <input
-                                className="location-radio"
-                                type="radio"
-                                name="locationTypeTo"
-                                id="machineTo"
-                                value="machineTo"
-                                onChange={handleFormChange}
-                                required
-                            />
-                            <label htmlFor="machineTo">Máquina</label>
-                            <input
-                                className="location-radio"
-                                type="radio"
-                                name="locationTypeTo"
-                                id="warehouseTo"
-                                value="warehouseTo"
-                                onChange={handleFormChange}
-                            />
-                            <label htmlFor="warehouseTo">Almacén</label>
-                        </label>
-                        <input
-                            className="location-input"
-                            type="text"
-                            id="locationTo"
-                            name="locationTo"
-                            required
-                            onChange={handleFormChange}
-                        />
-                        <div
-                            className={`${
-                                showFiller ? "autofiller show" : "autofiller"
-                            }`}
-                        ></div>
-                    </div>
-                </form>
-            </div>
-            <div className="footer-move-stock">
-                <Button
-                    colorPalette="blue"
-                    onClick={handleSubmit}
-                >
-                    Aceptar
-                </Button>
-                <Button
-                    colorPalette="red"
-                    onClick={handleCancel}
-                >
-                    Cancelar
-                </Button>
-            </div>
-        </div>
-    );
-}
+import { AddStockMenu, EditStockMenu, MoveStockMenu } from "./Menus";
 
 export default function PiecesDetails({ data }) {
     const pieceData = useSelectedPiece(data.name);
@@ -146,8 +22,15 @@ export default function PiecesDetails({ data }) {
     const totalInWarehouse =
         pieceData?.warehouseStock.reduce((sum, p) => sum + p.amount, 0) || 0;
     const totalStock = totalInMachines + totalInWarehouse;
-    const machinesWithPiece = pieceData?.machineStock.length || 0;
-    const warehousesWithPiece = pieceData?.warehouseStock.length || 0;
+
+    let machines = pieceData?.machineStock.reduce((acc, machine) => {
+        acc.push({ name: machine.machine });
+        return acc;
+    }, []);
+    let warehouses = pieceData?.warehouseStock.reduce((acc, warehouse) => {
+        acc.push({ name: warehouse.location });
+        return acc;
+    }, []);
 
     const chartData = [
         { name: "En máquinas", value: totalInMachines },
@@ -169,9 +52,37 @@ export default function PiecesDetails({ data }) {
         <>
             <DialogComponent
                 size="sm"
-                scrollBehavior="inside"
-                title={selectedValue === "move" ? "Mover pieza" : selectedValue === "edit" ? "Editar pieza" : selectedValue === "delete" ? "Eliminar pieza" : ""}
-                content={selectedValue === "move" ? (<MoveStockMenu handleCancel={closeDialog} />) : null}
+                scrollBehavior="outside"
+                title={
+                    selectedValue === "move"
+                        ? "Mover pieza"
+                        : selectedValue === "edit"
+                        ? "Editar datos"
+                        : selectedValue === "delete"
+                        ? "Eliminar pieza"
+                        : selectedValue === "add"
+                        ? "Añadir stock"
+                        : ""
+                }
+                content={
+                    selectedValue === "move" ? (
+                        <MoveStockMenu
+                            piece={data.name}
+                            inStock={[...machines, ...warehouses]}
+                            handleCancel={closeDialog}
+                        />
+                    ) : selectedValue === "edit" ? (
+                        <EditStockMenu
+                            pieceInfo={data}
+                            handleCancel={closeDialog}
+                        />
+                    ) : selectedValue === "add" ? (
+                        <AddStockMenu
+                            piece={data.name}
+                            handleCancel={closeDialog}
+                        />
+                    ) : null
+                }
                 open={showDialog}
                 close={closeDialog}
                 lazyMount
@@ -196,6 +107,7 @@ export default function PiecesDetails({ data }) {
                     content={[
                         { value: "move", label: "Mover pieza" },
                         { value: "edit", label: "Editar datos" },
+                        { value: "add", label: "Añadir stock" },
                         { value: "delete", label: "Eliminar pieza" },
                     ]}
                 />

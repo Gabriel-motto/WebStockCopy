@@ -33,7 +33,7 @@ function MachinesTable({ machines, handleClick }) {
                     >
                         <Table.Cell>{machine.name}</Table.Cell>
                         <Table.Cell>{machine.description}</Table.Cell>
-                        <Table.Cell>{machine.aLine}</Table.Cell>
+                        <Table.Cell>{machine.assembly_line}</Table.Cell>
                     </Table.Row>
                 ))}
             </Table.Body>
@@ -47,7 +47,11 @@ export default function MachinesPage({ params = {} }) {
     const [selectedALines, setSelectedAlines] = useState([]);
     const [search, setSearch] = useState("");
     const debouncedSearch = useDebounce(search, 300);
-    const machines = useMachines(selectedALines, search, debouncedSearch);
+    const machines = useMachines({
+        selectedALines: selectedALines,
+        search: search,
+        debouncedSearch: debouncedSearch,
+    });
 
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);

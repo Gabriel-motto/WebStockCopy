@@ -20,6 +20,7 @@ export default function NewPiece({ handleCancel }) {
         additionalInfo: null,
         locationType: "machine",
         location: null,
+        action: "new",
     });
 
     function handleSubmit(e) {

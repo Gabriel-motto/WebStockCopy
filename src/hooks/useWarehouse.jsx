@@ -2,12 +2,13 @@ import { getStockPieceFromWarehouse, getWarehouses } from "@/services/warehouse"
 import { useEffect, useState } from "react";
 
 
-export function useWarehouse(search) {
+export function useWarehouse(options = {}) {
+    const { search = "", columns = "*" } = options;
     const [warehouses, setWarehouses] = useState([]);
 
     useEffect(() => {
-        getWarehouses(search).then(setWarehouses);
-    }, [search]);
+        getWarehouses(search, columns).then(setWarehouses);
+    }, [search, columns]);
 
     return warehouses;
 }

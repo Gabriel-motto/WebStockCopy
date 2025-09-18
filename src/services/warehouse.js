@@ -1,17 +1,15 @@
 import supabase from "@/utils/supabase";
 
-export async function getWarehouses(search) {
-    let query = supabase.from("Warehouses").select();
+export async function getWarehouses(search, columns) {
+    let query = supabase.from("Warehouses").select(columns);
     
     if (search) {
         query = query.ilike(
-            "shelve", `%${search}%`
+            "name", `%${search}%`
         );
     }
 
-    const { data: warehouses } = await query.order("location", {
-        ascending: true,
-    });
+    const { data: warehouses } = await query;
 
     return warehouses;
 }

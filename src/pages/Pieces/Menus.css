@@ -1,0 +1,108 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    width: 100%;
+}
+
+.move-location-cell {
+    position: relative;
+}
+
+.location-group {
+    display: flex;
+}
+
+.menus-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.location-input {
+    margin: .25rem 0 .5rem 0;
+}
+
+.location {
+    position: relative;
+    flex: 1 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.location > input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.location > input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+    margin-top: 1rem;
+}
+
+.autofiller {
+    display: none;
+    position: absolute;
+    top: 6rem;
+    left: .5rem;
+    padding: .5rem;
+    background-color: #fff;
+    border: 1px solid #999;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 95%;
+}
+
+.show {
+    display: block;
+}
+
+.edit-body {
+    width: 100%;
+}
+
+.edit-input {
+    width: 100%;
+}
+
+.edit-input > input,
+.edit-input > textarea {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.edit-input > textarea {
+    height: 90px;
+}
+
+.edit-input > input:focus,
+.edit-input > textarea:focus,
+.amount-input > input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+
+.amount-input > input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 15%;
+    text-align: center;
+}

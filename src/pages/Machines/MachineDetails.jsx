@@ -115,7 +115,7 @@ function Summary({ data }) {
             />
             <div className="body">
                 <div className="description">{data.description}</div>
-                <div className="assembly-line">{data.aLine}</div>
+                <div className="assembly-line">{data.assembly_line}</div>
                 <div className="additional-content"></div>
             </div>
         </div>
