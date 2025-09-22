@@ -73,12 +73,12 @@
     width: 100%;
 }
 
-.edit-input {
+.input {
     width: 100%;
 }
 
-.edit-input > input,
-.edit-input > textarea {
+.input > input,
+.input > textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 0.5rem;
@@ -86,13 +86,12 @@
     width: 100%;
 }
 
-.edit-input > textarea {
+.input > textarea {
     height: 90px;
 }
 
-.edit-input > input:focus,
-.edit-input > textarea:focus,
-.amount-input > input:focus {
+.input > input:focus,
+.input > textarea:focus {
     border-color: #007bff;
     outline: none;
 }

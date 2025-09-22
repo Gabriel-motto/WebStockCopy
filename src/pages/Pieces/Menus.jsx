@@ -72,7 +72,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
                 >
                     <div className="move-location-cell">
                         <div className="location locationFrom">
-                            <label>
+                            <div>
                                 <p className="title-label menus-label">De</p>
                                 <input
                                     className="location-radio"
@@ -82,6 +82,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
                                     value="machineFrom"
                                     onChange={handleFormChange}
                                     required
+                                    disabled
                                 />
                                 <label htmlFor="machineFrom">Máquina</label>
                                 <input
@@ -93,7 +94,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
                                     onChange={handleFormChange}
                                 />
                                 <label htmlFor="warehouseFrom">Almacén</label>
-                            </label>
+                            </div>
                             <input
                                 className="location-input"
                                 type="text"
@@ -120,7 +121,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
                         </div>
 
                         <div className="location locationTo">
-                            <label>
+                            <div>
                                 <p className="title-label menus-label">A</p>
                                 <input
                                     className="location-radio"
@@ -141,7 +142,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
                                     onChange={handleFormChange}
                                 />
                                 <label htmlFor="warehouseTo">Almacén</label>
-                            </label>
+                            </div>
                             <input
                                 className="location-input"
                                 type="text"
@@ -206,7 +207,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
     return (
         <div className="edit-menu-container container">
             <div className="edit-body">
-                <div className="brand-input edit-input">
+                <div className="brand-input input">
                     <p className="brand-label menus-label">Marca</p>
                     <input
                         type="text"
@@ -216,7 +217,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="type-input edit-input">
+                <div className="type-input input">
                     <p className="type-label menus-label">Tipo</p>
                     <input
                         type="text"
@@ -226,7 +227,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="buy-price-input edit-input">
+                <div className="buy-price-input input">
                     <p className="buy-price-label menus-label">
                         Precio de compra
                     </p>
@@ -238,7 +239,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="repair-price-input edit-input">
+                <div className="repair-price-input input">
                     <p className="repair-price-label menus-label">
                         Precio de reparación
                     </p>
@@ -250,7 +251,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="supplier-input edit-input">
+                <div className="supplier-input input">
                     <p className="supplier-label menus-label">Proveedor</p>
                     <input
                         type="text"
@@ -260,7 +261,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="alt-piece-input edit-input">
+                <div className="alt-piece-input input">
                     <p className="alt-piece-label menus-label">
                         Pieza alternativa
                     </p>
@@ -272,7 +273,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="status-input edit-input">
+                <div className="status-input input">
                     <p className="status-label menus-label">Estado</p>
                     <input
                         type="text"
@@ -282,7 +283,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="description-input edit-input">
+                <div className="description-input input">
                     <p className="description-label menus-label">Descripción</p>
                     <textarea
                         name="description"
@@ -291,7 +292,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         onChange={handleFormChange}
                     ></textarea>
                 </div>
-                <div className="add-info-input edit-input">
+                <div className="add-info-input input">
                     <p className="add-info-label menus-label">
                         Información adicional
                     </p>
@@ -366,7 +367,7 @@ export function AddStockMenu({ piece, handleCancel }) {
     return (
         <div className="add-menu-container container">
             <div className="add-menu-body">
-                <div className="location add-input">
+                <div className="location input">
                     <div className="input-radio">
                         <p className="title-label menus-label">A</p>
                         <input
@@ -413,7 +414,7 @@ export function AddStockMenu({ piece, handleCancel }) {
                         />
                     </div>
                 </div>
-                <div className="amount-input add-input">
+                <div className="amount-input input">
                     <p className="amount-label menus-label">Cantidad</p>
                     <input
                         type="number"
@@ -431,6 +432,123 @@ export function AddStockMenu({ piece, handleCancel }) {
                     onClick={handleSubmit}
                 >
                     Aceptar
+                </Button>
+                <Button
+                    colorPalette="red"
+                    onClick={handleCancel}
+                >
+                    Cancelar
+                </Button>
+            </div>
+        </div>
+    );
+}
+
+export function DeleteStockMenu({ piece, inStock, handleCancel }) {
+    const [showHint, setShowHint] = useState(false);
+    const [formData, setFormData] = useState({
+        piece: piece,
+        locationTypeFrom: "",
+        locationFrom: "",
+        amount: 1,
+        action: "add",
+    });
+    const machines = useMachines({
+        columns: "name",
+    });
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        handleCancel();
+    }
+
+    function handleFormChange(e) {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value.toUpperCase(),
+        });
+        console.log(e.target.value.toUpperCase());
+    }
+
+    function handleHintSelect(value, field) {
+        setFormData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+
+        machines?.some((machine) => machine.name === value)
+            ? (document.getElementById("machineFrom").checked = true)
+            : (document.getElementById("warehouseFrom").checked = true);
+    }
+
+    return (
+        <div className="delete-stock-container container">
+            <div className="delete-menu-body">
+                <div className="location locationFrom">
+                    <label>
+                        <p className="title-label menus-label">De</p>
+                        <input
+                            className="location-radio"
+                            type="radio"
+                            name="locationTypeFrom"
+                            id="machineFrom"
+                            value="machineFrom"
+                            onChange={handleFormChange}
+                            required
+                        />
+                        <label htmlFor="machineFrom">Máquina</label>
+                        <input
+                            className="location-radio"
+                            type="radio"
+                            name="locationTypeFrom"
+                            id="warehouseFrom"
+                            value="warehouseFrom"
+                            onChange={handleFormChange}
+                        />
+                        <label htmlFor="warehouseFrom">Almacén</label>
+                    </label>
+                    <input
+                        className="location-input"
+                        type="text"
+                        id="locationFrom"
+                        name="locationFrom"
+                        required
+                        value={formData.locationFrom}
+                        onChange={handleFormChange}
+                        onFocus={() => setShowHint(true)}
+                        onBlur={() => setShowHint(false)}
+                    />
+                    <div
+                        className={`${
+                            showHint ? "autofiller show" : "autofiller"
+                        }`}
+                    >
+                        <HintPanel
+                            hintData={inStock}
+                            onSelect={(value) =>
+                                handleHintSelect(value, "locationFrom")
+                            }
+                        />
+                    </div>
+                </div>
+                <div className="amount-input input">
+                    <p className="amount-label menus-label">Cantidad</p>
+                    <input
+                        type="number"
+                        name="amount"
+                        id="amount"
+                        min="1"
+                        value={formData.amount}
+                        onChange={handleFormChange}
+                    />
+                </div>
+            </div>
+            <div className="delete-menu-footer footer">
+                <Button
+                    colorPalette="blue"
+                    onClick={handleSubmit}
+                >
+                    Enviar petición
                 </Button>
                 <Button
                     colorPalette="red"
