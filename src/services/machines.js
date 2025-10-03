@@ -13,7 +13,7 @@ export async function getMachines(selectedALines, search, columns) {
         );
     }
 
-    // const { data: machines } = await query.order("assembly_line", {
+    // const { data: machines } = await query.order(" assembly_line", {
     //     ascending: true,
     // });
     const { data: machines } = await query;

@@ -1,10 +1,11 @@
 import { HintPanel } from "@/components/ui/HintPanel/HintPanel";
 import { useMachines } from "@/hooks/useMachines";
 import { useWarehouse } from "@/hooks/useWarehouse";
-import { Button } from "@chakra-ui/react";
-import { useState } from "react";
+import { Button, QrCode } from "@chakra-ui/react";
+import { useRef, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import "./Menus.css";
+import { useReactToPrint } from "react-to-print";
 
 export function MoveStockMenu({ piece, inStock, handleCancel }) {
     const [showHint1, setShowHint1] = useState(false);
@@ -329,7 +330,7 @@ export function AddStockMenu({ piece, handleCancel }) {
         locationTypeTo: "",
         locationTo: "",
         amount: 1,
-        action: "add",
+        action: "new",
     });
     const machines = useMachines({
         search: formData.locationTo,
@@ -439,6 +440,34 @@ export function AddStockMenu({ piece, handleCancel }) {
                 >
                     Cancelar
                 </Button>
+            </div>
+        </div>
+    );
+}
+
+export function PrintMenu({ piece, inStock, handleCancel }) {
+    const contentRef = useRef();
+    const reactToPrintFn = useReactToPrint({ contentRef });
+
+    return (
+        <div className="print-menu-container container">
+            <div className="print-menu-body">
+                <Button
+                    colorPalette="blue"
+                    onClick={reactToPrintFn}
+                >
+                    Imprimir etiqueta
+                </Button>
+                <div
+                    ref={contentRef}
+                    className="print-content"
+                >
+                    <QrCode.Root value={`https://web-stock-peach.vercel.app/pieces/${piece}`}>
+                        <QrCode.Frame>
+                            <QrCode.Pattern />
+                        </QrCode.Frame>
+                    </QrCode.Root>
+                </div>
             </div>
         </div>
     );

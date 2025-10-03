@@ -10,7 +10,13 @@ import supabase from "@/utils/supabase";
 import { CustomSelect } from "@/components/ui/Select/Select";
 import { useState } from "react";
 import DialogComponent from "@/components/dialog/Dialog";
-import { AddStockMenu, DeleteStockMenu, EditStockMenu, MoveStockMenu } from "./Menus";
+import {
+    AddStockMenu,
+    DeleteStockMenu,
+    EditStockMenu,
+    MoveStockMenu,
+    PrintMenu,
+} from "./Menus";
 
 export default function PiecesDetails({ data }) {
     const pieceData = useSelectedPiece(data.name);
@@ -62,6 +68,8 @@ export default function PiecesDetails({ data }) {
                         ? "Eliminar stock"
                         : selectedValue === "add"
                         ? "Añadir stock"
+                        : selectedValue === "print"
+                        ? "Imprimir etiqueta"
                         : ""
                 }
                 content={
@@ -79,6 +87,12 @@ export default function PiecesDetails({ data }) {
                     ) : selectedValue === "add" ? (
                         <AddStockMenu
                             piece={data.name}
+                            handleCancel={closeDialog}
+                        />
+                    ) : selectedValue === "print" ? (
+                        <PrintMenu
+                            piece={data.name}
+                            inStock={[...machines, ...warehouses]}
                             handleCancel={closeDialog}
                         />
                     ) : selectedValue === "delete" ? (
@@ -114,6 +128,7 @@ export default function PiecesDetails({ data }) {
                         { value: "move", label: "Mover pieza" },
                         { value: "edit", label: "Editar datos" },
                         { value: "add", label: "Añadir stock" },
+                        { value: "print", label: "Imprimir etiqueta" },
                         { value: "delete", label: "Eliminar stock" },
                     ]}
                 />

@@ -272,7 +272,7 @@ export async function updatePiece({ values }) {
     } catch (error) {
         toaster.dismiss(promiseToaster.id);
         toaster.create({
-            title: `Error ${error.code} al añadir pieza`,
+            title: `Error al modificar pieza`,
             description: "Ha ocurrido un error al modificar la pieza.",
             type: "error",
         });
@@ -280,5 +280,46 @@ export async function updatePiece({ values }) {
 }
 
 export async function addStockMenu({ values }) {
-    
+    const promiseToaster = toaster.create({
+        title: "Modificando pieza...",
+        description: "Por favor, espera mientras se modifica la pieza.",
+        type: "loading",
+    });
+
+    try {
+        if (values.locationTypeTo === "WAREHOUSETO") {
+            const { error } = await supabase
+                .from("warehouse_pieces")
+                .upsert({
+                    piece: values.piece,
+                    location: values.locationTo,
+                    amount: 1,
+                })
+                .throwOnError();
+        } else {
+            const { error } = await supabase
+                .from("machine_pieces")
+                .upsert({
+                    piece: values.piece,
+                    machine: values.locationTo,
+                    amount: 1,
+                })
+                .throwOnError();
+        }
+        toaster.dismiss(promiseToaster.id);
+        toaster.create({
+            title: "Pieza añadida",
+            description: "La pieza se ha añadido correctamente.",
+            type: "success",
+        });
+    } catch (error) {
+        toaster.dismiss(promiseToaster.id);
+        toaster.create({
+            title: `Error ${error.code} al añadir pieza`,
+            description: "Ha ocurrido un error al añadir la pieza.",
+            type: "error",
+        });
+    }
+
+    insertRecentMovement(values);
 }
