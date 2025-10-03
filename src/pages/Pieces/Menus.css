@@ -108,5 +108,5 @@
 
 .print-content {
     display: flex;
-    width: 100%;
+    width: fit-content;
 }
