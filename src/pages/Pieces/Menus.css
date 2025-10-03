@@ -105,6 +105,11 @@
     text-align: center;
 }
 
+.print-content {
+    display: flex;
+    width: fit-content;
+}
+
 @media print {
     .print-content {
         height: 100vh;
@@ -112,9 +117,4 @@
         padding: 0;
         overflow: hidden;
     }
-}
-
-.print-content {
-    display: flex;
-    width: fit-content;
 }

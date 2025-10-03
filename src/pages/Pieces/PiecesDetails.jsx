@@ -1,5 +1,5 @@
 import "./PiecesDetails.css";
-import { Image, Text, Separator, Heading, Button } from "@chakra-ui/react";
+import { Image, Text, Separator, Heading, Button, useBreakpointValue } from "@chakra-ui/react";
 import { useSelectedPiece } from "@/hooks/usePieces";
 import { PieChart, Pie, Tooltip, Legend, Cell } from "recharts";
 import { COLOR } from "@/utils/consts";
@@ -204,7 +204,7 @@ export default function PiecesDetails({ data }) {
                                     : "No hay proveedor asignado"}
                             </Text>
                         </div>
-                        <div className="data-box alt-piece">
+                        <div className="data-box alt-piece-box">
                             <Text className="label alt-piece-label">
                                 Pieza alternativa
                             </Text>
@@ -296,7 +296,6 @@ export default function PiecesDetails({ data }) {
                                 </PieChart>
                             }
                             size="lg"
-                            positioning={{ placement: "right" }}
                         />
                     </div>
                     <div className="piece-in-machines"></div>
