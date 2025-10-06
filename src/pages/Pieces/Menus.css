@@ -130,7 +130,7 @@
         padding: 0;
         overflow: hidden;
         rotate: 90deg;
-        transform-origin: left bottom;
-        transform: translateX(-35%);
+        transform-origin: middle bottom;
+        transform: translateY(50%);
     }
 }
