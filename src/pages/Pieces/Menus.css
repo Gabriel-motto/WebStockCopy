@@ -131,5 +131,6 @@
         overflow: hidden;
         rotate: 90deg;
         transform-origin: left bottom;
+        transform: translateX(-35%);
     }
 }
