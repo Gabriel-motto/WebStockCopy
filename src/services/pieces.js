@@ -22,7 +22,7 @@ export async function getPieces(workshop, search, multiple) {
     });
 
     return pieces?.map((piece) => ({
-        id: piece.id,
+        id: `${String(piece.id).padStart(6, "0")}${workshop === 'Electrónica' ? 'E' : 'M'}`,
         name: piece.name,
         description: piece.description,
         type: piece.type,
