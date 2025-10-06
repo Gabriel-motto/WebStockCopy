@@ -1,5 +1,12 @@
 import "./PiecesDetails.css";
-import { Image, Text, Separator, Heading, Button, useBreakpointValue } from "@chakra-ui/react";
+import {
+    Image,
+    Text,
+    Separator,
+    Heading,
+    Button,
+    useBreakpointValue,
+} from "@chakra-ui/react";
 import { useSelectedPiece } from "@/hooks/usePieces";
 import { PieChart, Pie, Tooltip, Legend, Cell } from "recharts";
 import { COLOR } from "@/utils/consts";
@@ -17,6 +24,8 @@ import {
     MoveStockMenu,
     PrintMenu,
 } from "./Menus";
+import Zoom from 'react-medium-image-zoom'
+import 'react-medium-image-zoom/dist/styles.css'
 
 export default function PiecesDetails({ data }) {
     const pieceData = useSelectedPiece(data.name);
@@ -91,7 +100,7 @@ export default function PiecesDetails({ data }) {
                         />
                     ) : selectedValue === "print" ? (
                         <PrintMenu
-                            piece={data.name}
+                            piece={data}
                             inStock={[...machines, ...warehouses]}
                             handleCancel={closeDialog}
                         />
@@ -301,30 +310,34 @@ export default function PiecesDetails({ data }) {
                     <div className="piece-in-machines"></div>
                 </div>
                 <div className="right-side">
-                    <Image
-                        className="image-dialog piece-image"
-                        src={
-                            supabase.storage
-                                .from("pieces")
-                                .getPublicUrl(`${data.name}.webp`).data
-                                .publicUrl
-                        }
-                        alt={`Producto con referencia: ${data.name}`}
-                    />
+                    <Zoom>
+                        <Image
+                            className="image-dialog piece-image"
+                            src={
+                                supabase.storage
+                                    .from("pieces")
+                                    .getPublicUrl(`${data.name}.webp`).data
+                                    .publicUrl
+                            }
+                            alt={`Producto con referencia: ${data.name}`}
+                        />
+                    </Zoom>
                     <Separator
                         className="image-separator"
                         size="md"
                     />
-                    <Image
-                        className="image-dialog data-card-image"
-                        src={
-                            supabase.storage
-                                .from("pieces")
-                                .getPublicUrl(`${data.name}-data-card.webp`)
-                                .data.publicUrl
-                        }
-                        alt={`Producto con referencia: ${data.name}`}
-                    />
+                    <Zoom>
+                        <Image
+                            className="image-dialog data-card-image"
+                            src={
+                                supabase.storage
+                                    .from("pieces")
+                                    .getPublicUrl(`${data.name}-data-card.webp`)
+                                    .data.publicUrl
+                            }
+                            alt={`Producto con referencia: ${data.name}`}
+                        />
+                    </Zoom>
                 </div>
             </div>
         </>

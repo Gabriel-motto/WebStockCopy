@@ -108,13 +108,29 @@
 .print-content {
     display: flex;
     width: fit-content;
+    border: solid 2px black;
+}
+.qr-code {
+    padding: .25rem;
+}
+
+.print-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+    margin-right: 1rem;
+    height: fit-content;
 }
 
 @media print {
     .print-content {
-        height: 100vh;
+        height: fit-content;
         margin: 0;
         padding: 0;
         overflow: hidden;
+        rotate: 90deg;
+        transform-origin: left bottom;
+        transform: translateX(-35%);
     }
 }
