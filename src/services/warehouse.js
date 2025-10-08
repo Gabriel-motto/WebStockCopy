@@ -1,7 +1,7 @@
 import supabase from "@/utils/supabase";
 
 export async function getWarehouses(search, columns) {
-    let query = supabase.from("Warehouses").select(columns);
+    let query = supabase.from("warehouses").select(columns);
     
     if (search) {
         query = query.ilike(

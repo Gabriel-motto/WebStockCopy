@@ -1,7 +1,7 @@
 import supabase from "../utils/supabase";
 
 export async function getPieces(workshop, search, multiple) {
-    let query = supabase.from("Pieces").select();
+    let query = supabase.from("pieces").select();
 
     if (workshop !== "all") {
         query = query.eq("workshop", workshop);
@@ -22,7 +22,7 @@ export async function getPieces(workshop, search, multiple) {
     });
 
     return pieces?.map((piece) => ({
-        id: `${String(piece.id).padStart(6, "0")}${piece.workshop === 'Electrónica' ? 'E' : 'M'}`,
+        id: `${String(piece.id).padStart(6, "0")}-${piece.workshop}`,
         name: piece.name,
         description: piece.description,
         type: piece.type,

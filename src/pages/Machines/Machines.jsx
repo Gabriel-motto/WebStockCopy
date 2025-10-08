@@ -9,6 +9,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { EmptyError } from "@/components/ui/EmptyStates";
 import "./Machines.css";
 import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx";
+import { navigateTo } from "@/utils/Link.jsx";
 
 const DialogComponent = lazy(() =>
     import("../../components/dialog/Dialog.jsx")
