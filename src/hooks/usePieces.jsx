@@ -11,27 +11,25 @@ export function usePieces(options = {}) {
         search = "",
         multiple = [],
         debouncedSearch,
+        column = "*",
+        orderBy = {column: "is_critical", ascending: false},
     } = options;
     const [pieces, setPieces] = useState([]);
 
     useEffect(() => {
-        getPieces(workshop, search, multiple).then(setPieces);
+        getPieces(workshop, search, multiple, column, orderBy).then(setPieces);
     }, [workshop, debouncedSearch, JSON.stringify(multiple)]);
 
     return pieces;
 }
 
-export function useSelectedPiece(piece) {
+export function useStockPiece(options = {}) {
+    const { piece = "", column = "*" } = options;
     const [stock, setStock] = useState();
 
     useEffect(() => {
-        getStockPiece(piece).then(setStock);
+        getStockPiece(piece, column).then(setStock);
     }, [piece]);
-
-    // const mappedStock = stock?.map(data => ({
-
-    // }))
-    // console.log(stock)
 
     return stock;
 }

@@ -28,28 +28,22 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 
 export default function PiecesDetails({ data }) {
-    const pieceData = useSelectedPiece(data.name);
+    const pieceStock = useStockPiece({piece: data.name});
     const [showDialog, setShowDialog] = useState(false);
     const [selectedValue, setSelectedValue] = useState(null);
 
-    const totalInMachines =
-        pieceData?.machineStock.reduce((sum, p) => sum + p.amount, 0) || 0;
-    const totalInWarehouse =
-        pieceData?.warehouseStock.reduce((sum, p) => sum + p.amount, 0) || 0;
-    const totalStock = totalInMachines + totalInWarehouse;
-
-    let machines = pieceData?.machineStock.reduce((acc, machine) => {
-        acc.push({ name: machine.machine });
-        return acc;
-    }, []);
-    let warehouses = pieceData?.warehouseStock.reduce((acc, warehouse) => {
-        acc.push({ name: warehouse.location });
-        return acc;
-    }, []);
+    // let machines = pieceStock?.machineStock.reduce((acc, machine) => {
+    //     acc.push({ name: machine.machine });
+    //     return acc;
+    // }, []);
+    // let warehouses = pieceStock?.warehouseStock.reduce((acc, warehouse) => {
+    //     acc.push({ name: warehouse.location });
+    //     return acc;
+    // }, []);
 
     const chartData = [
-        { name: "En máquinas", value: totalInMachines },
-        { name: "En almacén", value: totalInWarehouse },
+        { name: "En máquinas", value: pieceStock.stock_in_machines },
+        { name: "En almacén", value: pieceStock.stock_in_warehouses },
     ];
 
     function handleSelectClick(value) {
@@ -243,7 +237,7 @@ export default function PiecesDetails({ data }) {
                             content={
                                 <div className="popover-content">
                                     <ul>
-                                        {pieceData?.machineStock.map((m) => (
+                                        {pieceStock?.machineStock.map((m) => (
                                             <li key={m.machine}>
                                                 <Text textStyle="lg">
                                                     <CustomLink
@@ -260,7 +254,7 @@ export default function PiecesDetails({ data }) {
                                         ))}
                                     </ul>
                                     <ul>
-                                        {pieceData?.warehouseStock.map((w) => (
+                                        {pieceStock?.warehouseStock.map((w) => (
                                             <li key={w.location}>
                                                 <Text textStyle="lg">
                                                     {w.location}: {w.amount}

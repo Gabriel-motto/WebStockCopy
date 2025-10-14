@@ -1,7 +1,7 @@
 import supabase from "../utils/supabase";
 
-export async function getPieces(workshop, search, multiple) {
-    let query = supabase.from("Pieces").select();
+export async function getPieces(workshop, search, multiple, column, orderBy) {
+    let query = supabase.from("pieces_new").select(column);
 
     if (workshop !== "all") {
         query = query.eq("workshop", workshop);
@@ -17,52 +17,43 @@ export async function getPieces(workshop, search, multiple) {
         );
     }
 
-    const { data: pieces } = await query.order("is_critical", {
-        ascending: false,
-    });
+    if (orderBy) {
+        query = query.order(orderBy.column, { ascending: orderBy.ascending });
+    }
 
-    return pieces?.map((piece) => ({
-        id: `${String(piece.id).padStart(6, "0")}${piece.workshop === 'Electrónica' ? 'E' : 'M'}`,
-        name: piece.name,
-        description: piece.description,
-        type: piece.type,
-        brand: piece.brand,
-        workshop: piece.workshop,
-        isCritical: piece.is_critical,
-        addInfo: piece.additional_info,
-        supplier: piece.supplier,
-        buyPrice: piece.buy_price,
-        repairPrice: piece.repair_price,
-        avaliability: piece.avaliability,
-        minStock: piece.min_stock,
-        altPiece: piece.alternative_piece,
-    }));
+    const { data: pieces } = await query;
+
+    return pieces;
 }
 
-export async function getStockPiece(piece) {
-    let machineStock = await supabase
-        .from("machine_pieces")
-        .select()
-        .ilike("piece", `${piece}`);
-    let warehouseStock = await supabase
-        .from("warehouse_pieces")
-        .select()
-        .ilike("piece", `${piece}`);
+export async function getStockPiece(piece, column) {
+    let query = supabase.from("v_stock_global").select(column).ilike("piece", `%${piece}%`);
 
-    return {
-        machineStock: machineStock.data,
-        warehouseStock: warehouseStock.data,
-    };
+    return await query;
 }
 
-// export async function getPiecesFromWarehouse(piece) {
-//     let query = supabase.from("Warehouse").select();
+export async function insertPiece(newPiece) {
+    const { data: piece, error } = await supabase
+            .from("pieces")
+            .insert([
+                {
+                    name: newPiece.name,
+                    type: newPiece.type,
+                    brand: newPiece.brand,
+                    description: newPiece.description,
+                    is_critical: newPiece.isCritical,
+                    workshop: newPiece.workshop,
+                    buy_price: newPiece.buyPrice,
+                    repair_price: newPiece.repairPrice,
+                    supplier: newPiece.supplier,
+                    alternative_piece: newPiece.altPiece,
+                    additional_info: newPiece.additionalInfo,
+                },
+            ])
+            .select("id")
+            .throwOnError();
 
-//     if (piece !== "") {
-//         query = query.eq("piece", `${piece}`);
-//     }
-
-//     const { data: pieces } = await query;
-
-//     return pieces;
-// }
+    // const {errorSerial} = await supabase.from("pieces_serials").insert([{
+    //     piece: pieceId
+    // }]) 
+}

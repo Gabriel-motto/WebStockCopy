@@ -25,7 +25,7 @@ export default function NewPiece({ handleCancel }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        insertPiece({values});
+        insertPiece({ values });
         handleCancel();
     }
 
@@ -191,6 +191,23 @@ export default function NewPiece({ handleCancel }) {
                         id="location"
                         name="location"
                         required
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell image-piece-cell">
+                    <label htmlFor="image-piece">Imagen pieza</label>
+                    <input
+                        type="file"
+                        name="image-piece"
+                        id="image-piece"
+                        onChange={handleFormChange}
+                        accept="image/jpeg"
+                    />
+                    <label htmlFor="image-data-card">Imagen etiqueta</label>
+                    <input
+                        type="file"
+                        name="image-piece"
+                        id="image-piece"
                         onChange={handleFormChange}
                     />
                 </div>
