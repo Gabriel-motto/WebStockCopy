@@ -154,6 +154,7 @@ export default function NewPiece({ handleCancel }) {
                         type="number"
                         id="repairPrice"
                         name="repairPrice"
+                        step="0.01"
                         onChange={handleFormChange}
                     />
                 </div>
@@ -163,6 +164,7 @@ export default function NewPiece({ handleCancel }) {
                         type="number"
                         id="buyPrice"
                         name="buyPrice"
+                        step="0.01"
                         onChange={handleFormChange}
                     />
                 </div>
