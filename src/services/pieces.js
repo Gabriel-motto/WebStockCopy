@@ -71,6 +71,8 @@ export async function insertPiece(newPiece) {
                 supplier: newPiece.supplier.toUpperCase(),
                 alternative_piece: newPiece.altPiece,
                 additional_info: newPiece.additionalInfo,
+                availability: newPiece.availability,
+                min_stock: newPiece.minStock,
             },
         ])
         .select("id")

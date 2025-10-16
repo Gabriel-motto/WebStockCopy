@@ -16,6 +16,8 @@ export default function NewPiece({ handleCancel }) {
         repairPrice: null,
         buyPrice: null,
         supplier: null,
+        availability: "available",
+        minStock: null,
         altPiece: null,
         additionalInfo: null,
         action: "new",
@@ -181,7 +183,32 @@ export default function NewPiece({ handleCancel }) {
                         required
                         onChange={handleFormChange}
                         defaultValue="available"
-                    ></select>
+                    >
+                        <option
+                            name="availability"
+                            value="available"
+                        >
+                            Disponible
+                        </option>
+                        <option
+                            name="availability"
+                            value="obsolete"
+                        >
+                            Obsoleto
+                        </option>
+                        <option
+                            name="availability"
+                            value="unavailable"
+                        >
+                            No disponible
+                        </option>
+                        <option
+                            name="availability"
+                            value="limited"
+                        >
+                            Limitado
+                        </option>
+                    </select>
                 </div>
                 <div className="cell min-stock-cell">
                     <label htmlFor="minStock">Stock mínimo</label>
