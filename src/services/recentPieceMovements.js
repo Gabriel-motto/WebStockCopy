@@ -1,7 +1,7 @@
 import supabase from "@/utils/supabase";
 
 export async function getRecentPieceMovements(machine, piece, warehouse) {
-    let query = supabase.from("Latest_piece_actions").select();
+    let query = supabase.from("piece_actions_new").select();
 
     if (machine !== "all") {
         query = query.eq("machine", machine);
