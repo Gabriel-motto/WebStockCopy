@@ -13,7 +13,7 @@ export async function getPieces(workshop, search, multiple, column, orderBy) {
 
     if (search) {
         query = query.or(
-            `name.ilike.%${search}%,description.ilike.%${search}%`
+            `id.eq.%${search},%name.ilike.%${search}%,description.ilike.%${search}%`
         );
     }
 
@@ -26,34 +26,140 @@ export async function getPieces(workshop, search, multiple, column, orderBy) {
     return pieces;
 }
 
-export async function getStockPiece(piece, column) {
-    let query = supabase.from("v_stock_global").select(column).ilike("piece", `%${piece}%`);
+export async function getTotalStockPiece(pieceId, column) {
+    let query = supabase
+        .from("v_stock_global")
+        .select(column)
+        .eq("piece_id", pieceId);
+
+    return await query;
+}
+
+export async function getMachinesStockPiece(pieceId, column) {
+    let query = supabase
+        .from("v_stock_machines")
+        .select(column)
+        .eq("piece_id", pieceId);
+
+    return await query;
+}
+
+export async function getWarehousesStockPiece(pieceId, column) {
+    let query = supabase
+        .from("v_stock_warehouses")
+        .select(column)
+        .eq("piece_id", pieceId);
 
     return await query;
 }
 
 export async function insertPiece(newPiece) {
+    console.log("Inserting piece:", newPiece);
+
     const { data: piece, error } = await supabase
-            .from("pieces")
+        .from("pieces_new")
+        .insert([
+            {
+                name: newPiece.name.toUpperCase(),
+                brand: newPiece.brand.toUpperCase(),
+                type: newPiece.type.toUpperCase(),
+                description: newPiece.description,
+                is_critical: newPiece.isCritical,
+                workshop: newPiece.workshop,
+                buy_price: newPiece.buyPrice,
+                repair_price: newPiece.repairPrice,
+                supplier: newPiece.supplier.toUpperCase(),
+                alternative_piece: newPiece.altPiece,
+                additional_info: newPiece.additionalInfo,
+            },
+        ])
+        .select("id")
+        .throwOnError();
+
+    const { error: uploadImageError } = await supabase.storage
+        .from("pieces")
+        .upload(newPiece.pieceImage.path, newPiece.pieceImage.file, {
+            cacheControl: "3600",
+            upsert: true,
+            contentType: newPiece.pieceImage.file.type,
+        });
+
+    const { error: uploadDataCardError } = await supabase.storage
+        .from("pieces")
+        .upload(newPiece.dataCard.path, newPiece.dataCard.file, {
+            cacheControl: "3600",
+            upsert: true,
+            contentType: newPiece.dataCard.file.type,
+        });
+}
+
+export async function insertRecentMovement({ values, pieceId }) {
+    if (values.action === "new") {
+        const { error } = await supabase
+            .from("piece_actions_new")
             .insert([
                 {
-                    name: newPiece.name,
-                    type: newPiece.type,
-                    brand: newPiece.brand,
-                    description: newPiece.description,
-                    is_critical: newPiece.isCritical,
-                    workshop: newPiece.workshop,
-                    buy_price: newPiece.buyPrice,
-                    repair_price: newPiece.repairPrice,
-                    supplier: newPiece.supplier,
-                    alternative_piece: newPiece.altPiece,
-                    additional_info: newPiece.additionalInfo,
+                    piece: pieceId,
+                    action: values.action,
+                    amount: values.amount,
                 },
             ])
-            .select("id")
             .throwOnError();
+    }
+    if (values.action === "install") {
+        const { error } = await supabase
+            .from("piece_actions_new")
+            .insert([
+                {
+                    piece: pieceId,
+                    machine_to: values.locationTo,
+                    action: values.action,
+                },
+            ])
+            .throwOnError();
+    }
+    if (values.action === "stocked") {
+        const { error } = await supabase
+            .from("piece_actions_new")
+            .insert([
+                {
+                    piece: pieceId,
+                    warehouse_to: values.locationTo,
+                    action: values.action,
+                },
+            ])
+            .throwOnError();
+    }
+    if (values.action === "delete") {
+    }
+    if (values.action === "repair_in") {
+        const { error } = await supabase
+            .from("piece_actions_new")
+            .insert([
+                {
+                    piece: pieceId,
+                    location_1: values.location,
+                    action: values.action,
+                    amount: values.amount,
+                },
+            ])
+            .throwOnError();
+    }
+    if (values.action === "repair_out") {
+    }
+}
 
-    // const {errorSerial} = await supabase.from("pieces_serials").insert([{
-    //     piece: pieceId
-    // }]) 
+export async function getImageName(bucket, baseName) {
+    const query = supabase.storage
+        .from(bucket)
+        .list("", {
+            limit: 1,
+            offset: 0,
+            sortBy: { column: "name", order: "desc" },
+            search: baseName,
+        });
+
+    const {data: image} = await query;
+
+    return image;
 }

@@ -3,7 +3,7 @@ import supabase from "@/utils/supabase";
 import { Button } from "@chakra-ui/react";
 import React, { useState } from "react";
 import "./NewPiece.css";
-import { insertPiece } from "@/hooks/usePieces";
+import { useInsertPiece } from "@/hooks/usePieces";
 
 export default function NewPiece({ handleCancel }) {
     const [values, setValues] = useState({
@@ -12,28 +12,48 @@ export default function NewPiece({ handleCancel }) {
         type: null,
         workshop: null,
         description: null,
+        isCritical: null,
         repairPrice: null,
         buyPrice: null,
-        amount: null,
         supplier: null,
         altPiece: null,
         additionalInfo: null,
-        locationType: "machine",
-        location: null,
         action: "new",
+        pieceImage: { path: null, file: null },
+        dataCard: { path: null, file: null },
     });
 
     function handleSubmit(e) {
         e.preventDefault();
-        insertPiece({ values });
+        useInsertPiece({ values });
         handleCancel();
     }
 
     function handleFormChange(e) {
         setValues({
             ...values,
-            [e.target.name]: e.target.value.toUpperCase(),
+            [e.target.name]: e.target.value,
         });
+    }
+
+    function handlePieceImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const extFromFile = file?.type?.split("/")?.pop() || "";
+        const path = `${values.name}.${extFromFile}`;
+
+        setValues({ ...values, pieceImage: { path: path, file: file } });
+    }
+
+    function handleDataCardUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const extFromFile = file?.type?.split("/")?.pop() || "";
+        const path = `${values.name}-data-card.${extFromFile}`;
+
+        setValues({ ...values, dataCard: { path: path, file: file } });
     }
 
     return (
@@ -78,24 +98,43 @@ export default function NewPiece({ handleCancel }) {
                         id="workshop"
                         name="workshop"
                         required
-                        defaultValue=""
+                        defaultValue="M"
                         onChange={handleFormChange}
                     >
                         <option
-                            value=""
-                            disabled
-                        ></option>
-                        <option
                             name="workshop"
-                            value="Mecánica"
+                            value="M"
                         >
                             Mecánica
                         </option>
                         <option
                             name="workshop"
-                            value="Electrónica"
+                            value="E"
                         >
                             Electrónica
+                        </option>
+                    </select>
+                </div>
+                <div className="cell isCritical-cell">
+                    <label htmlFor="isCritical">Es crítica</label>
+                    <select
+                        id="isCritical"
+                        name="isCritical"
+                        required
+                        defaultValue={false}
+                        onChange={handleFormChange}
+                    >
+                        <option
+                            name="isCritical"
+                            value={false}
+                        >
+                            No
+                        </option>
+                        <option
+                            name="isCritical"
+                            value={true}
+                        >
+                            Sí
                         </option>
                     </select>
                 </div>
@@ -125,22 +164,31 @@ export default function NewPiece({ handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="cell amount-cell">
-                    <label htmlFor="amount">Cantidad</label>
-                    <input
-                        type="number"
-                        id="amount"
-                        name="amount"
-                        required
-                        onChange={handleFormChange}
-                    />
-                </div>
                 <div className="cell supplier-cell">
                     <label htmlFor="supplier">Proveedor</label>
                     <input
                         type="text"
                         id="supplier"
                         name="supplier"
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="cell availability-cell">
+                    <label htmlFor="availability">Disponibilidad</label>
+                    <select
+                        name="availability"
+                        id="availability"
+                        required
+                        onChange={handleFormChange}
+                        defaultValue="available"
+                    ></select>
+                </div>
+                <div className="cell min-stock-cell">
+                    <label htmlFor="minStock">Stock mínimo</label>
+                    <input
+                        type="number"
+                        id="minStock"
+                        name="minStock"
                         onChange={handleFormChange}
                     />
                 </div>
@@ -163,52 +211,25 @@ export default function NewPiece({ handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="cell location-cell">
-                    <label htmlFor="location">
-                        <p>Ubicación</p>
-                        <input
-                            className="location-radio"
-                            type="radio"
-                            name="locationType"
-                            id="machine"
-                            value="machine"
-                            onChange={handleFormChange}
-                            required
-                        />
-                        <label htmlFor="machine">Máquina</label>
-                        <input
-                            className="location-radio"
-                            type="radio"
-                            name="locationType"
-                            id="warehouse"
-                            value="warehouse"
-                            onChange={handleFormChange}
-                        />
-                        <label htmlFor="warehouse">Almacén</label>
-                    </label>
-                    <input
-                        type="text"
-                        id="location"
-                        name="location"
-                        required
-                        onChange={handleFormChange}
-                    />
-                </div>
+
                 <div className="cell image-piece-cell">
                     <label htmlFor="image-piece">Imagen pieza</label>
                     <input
                         type="file"
-                        name="image-piece"
-                        id="image-piece"
-                        onChange={handleFormChange}
-                        accept="image/jpeg"
+                        name="pieceImage"
+                        id="pieceImage"
+                        onChange={handlePieceImageUpload}
+                        accept="image/*"
                     />
+                </div>
+                <div className="cell image-data-card-cell">
                     <label htmlFor="image-data-card">Imagen etiqueta</label>
                     <input
                         type="file"
-                        name="image-piece"
-                        id="image-piece"
-                        onChange={handleFormChange}
+                        name="dataCard"
+                        id="dataCard"
+                        onChange={handleDataCardUpload}
+                        accept="image/*"
                     />
                 </div>
                 <div className="cell form-buttons">

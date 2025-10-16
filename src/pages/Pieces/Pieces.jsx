@@ -166,7 +166,7 @@ function PiecesPage({ params = {} }) {
                                 image="/assets/GNK_logo_azul.png"
                                 description={piece.description}
                                 footer={piece.brand}
-                                isCritical={piece.isCritical}
+                                isCritical={piece.is_critical}
                                 haveImage
                             />
                         ))}

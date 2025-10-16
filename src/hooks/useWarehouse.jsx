@@ -1,25 +1,23 @@
-import { getStockPieceFromWarehouse, getWarehouses } from "@/services/warehouse";
+import { getWarehouses, getWarehouseStock } from "@/services/warehouse";
 import { useEffect, useState } from "react";
 
-
 export function useWarehouse(options = {}) {
-    const { search = "", columns = "*" } = options;
+    const { search = "", column = "*" } = options;
     const [warehouses, setWarehouses] = useState([]);
 
     useEffect(() => {
-        getWarehouses(search, columns).then(setWarehouses);
-    }, [search, columns]);
+        getWarehouses(search, column).then(setWarehouses);
+    }, [search, column]);
 
     return warehouses;
 }
 
-export function useStockPieceFromWarehouse(warehouse, piece) {
+export function useWarehouseStock(options = {}) {
+    const { warehouseId, column = "*" } = options;
     const [stock, setStock] = useState();
-    
+
     useEffect(() => {
-        if (warehouse && piece) {
-            getStockPieceFromWarehouse(warehouse, piece).then(setStock);
-        }
-    }, [warehouse, piece]);
+        getWarehouseStock(warehouseId, column).then(setStock);
+    }, [warehouseId, column]);
     return stock;
 }
