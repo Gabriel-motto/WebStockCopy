@@ -1,7 +1,7 @@
 import supabase from "../utils/supabase"
 
 export async function getAssemblyLines( search ) {
-    let query = supabase.from("Assembly Lines").select();
+    let query = supabase.from("assembly_lines").select();
 
     if(search !== "") {
         query = query.ilike("name", `%${search}%`);

@@ -2,10 +2,11 @@ import { HintPanel } from "@/components/ui/HintPanel/HintPanel";
 import { useMachines } from "@/hooks/useMachines";
 import { useWarehouse } from "@/hooks/useWarehouse";
 import { Button, QrCode } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import "./Menus.css";
 import { useReactToPrint } from "react-to-print";
+import { useInsertStock } from "@/hooks/usePieces";
 
 export function MoveStockMenu({ piece, inStock, handleCancel }) {
     const [showHint1, setShowHint1] = useState(false);
@@ -236,7 +237,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         type="number"
                         name="buy-price"
                         id="buy-price"
-                        value={formData.buyPrice ? formData.buyPrice : ""}
+                        value={formData.buy_price ? formData.buy_price : ""}
                         onChange={handleFormChange}
                     />
                 </div>
@@ -248,7 +249,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         type="number"
                         name="repair-price"
                         id="repair-price"
-                        value={formData.repairPrice ? formData.repairPrice : ""}
+                        value={formData.repair_price ? formData.repair_price : ""}
                         onChange={handleFormChange}
                     />
                 </div>
@@ -270,7 +271,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                         type="text"
                         name="altPiece"
                         id="alt-piece"
-                        value={formData.altPiece ? formData.altPiece : ""}
+                        value={formData.alternative_piece ? formData.alternative_piece : ""}
                         onChange={handleFormChange}
                     />
                 </div>
@@ -300,7 +301,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
                     <textarea
                         name="addInfo"
                         id="add-info"
-                        value={formData.addInfo ? formData.addInfo : ""}
+                        value={formData.additional_info ? formData.additional_info : ""}
                         onChange={handleFormChange}
                     ></textarea>
                 </div>
@@ -325,6 +326,7 @@ export function EditStockMenu({ pieceInfo, handleCancel }) {
 
 export function AddStockMenu({ piece, handleCancel }) {
     const [showHint, setShowHint] = useState(false);
+    const [locationId, setLocationId] = useState(null);
     const [formData, setFormData] = useState({
         piece: piece,
         locationTypeTo: "",
@@ -334,35 +336,46 @@ export function AddStockMenu({ piece, handleCancel }) {
     });
     const machines = useMachines({
         search: formData.locationTo,
-        columns: "name",
     });
     const warehouses = useWarehouse({
         search: formData.locationTo,
-        columns: "name",
     });
 
     function handleSubmit(e) {
         e.preventDefault();
+        useInsertStock(formData, locationId);
         handleCancel();
     }
+
+    useEffect(() => {
+        if (formData.locationTypeTo === "MACHINETO") {
+            setLocationId(machines[0]?.id);
+        } else {
+            setLocationId(warehouses[0]?.id);
+        }
+    }, [formData.locationTo, machines, warehouses]);
 
     function handleFormChange(e) {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value.toUpperCase(),
         });
-        console.log(e.target.value.toUpperCase());
     }
 
-    function handleHintSelect(value, field) {
-        setFormData((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
-
+    function handleHintSelect(value) {
         machines?.some((machine) => machine.name === value)
-            ? (document.getElementById("machineTo").checked = true)
-            : (document.getElementById("warehouseTo").checked = true);
+            ? ((document.getElementById("machineTo").checked = true),
+              setFormData({
+                  ...formData,
+                  locationTypeTo: "MACHINETO",
+                  locationTo: value,
+              }))
+            : ((document.getElementById("warehouseTo").checked = true),
+              setFormData({
+                  ...formData,
+                  locationTypeTo: "WAREHOUSETO",
+                  locationTo: value,
+              }));
     }
 
     return (
@@ -409,9 +422,7 @@ export function AddStockMenu({ piece, handleCancel }) {
                     >
                         <HintPanel
                             hintData={[...machines, ...warehouses]}
-                            onSelect={(value) =>
-                                handleHintSelect(value, "locationTo")
-                            }
+                            onSelect={(value) => handleHintSelect(value)}
                         />
                     </div>
                 </div>

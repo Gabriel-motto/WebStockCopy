@@ -1,12 +1,10 @@
 import supabase from "@/utils/supabase";
 
-export async function getWarehouses(search, columns) {
-    let query = supabase.from("Warehouses").select(columns);
-    
+export async function getWarehouses(search, column) {
+    let query = supabase.from("warehouses_new").select(column);
+
     if (search) {
-        query = query.ilike(
-            "name", `%${search}%`
-        );
+        query = query.or(`name.ilike.%${search}%`);
     }
 
     const { data: warehouses } = await query;
@@ -14,12 +12,11 @@ export async function getWarehouses(search, columns) {
     return warehouses;
 }
 
-export async function getStockPieceFromWarehouse(warehouse, piece) {
+export async function getWarehouseStock(warehouseId, column) {
     let query = supabase
-        .from("warehouse_pieces")
-        .select("amount")
-        .eq("location", warehouse)
-        .eq("piece", piece);
+        .from("v_stock_warehouses")
+        .select(column)
+        .eq("warehouse_id", warehouseId);
 
     const { data: stock } = await query;
 
