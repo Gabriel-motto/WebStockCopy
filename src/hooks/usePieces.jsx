@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMachinesStockPiece, getPieces, getTotalStockPiece, getWarehousesStockPiece, insertPiece, getImageName } from "../services/pieces";
+import { getMachinesStockPiece, getPieces, getTotalStockPiece, getWarehousesStockPiece, insertPiece, getImageName, updatePiece } from "../services/pieces";
 import supabase from "@/utils/supabase";
 import { toaster } from "@/components/ui/toaster";
 import { useMachines, useSelectedMachine } from "./useMachines";
@@ -81,6 +81,32 @@ export async function useInsertPiece({ values }) {
                     ? "La pieza ya existe."
                     : "Ha ocurrido un error al añadir la pieza."
             }`,
+            type: "error",
+        });
+    }
+}
+
+export async function useUpdatePiece( updatedPiece ) {
+    const promiseToaster = toaster.create({
+        title: "Modificando pieza...",
+        description: "Por favor, espera mientras se modifica la pieza.",
+        type: "loading",
+    });
+
+    try {
+        updatePiece(updatedPiece);
+
+        toaster.dismiss(promiseToaster.id);
+        toaster.create({
+            title: "Pieza modificada",
+            description: "La pieza se ha modificado correctamente.",
+            type: "success",
+        });
+    } catch (error) {
+        toaster.dismiss(promiseToaster.id);
+        toaster.create({
+            title: `Error ${error.code} al añadir pieza`,
+            description: "Ha ocurrido un error al añadir la pieza.",
             type: "error",
         });
     }
@@ -196,45 +222,6 @@ export async function movePiece({ values }) {
 //     }
 
 //     insertRecentMovement(values);
-}
-
-export async function updatePiece({ values }) {
-    const promiseToaster = toaster.create({
-        title: "Modificando pieza...",
-        description: "Por favor, espera mientras se modifica la pieza.",
-        type: "loading",
-    });
-
-    try {
-        const { error } = await supabase
-            .from("Pieces")
-            .update({
-                brand: values.brand,
-                type: values.type,
-                description: values.description,
-                buy_price: values.buyPrice,
-                repair_price: repairPrice,
-                supplier: values.supplier,
-                alternative_piece: values.altPiece,
-                status: values.status,
-                additional_info: values.addInfo,
-            })
-            .throwOnError();
-
-        toaster.dismiss(promiseToaster.id);
-        toaster.create({
-            title: "Pieza modificada",
-            description: "La pieza se ha modificado correctamente.",
-            type: "success",
-        });
-    } catch (error) {
-        toaster.dismiss(promiseToaster.id);
-        toaster.create({
-            title: `Error al modificar pieza`,
-            description: "Ha ocurrido un error al modificar la pieza.",
-            type: "error",
-        });
-    }
 }
 
 export async function useInsertStock( values, locationId ) {

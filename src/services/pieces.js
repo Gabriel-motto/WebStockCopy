@@ -152,16 +152,60 @@ export async function insertRecentMovement({ values, pieceId }) {
 }
 
 export async function getImageName(bucket, baseName) {
-    const query = supabase.storage
-        .from(bucket)
-        .list("", {
-            limit: 1,
-            offset: 0,
-            sortBy: { column: "name", order: "desc" },
-            search: baseName,
-        });
+    const query = supabase.storage.from(bucket).list("", {
+        limit: 1,
+        offset: 0,
+        sortBy: { column: "name", order: "desc" },
+        search: baseName,
+    });
 
-    const {data: image} = await query;
+    const { data: image } = await query;
 
     return image;
+}
+
+export async function updatePiece(updatedPiece) {
+    console.log("insert", updatedPiece);
+    const { data, error } = await supabase
+        .from("pieces_new")
+        .update({
+            brand: updatedPiece.brand.toUpperCase(),
+            type: updatedPiece.type.toUpperCase(),
+            workshop: updatedPiece.workshop,
+            availability: updatedPiece.availability,
+            buy_price: updatedPiece.buyPrice,
+            repair_price: updatedPiece.repairPrice,
+            min_stock: updatedPiece.minStock,
+            supplier: updatedPiece.supplier.toUpperCase(),
+            alternative_piece: updatedPiece.altPiece,
+            is_critical: updatedPiece.isCritical,
+            description: updatedPiece.description,
+            additional_info: updatedPiece.additionalInfo,
+        })
+        .eq("id", updatedPiece.id)
+        .throwOnError();
+
+    if (updatedPiece.pieceImage.file !== null) {
+        const { error: uploadImageError } = await supabase.storage
+            .from("pieces")
+            .upload(
+                updatedPiece.pieceImage.path,
+                updatedPiece.pieceImage.file,
+                {
+                    cacheControl: "3600",
+                    upsert: true,
+                    contentType: updatedPiece.pieceImage.file.type,
+                }
+            );
+    }
+
+    if (updatedPiece.dataCard.file !== null) {
+        const { error: uploadDataCardError } = await supabase.storage
+            .from("pieces")
+            .upload(updatedPiece.dataCard.path, updatedPiece.dataCard.file, {
+                cacheControl: "3600",
+                upsert: true,
+                contentType: updatedPiece.dataCard.file.type,
+            });
+    }
 }

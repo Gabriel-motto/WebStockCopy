@@ -59,7 +59,7 @@ export default function PiecesDetails({ data }) {
     return (
         <>
             <DialogComponent
-                size="sm"
+                size="md"
                 scrollBehavior="outside"
                 title={
                     selectedValue === "move"
