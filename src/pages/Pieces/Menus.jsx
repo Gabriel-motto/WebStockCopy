@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import "./Menus.css";
 import { useReactToPrint } from "react-to-print";
-import { useInsertStock, useUpdatePiece } from "@/hooks/usePieces";
+import { useUpdatePiece } from "@/hooks/usePieces";
 
 export function MoveStockMenu({ piece, inStock, handleCancel }) {
     const [showHint1, setShowHint1] = useState(false);
@@ -190,16 +190,18 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
     );
 }
 
-export function EditStockMenu({ pieceInfo, handleCancel }) {
+export function EditStockMenu({ pieceInfo, handleCancel, pieceImageOld, dataCardOld }) {
     const [formData, setFormData] = useState({
         ...pieceInfo,
         pieceImage: { path: "", file: null },
         dataCard: { path: "", file: null },
     });
 
+    console.log("old", pieceImageOld, dataCardOld)
+
     function handleSubmit(e) {
         e.preventDefault();
-        useUpdatePiece(formData);
+        useUpdatePiece(formData, pieceImageOld.name, dataCardOld.name);
         console.log("menu", formData)
         handleCancel();
     }
@@ -482,7 +484,6 @@ export function AddStockMenu({ piece, handleCancel }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        useInsertStock(formData, locationId);
         handleCancel();
     }
 

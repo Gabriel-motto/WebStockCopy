@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
-import { getMachinesStockPiece, getPieces, getTotalStockPiece, getWarehousesStockPiece, insertPiece, getImageName, updatePiece } from "../services/pieces";
+import {
+    getMachinesStockPiece,
+    getPieces,
+    getTotalStockPiece,
+    getWarehousesStockPiece,
+    insertPiece,
+    getImageName,
+    updatePiece,
+    deleteImage,
+    insertImage,
+} from "../services/pieces";
 import supabase from "@/utils/supabase";
 import { toaster } from "@/components/ui/toaster";
-import { useMachines, useSelectedMachine } from "./useMachines";
-import { useWarehouse, useWarehouseStock } from "./useWarehouse";
 
 export function usePieces(options = {}) {
     const {
@@ -12,7 +20,7 @@ export function usePieces(options = {}) {
         multiple = [],
         debouncedSearch,
         column = "*",
-        orderBy = {column: "is_critical", ascending: false},
+        orderBy = { column: "is_critical", ascending: false },
     } = options;
     const [pieces, setPieces] = useState([]);
 
@@ -79,14 +87,14 @@ export async function useInsertPiece({ values }) {
             description: `${
                 error.code === "23505"
                     ? "La pieza ya existe."
-                    : "Ha ocurrido un error al añadir la pieza."
+                    : error.message
             }`,
             type: "error",
         });
     }
 }
 
-export async function useUpdatePiece( updatedPiece ) {
+export async function useUpdatePiece(updatedPiece, pieceImageOld, dataCardOld) {
     const promiseToaster = toaster.create({
         title: "Modificando pieza...",
         description: "Por favor, espera mientras se modifica la pieza.",
@@ -138,142 +146,6 @@ export async function insertPieceInWarehouse({ values }) {
         .throwOnError();
 }
 
-
-
-export async function movePiece({ values }) {
-    console.log(values);
-//     const fromStock =
-//         values.locationTypeFrom === "MACHINEFROM"
-//             ? useSelectedMachineStock(values.locationFrom, values.piece)
-//             : useStockPieceFromWarehouse(values.locationFrom, values.piece);
-//     const toStock =
-//         values.locationTypeTo === "MACHINETO"
-//             ? useSelectedMachineStock(values.locationTo, values.piece)
-//             : useStockPieceFromWarehouse(values.locationTo, values.piece);
-
-//     if (values.locationTypeFrom === "MACHINEFROM") {
-//         const { error } = await supabase
-//             .from("machine_pieces")
-//             .update({
-//                 amount: fromStock[0].amount - 1,
-//             })
-//             .eq("machine", values.locationFrom)
-//             .eq("piece", values.piece)
-//             .throwOnError();
-//     }
-
-//     if (values.locationTypeFrom === "WAREHOUSEFROM") {
-//         const { error } = await supabase
-//             .from("warehouse_pieces")
-//             .update({
-//                 amount: fromStock[0].amount - 1,
-//             })
-//             .eq("location", values.locationFrom)
-//             .eq("piece", values.piece)
-//             .throwOnError();
-//     }
-
-//     if (values.locationTypeTo === "MACHINETO") {
-//         if (toStock.length === 0) {
-//             const { error } = await supabase
-//                 .from("machine_pieces")
-//                 .insert([
-//                     {
-//                         piece: values.piece,
-//                         machine: values.locationTo,
-//                         amount: 1,
-//                     },
-//                 ])
-//                 .throwOnError();
-//         } else {
-//             const { error } = await supabase
-//                 .from("machine_pieces")
-//                 .update({
-//                     amount: toStock[0].amount + 1,
-//                 })
-//                 .eq("machine", values.locationTo)
-//                 .eq("piece", values.piece)
-//                 .throwOnError();
-//         }
-//     }
-
-//     if (values.locationTypeTo === "WAREHOUSETO") {
-//         if (toStock.length === 0) {
-//             const { error } = await supabase
-//                 .from("warehouse_pieces")
-//                 .insert([
-//                     {
-//                         piece: values.piece,
-//                         location: values.locationTo,
-//                         amount: 1,
-//                     },
-//                 ])
-//                 .throwOnError();
-//         } else {
-//             const { error } = await supabase
-//                 .from("warehouse_pieces")
-//                 .update({
-//                     amount: toStock[0].amount + 1,
-//                 })
-//                 .eq("location", values.locationTo)
-//                 .eq("piece", values.piece)
-//                 .throwOnError();
-//         }
-//     }
-
-//     insertRecentMovement(values);
-}
-
-export async function useInsertStock( values, locationId ) {
-    console.log(values);
-    console.log(locationId);
-
-    // const promiseToaster = toaster.create({
-    //     title: "Modificando pieza...",
-    //     description: "Por favor, espera mientras se modifica la pieza.",
-    //     type: "loading",
-    // });
-
-    // if (values.locationTypeTo === "WAREHOUSETO") {
-    //     console.log("a");
-    //     const locationId = useWarehouse({search: values.locationTo});
-    //     // const { error } = await supabase
-    //     //     .from("warehouse_pieces_new")
-    //     //     .upsert({
-    //     //         piece: values.piece,
-    //     //         location: locationId,
-    //     //         amount: 1,
-    //     //     })
-    //     //     .throwOnError();
-    // } else {
-    //     // const { error } = await supabase
-    //     //     .from("machine_pieces_new")
-    //     //     .upsert({
-    //     //         piece: values.piece,
-    //     //         machine: values.locationTo,
-    //     //         amount: 1,
-    //     //     })
-    //     //     .throwOnError();
-    // }
-    // try {
-    //     toaster.dismiss(promiseToaster.id);
-    //     toaster.create({
-    //         title: "Pieza añadida",
-    //         description: "La pieza se ha añadido correctamente.",
-    //         type: "success",
-    //     });
-    // } catch (error) {
-    //     toaster.dismiss(promiseToaster.id);
-    //     toaster.create({
-    //         title: `Error ${error.code} al añadir pieza`,
-    //         description: "Ha ocurrido un error al añadir la pieza.",
-    //         type: "error",
-    //     });
-    // }
-
-    // insertRecentMovement(values);
-}
-
 export function useImageName(options = {}) {
     const { bucket = "pieces", baseName } = options;
     const [imageUrl, setImageUrl] = useState(null);
@@ -281,6 +153,6 @@ export function useImageName(options = {}) {
     useEffect(() => {
         getImageName(bucket, baseName).then(setImageUrl);
     }, [bucket, baseName]);
-    
+
     return imageUrl;
 }

@@ -40,6 +40,8 @@ export default function PiecesDetails({ data }) {
         baseName: data?.name + "-data-card",
     });
 
+    // console.log("imagen", pieceImageName, dataCardImageName);
+
     const chartData = [
         { name: "En máquinas", value: pieceStock?.data[0].stock_in_machines },
         { name: "En almacén", value: pieceStock?.data[0].stock_in_warehouses },
@@ -85,6 +87,8 @@ export default function PiecesDetails({ data }) {
                         <EditStockMenu
                             pieceInfo={data}
                             handleCancel={closeDialog}
+                            pieceImageOld={pieceImageName[0]}
+                            dataCardOld={dataCardImageName[0]}
                         />
                     ) : selectedValue === "add" ? (
                         <AddStockMenu
@@ -308,7 +312,7 @@ export default function PiecesDetails({ data }) {
                         <Image
                             className="image-dialog piece-image"
                             src={
-                                pieceImageName === null
+                                pieceImageName === null || pieceImageName?.length === 0
                                     ? undefined
                                     : supabase.storage
                                           .from("pieces")
@@ -326,7 +330,7 @@ export default function PiecesDetails({ data }) {
                         <Image
                             className="image-dialog data-card-image"
                             src={
-                                dataCardImageName === null
+                                dataCardImageName === null || pieceImageName?.length === 0
                                     ? undefined
                                     : supabase.storage
                                           .from("pieces")

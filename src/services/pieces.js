@@ -1,3 +1,4 @@
+import { useImageName } from "@/hooks/usePieces";
 import supabase from "../utils/supabase";
 
 export async function getPieces(workshop, search, multiple, column, orderBy) {
@@ -78,7 +79,7 @@ export async function insertPiece(newPiece) {
         .select("id")
         .throwOnError();
 
-    const { error: uploadImageError } = await supabase.storage
+    const { error: insertImageError } = await supabase.storage
         .from("pieces")
         .upload(newPiece.pieceImage.path, newPiece.pieceImage.file, {
             cacheControl: "3600",
@@ -86,13 +87,45 @@ export async function insertPiece(newPiece) {
             contentType: newPiece.pieceImage.file.type,
         });
 
-    const { error: uploadDataCardError } = await supabase.storage
+    const { error: insertDataCardError } = await supabase.storage
         .from("pieces")
         .upload(newPiece.dataCard.path, newPiece.dataCard.file, {
             cacheControl: "3600",
             upsert: true,
             contentType: newPiece.dataCard.file.type,
         });
+}
+
+export async function getImageName(bucket, baseName, limit = 1) {
+    const query = supabase.storage.from(bucket).list("", {
+        limit: limit,
+        offset: 0,
+        sortBy: { column: "name", order: "desc" },
+        search: baseName,
+    });
+
+    const { data: image } = await query;
+
+    return image;
+}
+
+export async function insertImage({ bucket, path, file }) {
+    const { error: uploadImageError } = await supabase.storage
+        .from(bucket)
+        .upload(path, file, {
+            cacheControl: "3600",
+            upsert: true,
+            contentType: file.type,
+        })
+        .throwOnError();
+}
+
+export async function deleteImage({ bucket, path }) {
+    const { error: removeError } = await supabase.storage
+        .from(bucket)
+        .remove([path]);
+
+    console.log("Error deleting image:", removeError);
 }
 
 export async function insertRecentMovement({ values, pieceId }) {
@@ -151,20 +184,7 @@ export async function insertRecentMovement({ values, pieceId }) {
     }
 }
 
-export async function getImageName(bucket, baseName) {
-    const query = supabase.storage.from(bucket).list("", {
-        limit: 1,
-        offset: 0,
-        sortBy: { column: "name", order: "desc" },
-        search: baseName,
-    });
-
-    const { data: image } = await query;
-
-    return image;
-}
-
-export async function updatePiece(updatedPiece) {
+export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld) {
     console.log("insert", updatedPiece);
     const { data, error } = await supabase
         .from("pieces_new")
@@ -186,23 +206,21 @@ export async function updatePiece(updatedPiece) {
         .throwOnError();
 
     if (updatedPiece.pieceImage.file !== null) {
-        const { error: uploadImageError } = await supabase.storage
+        deleteImage("pieces", pieceImageOld);
+        const { error: insertImageError } = await supabase.storage
             .from("pieces")
-            .upload(
-                updatedPiece.pieceImage.path,
-                updatedPiece.pieceImage.file,
-                {
-                    cacheControl: "3600",
-                    upsert: true,
-                    contentType: updatedPiece.pieceImage.file.type,
-                }
-            );
+            .update(updatedPiece.pieceImage.path, updatedPiece.pieceImage.file, {
+                cacheControl: "3600",
+                upsert: true,
+                contentType: updatedPiece.pieceImage.file.type,
+            });
     }
 
     if (updatedPiece.dataCard.file !== null) {
-        const { error: uploadDataCardError } = await supabase.storage
+        deleteImage("pieces", dataCardOld);
+        const { error: insertDataCardError } = await supabase.storage
             .from("pieces")
-            .upload(updatedPiece.dataCard.path, updatedPiece.dataCard.file, {
+            .update(updatedPiece.dataCard.path, updatedPiece.dataCard.file, {
                 cacheControl: "3600",
                 upsert: true,
                 contentType: updatedPiece.dataCard.file.type,
