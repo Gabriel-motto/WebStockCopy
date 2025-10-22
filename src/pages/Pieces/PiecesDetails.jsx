@@ -316,7 +316,7 @@ export default function PiecesDetails({ data }) {
                                     ? undefined
                                     : supabase.storage
                                           .from("pieces")
-                                          .getPublicUrl(pieceImageName[0].name)
+                                          .getPublicUrl(pieceImageName[0]?.name)
                                           .data.publicUrl
                             }
                             alt={`Producto con referencia: ${data.name}`}
@@ -334,7 +334,7 @@ export default function PiecesDetails({ data }) {
                                     ? undefined
                                     : supabase.storage
                                           .from("pieces")
-                                          .getPublicUrl(dataCardImageName[0].name).data
+                                          .getPublicUrl(dataCardImageName[0]?.name).data
                                           .publicUrl
                             }
                             alt={`Producto con referencia: ${data.name}`}
