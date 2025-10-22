@@ -1,7 +1,4 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
     width: 100%;
 }
 
@@ -71,19 +68,25 @@
 
 .edit-body {
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: .5rem;
+    row-gap: .25rem;
 }
 
-.input {
-    width: 100%;
+.input {    
+    flex: 1 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .input > input,
-.input > textarea {
+.input > textarea,
+.input > select {
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 0.5rem;
     font-size: 1rem;
-    width: 100%;
 }
 
 .input > textarea {
@@ -121,6 +124,19 @@
     padding: 1rem;
     margin-right: 1rem;
     height: fit-content;
+}
+
+.brand-input,
+.type-input,
+.workshop-input,
+.availability-input,
+.min-stock-input,
+.buy-price-input,
+.repair-price-input,
+.supplier-input,
+.alt-piece-input,
+.is-critical-input {
+    flex: 1 1 48%;
 }
 
 @media print {

@@ -1,10 +1,10 @@
 import supabase from "../utils/supabase";
 
-export async function getMachines(selectedALines, search, columns) {
-    let query = supabase.from("machines").select(columns);
+export async function getMachines(selectedALines, search, column) {
+    let query = supabase.from("machines_new").select(column);
 
     if (selectedALines.length > 0) {
-        query = query.in("assembly_line", selectedALines);
+        query = query.in("assembly_line_id", selectedALines);
     }
 
     if (search) {
@@ -13,27 +13,15 @@ export async function getMachines(selectedALines, search, columns) {
         );
     }
 
-    // const { data: machines } = await query.order(" assembly_line", {
-    //     ascending: true,
-    // });
     const { data: machines } = await query;
 
     return machines;
 }
 
-export async function getPiecesFromMachines(machine) {
+export async function getPiecesFromMachines(machineId, column) {
     const { data: pieces } = await supabase
-        .from("machine_pieces")
-        .select()
-        .eq("machine", machine);
+        .from("v_stock_machines")
+        .select(column)
+        .eq("machine_id", machineId);
     return pieces;
-}
-
-export async function getStockPieceFromMachine(machine, piece) {
-    const { data: stock } = await supabase
-        .from("machine_pieces")
-        .select()
-        .eq("machine", machine)
-        .eq("piece", piece);
-    return stock;
 }

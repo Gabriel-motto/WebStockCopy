@@ -1,29 +1,38 @@
 .form {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: .5rem;
 }
 
 .cell {
     flex: 1 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
 }
 
 .name-cell,
 .brand-cell,
 .type-cell,
-.workshop-cell {
+.workshop-cell,
+.isCritical-cell {
     flex: 1;
 }
 
 .buyPrice-cell,
-.repairPrice-cell,
-.amount-cell,
-.supplier-cell {
-    flex: 1;
+.repairPrice-cell {
+    flex: 1 1 49%;
 }
+.supplier-cell,
+.availability-cell,
+.min-stock-cell {
+    flex: 1 1 32%;
+}
+
+.image-piece-cell,
+.image-data-card-cell {
+    flex: 0 1;
+}
+
 .cell > input,
 .cell > textarea,
 .cell > select {
@@ -47,7 +56,7 @@
     height: 16px;
     border: 2px solid #999;
     transition: 0.2s all linear;
-    margin: 0 .25rem 0 .75rem;
+    margin: 0 0.25rem 0 0.75rem;
     position: relative;
     top: 4px;
 }

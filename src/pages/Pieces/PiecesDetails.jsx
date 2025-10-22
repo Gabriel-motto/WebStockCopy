@@ -1,13 +1,11 @@
 import "./PiecesDetails.css";
+import { Image, Text, Separator, Heading } from "@chakra-ui/react";
 import {
-    Image,
-    Text,
-    Separator,
-    Heading,
-    Button,
-    useBreakpointValue,
-} from "@chakra-ui/react";
-import { useSelectedPiece } from "@/hooks/usePieces";
+    useImageName,
+    useMachinesStockPiece,
+    useTotalStockPiece,
+    useWarehousesStockPiece,
+} from "@/hooks/usePieces";
 import { PieChart, Pie, Tooltip, Legend, Cell } from "recharts";
 import { COLOR } from "@/utils/consts";
 import { CustomLink } from "@/utils/Link";
@@ -24,32 +22,29 @@ import {
     MoveStockMenu,
     PrintMenu,
 } from "./Menus";
-import Zoom from 'react-medium-image-zoom'
-import 'react-medium-image-zoom/dist/styles.css'
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 export default function PiecesDetails({ data }) {
-    const pieceData = useSelectedPiece(data.name);
+    const pieceStock = useTotalStockPiece({ pieceId: data.id });
+    const machines = useMachinesStockPiece({ pieceId: data.id });
+    const warehouses = useWarehousesStockPiece({ pieceId: data.id });
     const [showDialog, setShowDialog] = useState(false);
     const [selectedValue, setSelectedValue] = useState(null);
+    const pieceImageName = useImageName({
+        bucket: "pieces",
+        baseName: data?.name,
+    });
+    const dataCardImageName = useImageName({
+        bucket: "pieces",
+        baseName: data?.name + "-data-card",
+    });
 
-    const totalInMachines =
-        pieceData?.machineStock.reduce((sum, p) => sum + p.amount, 0) || 0;
-    const totalInWarehouse =
-        pieceData?.warehouseStock.reduce((sum, p) => sum + p.amount, 0) || 0;
-    const totalStock = totalInMachines + totalInWarehouse;
-
-    let machines = pieceData?.machineStock.reduce((acc, machine) => {
-        acc.push({ name: machine.machine });
-        return acc;
-    }, []);
-    let warehouses = pieceData?.warehouseStock.reduce((acc, warehouse) => {
-        acc.push({ name: warehouse.location });
-        return acc;
-    }, []);
+    // console.log("imagen", pieceImageName, dataCardImageName);
 
     const chartData = [
-        { name: "En máquinas", value: totalInMachines },
-        { name: "En almacén", value: totalInWarehouse },
+        { name: "En máquinas", value: pieceStock?.data[0].stock_in_machines },
+        { name: "En almacén", value: pieceStock?.data[0].stock_in_warehouses },
     ];
 
     function handleSelectClick(value) {
@@ -66,7 +61,7 @@ export default function PiecesDetails({ data }) {
     return (
         <>
             <DialogComponent
-                size="sm"
+                size="md"
                 scrollBehavior="outside"
                 title={
                     selectedValue === "move"
@@ -85,13 +80,15 @@ export default function PiecesDetails({ data }) {
                     selectedValue === "move" ? (
                         <MoveStockMenu
                             piece={data.name}
-                            inStock={[...machines, ...warehouses]}
+                            inStock={[...machines?.data, ...warehouses?.data]}
                             handleCancel={closeDialog}
                         />
                     ) : selectedValue === "edit" ? (
                         <EditStockMenu
                             pieceInfo={data}
                             handleCancel={closeDialog}
+                            pieceImageOld={pieceImageName[0]}
+                            dataCardOld={dataCardImageName[0]}
                         />
                     ) : selectedValue === "add" ? (
                         <AddStockMenu
@@ -100,14 +97,14 @@ export default function PiecesDetails({ data }) {
                         />
                     ) : selectedValue === "print" ? (
                         <PrintMenu
-                            piece={data}
-                            inStock={[...machines, ...warehouses]}
+                            piece={data.name}
+                            inStock={[...machines?.data, ...warehouses?.data]}
                             handleCancel={closeDialog}
                         />
                     ) : selectedValue === "delete" ? (
                         <DeleteStockMenu
                             piece={data.name}
-                            inStock={[...machines, ...warehouses]}
+                            inStock={[...machines?.data, ...warehouses?.data]}
                             handleCancel={closeDialog}
                         />
                     ) : null
@@ -120,13 +117,13 @@ export default function PiecesDetails({ data }) {
             />
 
             <div className="warning-badges">
-                {data?.isCritical === true && (
+                {data?.is_critical === true && (
                     <div className="critical-badge">
                         <IoWarningOutline />
                         &nbsp;Crítico
                     </div>
                 )}
-                {data?.avaliability === "spare_part" && (
+                {data?.availability === "obsolete" && (
                     <div className="spare-badge">Descatalogado</div>
                 )}
             </div>
@@ -178,8 +175,8 @@ export default function PiecesDetails({ data }) {
                                 Precio de compra
                             </Text>
                             <Text className="value buy-price-value">
-                                {data?.buyPrice
-                                    ? `${data.buyPrice} €`
+                                {data?.buy_price
+                                    ? `${data.buy_price} €`
                                     : "No hay precio de compra"}
                             </Text>
                         </div>
@@ -188,8 +185,8 @@ export default function PiecesDetails({ data }) {
                                 Precio de reparación
                             </Text>
                             <Text className="value repair-price-value">
-                                {data?.repairPrice
-                                    ? `${data.repairPrice} €`
+                                {data?.repair_price
+                                    ? `${data.repair_price} €`
                                     : "No hay precio de reparación"}
                             </Text>
                         </div>
@@ -218,8 +215,8 @@ export default function PiecesDetails({ data }) {
                                 Pieza alternativa
                             </Text>
                             <Text className="value alt-piece-value">
-                                {data?.altPiece
-                                    ? data.altPiece
+                                {data?.alternative_piece
+                                    ? data.alternative_piece
                                     : "No hay pieza alternativa"}
                             </Text>
                         </div>
@@ -229,21 +226,22 @@ export default function PiecesDetails({ data }) {
                             </Text>
                             <Text className="value additional-info-value">
                                 {data?.additional_info
-                                    ? data.addInfo
+                                    ? data.additional_info
                                     : "No hay información adicional"}
                             </Text>
                         </div>
                     </div>
                     <div className="charts">
                         <Heading>
-                            Stock total en máquinas/almacén: {totalStock}
+                            Stock total en máquinas/almacén:{" "}
+                            {pieceStock?.data[0].stock_total}
                         </Heading>
                         <PopoverComponent
                             title="Localización de esta pieza"
                             content={
                                 <div className="popover-content">
                                     <ul>
-                                        {pieceData?.machineStock.map((m) => (
+                                        {machines?.data.map((m) => (
                                             <li key={m.machine}>
                                                 <Text textStyle="lg">
                                                     <CustomLink
@@ -260,10 +258,10 @@ export default function PiecesDetails({ data }) {
                                         ))}
                                     </ul>
                                     <ul>
-                                        {pieceData?.warehouseStock.map((w) => (
-                                            <li key={w.location}>
+                                        {warehouses?.data.map((w) => (
+                                            <li key={w.warehouse_id}>
                                                 <Text textStyle="lg">
-                                                    {w.location}: {w.amount}
+                                                    {w.warehouse}: {w.amount}
                                                     {w.amount > 1
                                                         ? " piezas"
                                                         : " pieza"}
@@ -314,10 +312,12 @@ export default function PiecesDetails({ data }) {
                         <Image
                             className="image-dialog piece-image"
                             src={
-                                supabase.storage
-                                    .from("pieces")
-                                    .getPublicUrl(`${data.name}.webp`).data
-                                    .publicUrl
+                                pieceImageName === null || pieceImageName?.length === 0
+                                    ? undefined
+                                    : supabase.storage
+                                          .from("pieces")
+                                          .getPublicUrl(pieceImageName[0].name)
+                                          .data.publicUrl
                             }
                             alt={`Producto con referencia: ${data.name}`}
                         />
@@ -330,10 +330,12 @@ export default function PiecesDetails({ data }) {
                         <Image
                             className="image-dialog data-card-image"
                             src={
-                                supabase.storage
-                                    .from("pieces")
-                                    .getPublicUrl(`${data.name}-data-card.webp`)
-                                    .data.publicUrl
+                                dataCardImageName === null || pieceImageName?.length === 0
+                                    ? undefined
+                                    : supabase.storage
+                                          .from("pieces")
+                                          .getPublicUrl(dataCardImageName[0].name).data
+                                          .publicUrl
                             }
                             alt={`Producto con referencia: ${data.name}`}
                         />
