@@ -123,7 +123,7 @@ function Summary({ data }) {
 }
 
 export default function MachineDetails({ data }) {
-    const pieces = useSelectedMachine(data.name);
+    const pieces = useSelectedMachine({ machineId: data.id });
     const [selectedTab, setSelectedTab] = useState("summary");
 
     const handleTabChange = (e) => {

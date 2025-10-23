@@ -14,7 +14,7 @@ export async function getPieces(workshop, search, multiple, column, orderBy) {
 
     if (search) {
         query = query.or(
-            `id.eq.%${search},%name.ilike.%${search}%,description.ilike.%${search}%`
+            `name.ilike.%${search}%,description.ilike.%${search}%`
         );
     }
 
@@ -185,20 +185,20 @@ export async function insertRecentMovement({ values, pieceId }) {
 }
 
 export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld) {
-    console.log("insert", updatedPiece);
+    console.log("update", updatedPiece);
     const { data, error } = await supabase
         .from("pieces_new")
         .update({
-            brand: updatedPiece.brand.toUpperCase(),
-            type: updatedPiece.type.toUpperCase(),
+            brand: updatedPiece.brand?.toUpperCase(),
+            type: updatedPiece.type?.toUpperCase(),
             workshop: updatedPiece.workshop,
             availability: updatedPiece.availability,
             buy_price: updatedPiece.buyPrice,
             repair_price: updatedPiece.repairPrice,
             min_stock: updatedPiece.minStock,
-            supplier: updatedPiece.supplier.toUpperCase(),
+            supplier: updatedPiece.supplier?.toUpperCase(),
             alternative_piece: updatedPiece.altPiece,
-            is_critical: updatedPiece.isCritical,
+            is_critical: updatedPiece.is_critical,
             description: updatedPiece.description,
             additional_info: updatedPiece.additionalInfo,
         })

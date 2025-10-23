@@ -201,7 +201,7 @@ export function EditStockMenu({ pieceInfo, handleCancel, pieceImageOld, dataCard
 
     function handleSubmit(e) {
         e.preventDefault();
-        useUpdatePiece(formData, pieceImageOld.name, dataCardOld.name);
+        useUpdatePiece(formData, pieceImageOld?.name, dataCardOld?.name);
         console.log("menu", formData)
         handleCancel();
     }

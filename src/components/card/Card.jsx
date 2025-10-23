@@ -26,6 +26,7 @@ export function CardText({ title, description, footer, ...props }) {
                     textStyle="2xl"
                     letterSpacing="tight"
                     mt="2"
+                    truncate
                 >
                     {footer}
                 </Text>
@@ -69,15 +70,20 @@ export function CardImage({
                     {description}
                 </Card.Description>
             </Card.Body>
-            <Card.Footer>
-                <div className="footer">
+            <Card.Footer className="footer">
+                <Text
+                    textStyle="2xl"
+                    letterSpacing="tight"
+                    mt="2"
+                    truncate
+                >
                     {footer}
-                    {isCritical && (
-                        <div className="critical-badge-card">
-                            <IoWarningOutline />
-                        </div>
-                    )}
-                </div>
+                </Text>
+                {isCritical && (
+                    <div className="critical-badge-card">
+                        <IoWarningOutline />
+                    </div>
+                )}
             </Card.Footer>
         </Card.Root>
     );
