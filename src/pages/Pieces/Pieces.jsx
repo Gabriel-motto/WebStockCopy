@@ -20,11 +20,11 @@ const tabData = [
         title: "Todas",
     },
     {
-        id: "Mecánica",
+        id: "M",
         title: "Mecánica",
     },
     {
-        id: "Electrónica",
+        id: "E",
         title: "Electrónica",
     },
 ];
