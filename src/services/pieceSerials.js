@@ -12,28 +12,27 @@ export async function getPieceSerials(pieceId, column) {
     return pieceSerials;
 }
 
-export async function insertPieceSerials(pieceId, pieceStatus, location) {
-
-    if (location.type === 'machine') {
+export async function insertPieceSerials(values) {
+    if (values.location.type === 'machine') {
         const { data: pieceSerial, error: insertError } = await supabase
         .from("piece_serials")
         .insert([
             {
-                piece_id: pieceId,
-                status: pieceStatus,
-                current_machine: location.id
+                piece_id: values.piece,
+                status: "active",
+                current_machine: values.location.id.id
             }
         ])
     }
 
-    if (location.type === 'warehouse') {
+    if (values.location.type === 'warehouse') {
         const { data: pieceSerial, error: insertError } = await supabase
         .from("piece_serials")
         .insert([
             {
-                piece_id: pieceId,
-                status: pieceStatus,
-                current_machine: location.id
+                piece_id: values.pieceId,
+                status: "inactive",
+                current_warehouse: values.location.id.id
             }
         ])
         .throwOnError();

@@ -40,8 +40,6 @@ export default function PiecesDetails({ data }) {
         baseName: data?.name + "-data-card",
     });
 
-    // console.log("imagen", pieceImageName, dataCardImageName);
-
     const chartData = [
         { name: "En máquinas", value: pieceStock?.data[0].stock_in_machines },
         { name: "En almacén", value: pieceStock?.data[0].stock_in_warehouses },
@@ -92,7 +90,7 @@ export default function PiecesDetails({ data }) {
                         />
                     ) : selectedValue === "add" ? (
                         <AddStockMenu
-                            piece={data.name}
+                            piece={data}
                             handleCancel={closeDialog}
                         />
                     ) : selectedValue === "print" ? (

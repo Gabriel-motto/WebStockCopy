@@ -12,7 +12,7 @@ export function HintPanel({ hintData, onSelect }) {
                     <div
                         key={item.name}
                         className="hint-item"
-                        onMouseDown={(e) => handleClick(item.name, e)}
+                        onMouseDown={(e) => handleClick(item, e)}
                     >
                         <p>{item.name}</p>
                     </div>
