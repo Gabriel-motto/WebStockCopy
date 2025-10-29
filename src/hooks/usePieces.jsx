@@ -147,7 +147,7 @@ export async function insertPieceInWarehouse({ values }) {
 }
 
 export function useImageName(options = {}) {
-    const { bucket = "pieces", baseName } = options;
+    const { bucket, baseName } = options;
     const [imageUrl, setImageUrl] = useState(null);
 
     useEffect(() => {

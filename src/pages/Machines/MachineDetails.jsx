@@ -1,12 +1,14 @@
 import "./MachineDetails.css";
-import { Separator, Table, Text } from "@chakra-ui/react";
+import { Image, Separator, Table, Text } from "@chakra-ui/react";
 import { useSelectedMachine } from "@/hooks/useMachines";
-import { usePieces } from "@/hooks/usePieces";
+import { useImageName, usePieces } from "@/hooks/usePieces";
 import { useState, useMemo, useRef } from "react";
 import PaginationControls from "@/components/ui/Pagination/Pagination.jsx";
 import { TabComponent } from "@/components/ui/tab-component";
 import { EmptyError } from "@/components/ui/EmptyStates";
 import { navigateTo } from "@/utils/Link";
+import Zoom from "react-medium-image-zoom";
+import supabase from "@/utils/supabase";
 
 const tabData = [
     {
@@ -54,10 +56,7 @@ function PieceInfoTable({ pieces }) {
         <div className="piece-related-content">
             <div className="title">Piezas en la máquina</div>
             <div className="piece-body">
-                <Table.Root
-                    stickyHeader
-                    interactive
-                >
+                <Table.Root stickyHeader interactive>
                     <Table.ColumnGroup>
                         <Table.Column htmlWidth="10%" />
                         <Table.Column htmlWidth="2%" />
@@ -106,17 +105,37 @@ function PieceInfoTable({ pieces }) {
 }
 
 function Summary({ data }) {
+    const machineImage = useImageName({
+        bucket: "machines",
+        baseName: data?.name,
+    });
+
+    console.log(machineImage);
+
     return (
         <div className="machine-related-content">
-            <div className="title">{data.name}</div>
-            <Separator
-                orientation="vertical"
-                size="md"
-            />
-            <div className="body">
-                <div className="description">{data.description}</div>
-                <div className="assembly-line">{data.assembly_line}</div>
-                <div className="additional-content"></div>
+            <div className="summary-header">
+                <div className="summary-title">{data.name}</div>
+                <div className="header-separator"></div>
+                <div className="summary-description">{data.description}</div>
+            </div>
+            <Separator size="md" />
+            <div className="machine-details-body">
+                <Zoom>
+                    <Image
+                        className="summary-image"
+                        src={
+                            machineImage === null ||
+                            machineImage?.length === 0
+                                ? undefined
+                                : supabase.storage
+                                      .from("machines")
+                                      .getPublicUrl(machineImage[0]?.name)
+                                      .data.publicUrl
+                        }
+                        alt={`Máquina: ${data.name}`}
+                    />
+                </Zoom>
             </div>
         </div>
     );
