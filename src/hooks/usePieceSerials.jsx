@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 export function usePieceSerials(options = {}) {
     const { pieceId, column = "*" } = options;
     const [serials, setSerials] = useState([]);
-
+    
     useEffect(() => {
         getPieceSerials(pieceId, column).then(setSerials);
     }, [pieceId, column]);
+
+    return serials;
 }
 
 export function useInsertPieceSerials(values) {

@@ -1,10 +1,13 @@
 import supabase from "@/utils/supabase";
 
 export async function getPieceSerials(pieceId, column) {
+    console.log("piece", pieceId)
+    console.log("column", column)
     let query = supabase.from("piece_serials").select(column);
 
+
     if (pieceId) {
-        query = query.ilike(pieceId);
+        query = query.eq("piece_id", pieceId);
     }
 
     const { data: pieceSerials } = await query;

@@ -95,7 +95,7 @@ export default function PiecesDetails({ data }) {
                         />
                     ) : selectedValue === "print" ? (
                         <PrintMenu
-                            piece={data.name}
+                            piece={data}
                             inStock={[...machines?.data, ...warehouses?.data]}
                             handleCancel={closeDialog}
                         />
