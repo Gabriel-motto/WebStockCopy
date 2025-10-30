@@ -1,12 +1,18 @@
 import { HintPanel } from "@/components/ui/HintPanel/HintPanel";
 import { useMachines } from "@/hooks/useMachines";
 import { useWarehouse } from "@/hooks/useWarehouse";
-import { Button, QrCode } from "@chakra-ui/react";
+import { Button, QrCode, Separator } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import "./Menus.css";
 import { useReactToPrint } from "react-to-print";
 import { useUpdatePiece } from "@/hooks/usePieces";
-import { useInsertPieceSerials } from "@/hooks/usePieceSerials";
+import {
+    useInsertPieceSerials,
+    usePieceSerials,
+} from "@/hooks/usePieceSerials";
+import { CustomSelect } from "@/components/ui/Select/Select";
+import { useClickAway } from "@uidotdev/usehooks";
+import { IoIosArrowDown } from "react-icons/io";
 
 export function MoveStockMenu({ piece, inStock, handleCancel }) {
     const [showHint1, setShowHint1] = useState(false);
@@ -15,7 +21,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
         piece: piece,
         locationTypeFrom: "",
         locationFrom: "",
-        location: { id, type },
+        location: { id: "", type: "" },
         amount: 1,
         action: "move",
     });
@@ -65,10 +71,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
     return (
         <div className="move-stock-container container">
             <div className="body-move-stock">
-                <form
-                    className="move-form"
-                    onSubmit={handleSubmit}
-                >
+                <form className="move-form" onSubmit={handleSubmit}>
                     <div className="move-location-cell">
                         <div className="location locationFrom">
                             <div>
@@ -170,16 +173,10 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
                 </form>
             </div>
             <div className="footer-move-stock footer">
-                <Button
-                    colorPalette="blue"
-                    onClick={handleSubmit}
-                >
+                <Button colorPalette="blue" onClick={handleSubmit}>
                     Aceptar
                 </Button>
-                <Button
-                    colorPalette="red"
-                    onClick={handleCancel}
-                >
+                <Button colorPalette="red" onClick={handleCancel}>
                     Cancelar
                 </Button>
             </div>
@@ -263,16 +260,10 @@ export function EditStockMenu({
                         value={formData.workshop}
                         onChange={handleFormChange}
                     >
-                        <option
-                            name="workshop"
-                            value="E"
-                        >
+                        <option name="workshop" value="E">
                             Eléctrico
                         </option>
-                        <option
-                            name="workshop"
-                            value="M"
-                        >
+                        <option name="workshop" value="M">
                             Mecánico
                         </option>
                     </select>
@@ -290,28 +281,16 @@ export function EditStockMenu({
                         }
                         onChange={handleFormChange}
                     >
-                        <option
-                            name="availability"
-                            value="available"
-                        >
+                        <option name="availability" value="available">
                             Disponible
                         </option>
-                        <option
-                            name="availability"
-                            value="obsolete"
-                        >
+                        <option name="availability" value="obsolete">
                             Obsoleto
                         </option>
-                        <option
-                            name="availability"
-                            value="unavailable"
-                        >
+                        <option name="availability" value="unavailable">
                             No disponible
                         </option>
-                        <option
-                            name="availability"
-                            value="limited"
-                        >
+                        <option name="availability" value="limited">
                             Limitado
                         </option>
                     </select>
@@ -387,16 +366,10 @@ export function EditStockMenu({
                         value={formData.is_critical}
                         onChange={handleFormChange}
                     >
-                        <option
-                            name="is_critical"
-                            value={false}
-                        >
+                        <option name="is_critical" value={false}>
                             No
                         </option>
-                        <option
-                            name="is_critical"
-                            value={true}
-                        >
+                        <option name="is_critical" value={true}>
                             Sí
                         </option>
                     </select>
@@ -447,16 +420,10 @@ export function EditStockMenu({
                 </div>
             </div>
             <div className="edit-footer footer">
-                <Button
-                    colorPalette="blue"
-                    onClick={handleSubmit}
-                >
+                <Button colorPalette="blue" onClick={handleSubmit}>
                     Aceptar
                 </Button>
-                <Button
-                    colorPalette="red"
-                    onClick={handleCancel}
-                >
+                <Button colorPalette="red" onClick={handleCancel}>
                     Cancelar
                 </Button>
             </div>
@@ -573,16 +540,10 @@ export function AddStockMenu({ piece, handleCancel }) {
                 </div>
             </div>
             <div className="add-menu-footer footer">
-                <Button
-                    colorPalette="blue"
-                    onClick={handleSubmit}
-                >
+                <Button colorPalette="blue" onClick={handleSubmit}>
                     Aceptar
                 </Button>
-                <Button
-                    colorPalette="red"
-                    onClick={handleCancel}
-                >
+                <Button colorPalette="red" onClick={handleCancel}>
                     Cancelar
                 </Button>
             </div>
@@ -593,35 +554,85 @@ export function AddStockMenu({ piece, handleCancel }) {
 export function PrintMenu({ piece, inStock, handleCancel }) {
     const contentRef = useRef();
     const reactToPrintFn = useReactToPrint({ contentRef });
+    const [serialSelected, setSerialSelected] = useState();
+    const pieceSerials = usePieceSerials({
+        pieceId: piece?.id,
+    });
+    const [showOptions, setShowOptions] = useState(false);
+
+    function handleClickSelect(value) {
+        setSerialSelected(value);
+    }
+
+    console.log(serialSelected);
+
+    const ref = useClickAway(() => {
+            setShowOptions(false);
+        });
 
     return (
         <div className="print-menu-container container">
-            <div className="print-menu-body">
-                <Button
-                    colorPalette="blue"
-                    onClick={reactToPrintFn}
-                >
-                    Imprimir etiqueta
-                </Button>
+            <div className="print-menu-selector">
                 <div
-                    ref={contentRef}
-                    className="print-content"
+                    ref={ref}
+                    className="custom-select-container"
+                    onClick={() => setShowOptions(!showOptions)}
                 >
+                    <div className="custom-selector">
+                        <p className="selector-label">Selecciona una opción</p>
+                        <Separator
+                            orientation="vertical"
+                            height="5"
+                            size="md"
+                        />
+                        <IoIosArrowDown />
+                    </div>
+                    <div
+                        className={`${
+                            showOptions
+                                ? "custom-options show"
+                                : "custom-options"
+                        }`}
+                    >
+                        {pieceSerials?.map((item, index) => (
+                            <div
+                                className={"custom-item"}
+                                key={index}
+                                onClick={() => {
+                                    setSerialSelected(item.serial_code);
+                                    setShowOptions(false);
+                                }}
+                            >
+                                {item.serial_code}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <div
+                className={`${
+                    serialSelected ? "print-menu-body show" : "print-menu-body"
+                }`}
+            >
+                <div ref={contentRef} className="print-content">
                     <QrCode.Root
                         className="qr-code"
-                        value={`https://web-stock-peach.vercel.app/pieces/${piece}`}
+                        value={`https://web-stock-peach.vercel.app/pieces/${piece.name}`}
                     >
                         <QrCode.Frame>
                             <QrCode.Pattern />
                         </QrCode.Frame>
                     </QrCode.Root>
                     <div className="print-info">
-                        <p>ID: {piece.id}</p>
+                        <p>Serial: {serialSelected}</p>
                         <p>Ref: {piece.name}</p>
                         <p>Marca: {piece.brand}</p>
                         <p>Tipo: {piece.type}</p>
                     </div>
                 </div>
+                <Button colorPalette="blue" onClick={reactToPrintFn}>
+                    Imprimir etiqueta
+                </Button>
             </div>
         </div>
     );
@@ -727,16 +738,10 @@ export function DeleteStockMenu({ piece, inStock, handleCancel }) {
                 </div>
             </div>
             <div className="delete-menu-footer footer">
-                <Button
-                    colorPalette="blue"
-                    onClick={handleSubmit}
-                >
+                <Button colorPalette="blue" onClick={handleSubmit}>
                     Enviar petición
                 </Button>
-                <Button
-                    colorPalette="red"
-                    onClick={handleCancel}
-                >
+                <Button colorPalette="red" onClick={handleCancel}>
                     Cancelar
                 </Button>
             </div>

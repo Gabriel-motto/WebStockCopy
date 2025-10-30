@@ -150,7 +150,7 @@ export function CustomSelect({ dataFromChild, content, ...props }) {
                     showOptions ? "custom-options show" : "custom-options"
                 }`}
             >
-                {content.map((item, index) => (
+                {content?.map((item, index) => (
                     <div
                         className={`${
                             item.value === "delete"
