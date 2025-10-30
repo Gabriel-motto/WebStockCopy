@@ -58,7 +58,7 @@
 .machine-details-body {
     display: flex;
     justify-content: center;
-    margin-top: .5rem;
+    margin-top: 0.5rem;
 }
 
 .summary-image {
