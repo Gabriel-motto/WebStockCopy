@@ -35,10 +35,12 @@
     display: flex;
 }
 
-.summary-body {
+.summary-body,
+.traceability-body {
     display: flex;
     justify-content: space-between;
     height: 100%;
+    margin-top: 1rem;
 }
 
 .left-side,
@@ -152,4 +154,17 @@
     .image-dialog {
         width: 70%;
     }
+}
+
+
+.traceability-body {
+    margin: 1rem;
+}
+
+.serials-accordion {
+    margin-left: 1rem;
+}
+
+.serial-details {
+    margin-left: 1rem;
 }

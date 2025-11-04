@@ -33,7 +33,7 @@ export async function insertPieceSerials(values) {
         .from("piece_serials")
         .insert([
             {
-                piece_id: values.pieceId,
+                piece_id: values.piece,
                 status: "inactive",
                 current_warehouse: values.location.id.id
             }

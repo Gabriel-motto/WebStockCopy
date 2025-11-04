@@ -65,7 +65,7 @@ export default function NewPiece({ handleCancel }) {
                 className="form"
             >
                 <div className="cell name-cell">
-                    <label htmlFor="name">Nombre</label>
+                    <label htmlFor="name">Referencia</label>
                     <input
                         type="text"
                         id="name"

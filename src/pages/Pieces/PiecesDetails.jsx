@@ -1,5 +1,5 @@
 import "./PiecesDetails.css";
-import { Image, Text, Separator, Heading } from "@chakra-ui/react";
+import { Image, Text, Separator, Heading, Accordion } from "@chakra-ui/react";
 import {
     useImageName,
     useMachinesStockPiece,
@@ -24,8 +24,121 @@ import {
 } from "./Menus";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
+import { TabComponent } from "@/components/ui/tab-component";
+import { usePieceSerials } from "@/hooks/usePieceSerials";
+
+const tabData = [
+    {
+        id: "details",
+        title: "Detalles",
+    },
+    {
+        id: "traceability",
+        title: "Trazabilidad",
+    },
+];
 
 export default function PiecesDetails({ data }) {
+    const [selectedTab, setSelectedTab] = useState("details");
+
+    function handleTabChange(e) {
+        setSelectedTab(e.value);
+    }
+
+    return (
+        <>
+            <TabComponent
+                tabContent={tabData}
+                defaultValue={"details"}
+                dataFromChild={handleTabChange}
+            />
+            <main className="container">
+                {selectedTab === "details" ? (
+                    <Details data={data} />
+                ) : (
+                    <Traceability data={data} />
+                )}
+            </main>
+        </>
+    );
+}
+
+function Traceability({ data }) {
+    const pieceStock = useTotalStockPiece({ pieceId: data.id });
+    const machines = useMachinesStockPiece({ pieceId: data.id });
+    const warehouses = useWarehousesStockPiece({ pieceId: data.id });
+    const pieceSerials = usePieceSerials({ pieceId: data.id });
+
+    console.log(pieceSerials);
+
+    return (
+        <div className="traceability-body">
+            <Accordion.Root collapsible>
+                {machines?.data.map((m) => (
+                    <Accordion.Item
+                        key={m.machine}
+                        value={m.machine}
+                    >
+                        <Accordion.ItemTrigger>
+                            Máquina: {m.machine}
+                            <Accordion.ItemIndicator />
+                        </Accordion.ItemTrigger>
+                        <Accordion.ItemContent>
+                            <Accordion.ItemBody>
+                                <div className="serials-accordion">
+                                    <Accordion.Root collapsible>
+                                        {pieceSerials?.map((serial) => (
+                                            <Accordion.Item
+                                                key={serial.id}
+                                                value={serial.serial_code}
+                                            >
+                                                <Accordion.ItemTrigger>
+                                                    {serial.serial_code}
+                                                    <Accordion.ItemIndicator />
+                                                </Accordion.ItemTrigger>
+                                                <Accordion.ItemContent>
+                                                    <Accordion.ItemBody>
+                                                        <div className="serial-details">
+                                                            <Text>
+                                                                <strong>
+                                                                    Estado:
+                                                                </strong>{" "}
+                                                                {serial.status}
+                                                            </Text>
+                                                            <Text>
+                                                                <strong>
+                                                                    Ubicación:
+                                                                </strong>{" "}
+                                                                {
+                                                                    serial.location
+                                                                }
+                                                            </Text>
+                                                            <Text>
+                                                                <strong>
+                                                                    Último
+                                                                    movimiento:
+                                                                </strong>{" "}
+                                                                {serial.last_movement
+                                                                    ? serial.last_movement
+                                                                    : "N/A"}
+                                                            </Text>
+                                                        </div>
+                                                    </Accordion.ItemBody>
+                                                </Accordion.ItemContent>
+                                            </Accordion.Item>
+                                        ))}
+                                    </Accordion.Root>
+                                </div>
+                            </Accordion.ItemBody>
+                        </Accordion.ItemContent>
+                    </Accordion.Item>
+                ))}
+            </Accordion.Root>
+        </div>
+    );
+}
+
+function Details({ data }) {
     const pieceStock = useTotalStockPiece({ pieceId: data.id });
     const machines = useMachinesStockPiece({ pieceId: data.id });
     const warehouses = useWarehousesStockPiece({ pieceId: data.id });
@@ -310,7 +423,8 @@ export default function PiecesDetails({ data }) {
                         <Image
                             className="image-dialog piece-image"
                             src={
-                                pieceImageName === null || pieceImageName?.length === 0
+                                pieceImageName === null ||
+                                pieceImageName?.length === 0
                                     ? undefined
                                     : supabase.storage
                                           .from("pieces")
@@ -328,12 +442,14 @@ export default function PiecesDetails({ data }) {
                         <Image
                             className="image-dialog data-card-image"
                             src={
-                                dataCardImageName === null || pieceImageName?.length === 0
+                                dataCardImageName === null ||
+                                pieceImageName?.length === 0
                                     ? undefined
                                     : supabase.storage
                                           .from("pieces")
-                                          .getPublicUrl(dataCardImageName[0]?.name).data
-                                          .publicUrl
+                                          .getPublicUrl(
+                                              dataCardImageName[0]?.name
+                                          ).data.publicUrl
                             }
                             alt={`Producto con referencia: ${data.name}`}
                         />

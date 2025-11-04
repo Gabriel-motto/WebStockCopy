@@ -112,7 +112,7 @@ function PiecesPage({ params = {} }) {
     ) : null;
 
     return (
-        <div className="container">
+        <div className="pieces-container">
             <Toaster />
             <DialogComponent
                 size="xl"

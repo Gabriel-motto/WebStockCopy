@@ -15,6 +15,12 @@ import { useClickAway } from "@uidotdev/usehooks";
 import { IoIosArrowDown } from "react-icons/io";
 
 export function MoveStockMenu({ piece, inStock, handleCancel }) {
+    const contentRef = useRef();
+    const [serialSelected, setSerialSelected] = useState();
+    const pieceSerials = usePieceSerials({
+        pieceId: piece?.id,
+    });
+    const [showOptions, setShowOptions] = useState(false);
     const [showHint1, setShowHint1] = useState(false);
     const [showHint2, setShowHint2] = useState(false);
     const [formData, setFormData] = useState({
@@ -30,6 +36,10 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
     });
     const warehouses = useWarehouse({
         search: formData.location.id,
+    });
+
+    const ref = useClickAway(() => {
+        setShowOptions(false);
     });
 
     function handleSubmit(e) {
@@ -69,56 +79,52 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
     }
 
     return (
-        <div className="move-stock-container container">
+        <div className="move-stock-container menus-container">
             <div className="body-move-stock">
-                <form className="move-form" onSubmit={handleSubmit}>
+                <form
+                    className="move-form"
+                    onSubmit={handleSubmit}
+                >
                     <div className="move-location-cell">
-                        <div className="location locationFrom">
-                            <div>
-                                <p className="title-label menus-label">De</p>
-                                <input
-                                    className="location-radio"
-                                    type="radio"
-                                    name="locationTypeFrom"
-                                    id="machineFrom"
-                                    value="machineFrom"
-                                    onChange={handleFormChange}
-                                    required
-                                    disabled
-                                />
-                                <label htmlFor="machineFrom">Máquina</label>
-                                <input
-                                    className="location-radio"
-                                    type="radio"
-                                    name="locationTypeFrom"
-                                    id="warehouseFrom"
-                                    value="warehouseFrom"
-                                    onChange={handleFormChange}
-                                />
-                                <label htmlFor="warehouseFrom">Almacén</label>
-                            </div>
-                            <input
-                                className="location-input"
-                                type="text"
-                                id="locationFrom"
-                                name="locationFrom"
-                                required
-                                value={formData.locationFrom}
-                                onChange={handleFormChange}
-                                onFocus={() => handleFocus(1)}
-                                onBlur={() => handleBlur(1)}
-                            />
+                        <div className="print-menu-selector">
                             <div
-                                className={`${
-                                    showHint1 ? "autofiller show" : "autofiller"
-                                }`}
+                                ref={ref}
+                                className="custom-select-container"
+                                onClick={() => setShowOptions(!showOptions)}
                             >
-                                <HintPanel
-                                    hintData={inStock}
-                                    onSelect={(value) =>
-                                        handleHintSelect(value, "locationFrom")
-                                    }
-                                />
+                                <div className="custom-selector">
+                                    <p className="selector-label">
+                                        Selecciona una opción
+                                    </p>
+                                    <Separator
+                                        orientation="vertical"
+                                        height="5"
+                                        size="md"
+                                    />
+                                    <IoIosArrowDown />
+                                </div>
+                                <div
+                                    className={`${
+                                        showOptions
+                                            ? "custom-options show"
+                                            : "custom-options"
+                                    }`}
+                                >
+                                    {pieceSerials?.map((item, index) => (
+                                        <div
+                                            className={"custom-item"}
+                                            key={index}
+                                            onClick={() => {
+                                                setSerialSelected(
+                                                    item.serial_code
+                                                );
+                                                setShowOptions(false);
+                                            }}
+                                        >
+                                            {item.serial_code}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -173,10 +179,16 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
                 </form>
             </div>
             <div className="footer-move-stock footer">
-                <Button colorPalette="blue" onClick={handleSubmit}>
+                <Button
+                    colorPalette="blue"
+                    onClick={handleSubmit}
+                >
                     Aceptar
                 </Button>
-                <Button colorPalette="red" onClick={handleCancel}>
+                <Button
+                    colorPalette="red"
+                    onClick={handleCancel}
+                >
                     Cancelar
                 </Button>
             </div>
@@ -230,7 +242,7 @@ export function EditStockMenu({
     }
 
     return (
-        <div className="edit-menu-container container">
+        <div className="edit-menu-container menus-container">
             <div className="edit-body">
                 <div className="brand-input input">
                     <p className="brand-label menus-label">Marca</p>
@@ -260,10 +272,16 @@ export function EditStockMenu({
                         value={formData.workshop}
                         onChange={handleFormChange}
                     >
-                        <option name="workshop" value="E">
+                        <option
+                            name="workshop"
+                            value="E"
+                        >
                             Eléctrico
                         </option>
-                        <option name="workshop" value="M">
+                        <option
+                            name="workshop"
+                            value="M"
+                        >
                             Mecánico
                         </option>
                     </select>
@@ -281,16 +299,28 @@ export function EditStockMenu({
                         }
                         onChange={handleFormChange}
                     >
-                        <option name="availability" value="available">
+                        <option
+                            name="availability"
+                            value="available"
+                        >
                             Disponible
                         </option>
-                        <option name="availability" value="obsolete">
+                        <option
+                            name="availability"
+                            value="obsolete"
+                        >
                             Obsoleto
                         </option>
-                        <option name="availability" value="unavailable">
+                        <option
+                            name="availability"
+                            value="unavailable"
+                        >
                             No disponible
                         </option>
-                        <option name="availability" value="limited">
+                        <option
+                            name="availability"
+                            value="limited"
+                        >
                             Limitado
                         </option>
                     </select>
@@ -366,10 +396,16 @@ export function EditStockMenu({
                         value={formData.is_critical}
                         onChange={handleFormChange}
                     >
-                        <option name="is_critical" value={false}>
+                        <option
+                            name="is_critical"
+                            value={false}
+                        >
                             No
                         </option>
-                        <option name="is_critical" value={true}>
+                        <option
+                            name="is_critical"
+                            value={true}
+                        >
                             Sí
                         </option>
                     </select>
@@ -420,10 +456,16 @@ export function EditStockMenu({
                 </div>
             </div>
             <div className="edit-footer footer">
-                <Button colorPalette="blue" onClick={handleSubmit}>
+                <Button
+                    colorPalette="blue"
+                    onClick={handleSubmit}
+                >
                     Aceptar
                 </Button>
-                <Button colorPalette="red" onClick={handleCancel}>
+                <Button
+                    colorPalette="red"
+                    onClick={handleCancel}
+                >
                     Cancelar
                 </Button>
             </div>
@@ -482,7 +524,7 @@ export function AddStockMenu({ piece, handleCancel }) {
     }
 
     return (
-        <div className="add-menu-container container">
+        <div className="add-menu-container menus-container">
             <div className="add-menu-body">
                 <div className="location input">
                     <div className="input-radio">
@@ -540,10 +582,16 @@ export function AddStockMenu({ piece, handleCancel }) {
                 </div>
             </div>
             <div className="add-menu-footer footer">
-                <Button colorPalette="blue" onClick={handleSubmit}>
+                <Button
+                    colorPalette="blue"
+                    onClick={handleSubmit}
+                >
                     Aceptar
                 </Button>
-                <Button colorPalette="red" onClick={handleCancel}>
+                <Button
+                    colorPalette="red"
+                    onClick={handleCancel}
+                >
                     Cancelar
                 </Button>
             </div>
@@ -560,18 +608,12 @@ export function PrintMenu({ piece, inStock, handleCancel }) {
     });
     const [showOptions, setShowOptions] = useState(false);
 
-    function handleClickSelect(value) {
-        setSerialSelected(value);
-    }
-
-    console.log(serialSelected);
-
     const ref = useClickAway(() => {
-            setShowOptions(false);
-        });
+        setShowOptions(false);
+    });
 
     return (
-        <div className="print-menu-container container">
+        <div className="print-menu-container menus-container">
             <div className="print-menu-selector">
                 <div
                     ref={ref}
@@ -614,7 +656,10 @@ export function PrintMenu({ piece, inStock, handleCancel }) {
                     serialSelected ? "print-menu-body show" : "print-menu-body"
                 }`}
             >
-                <div ref={contentRef} className="print-content">
+                <div
+                    ref={contentRef}
+                    className="print-content"
+                >
                     <QrCode.Root
                         className="qr-code"
                         value={`https://web-stock-peach.vercel.app/pieces/${piece.name}`}
@@ -630,7 +675,10 @@ export function PrintMenu({ piece, inStock, handleCancel }) {
                         <p>Tipo: {piece.type}</p>
                     </div>
                 </div>
-                <Button colorPalette="blue" onClick={reactToPrintFn}>
+                <Button
+                    colorPalette="blue"
+                    onClick={reactToPrintFn}
+                >
                     Imprimir etiqueta
                 </Button>
             </div>
@@ -676,7 +724,7 @@ export function DeleteStockMenu({ piece, inStock, handleCancel }) {
     }
 
     return (
-        <div className="delete-stock-container container">
+        <div className="delete-stock-container menus-container">
             <div className="delete-menu-body">
                 <div className="location locationFrom">
                     <label>
@@ -738,10 +786,16 @@ export function DeleteStockMenu({ piece, inStock, handleCancel }) {
                 </div>
             </div>
             <div className="delete-menu-footer footer">
-                <Button colorPalette="blue" onClick={handleSubmit}>
+                <Button
+                    colorPalette="blue"
+                    onClick={handleSubmit}
+                >
                     Enviar petición
                 </Button>
-                <Button colorPalette="red" onClick={handleCancel}>
+                <Button
+                    colorPalette="red"
+                    onClick={handleCancel}
+                >
                     Cancelar
                 </Button>
             </div>
