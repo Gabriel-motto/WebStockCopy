@@ -1,6 +1,6 @@
 import supabase from "../utils/supabase";
 
-export async function getMachines(selectedALines, search, column) {
+export async function getMachines(selectedALines, search, column, getCriticals) {
     let query = supabase.from("machines_new").select(column);
 
     if (selectedALines.length > 0) {
@@ -11,6 +11,10 @@ export async function getMachines(selectedALines, search, column) {
         query = query.or(
             `name.ilike.%${search}%,description.ilike.%${search}%`
         );
+    }
+
+    if (getCriticals) {
+        query = query.eq("is_critical", true);
     }
 
     const { data: machines } = await query;

@@ -1,7 +1,13 @@
 import { useState, lazy, Suspense, useRef, useEffect } from "react";
 import PaginationControls from "@/components/ui/Pagination/Pagination.jsx";
 import { IoSearch } from "react-icons/io5";
-import { Input, InputGroup, Table, CloseButton } from "@chakra-ui/react";
+import {
+    Input,
+    InputGroup,
+    Table,
+    CloseButton,
+    Button,
+} from "@chakra-ui/react";
 import { SelectAssemblyLine } from "../../components/ui/Select/Select.jsx";
 import MachineDetails from "./MachineDetails.jsx";
 import { useMachines } from "../../hooks/useMachines";
@@ -10,12 +16,18 @@ import { EmptyError } from "@/components/ui/EmptyStates";
 import "./Machines.css";
 import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx";
 import { navigateTo } from "@/utils/Link.jsx";
+import { useAssemblyLines } from "@/hooks/useALine.jsx";
+
+//TODO maquinas criticas 2571, 2528, 3247, 2821, 2022, 2051, 3140, wa6135
 
 const DialogComponent = lazy(() =>
     import("../../components/dialog/Dialog.jsx")
 );
 
 function MachinesTable({ machines, handleClick }) {
+    const ALines = useAssemblyLines();
+    console.log(ALines);
+
     return (
         <Table.Root interactive>
             <Table.Header>
@@ -34,7 +46,11 @@ function MachinesTable({ machines, handleClick }) {
                     >
                         <Table.Cell>{machine.name}</Table.Cell>
                         <Table.Cell>{machine.description}</Table.Cell>
-                        <Table.Cell>{machine.assembly_line}</Table.Cell>
+                        <Table.Cell>
+                            {ALines.find(
+                                (ALine) => ALine.id === machine.assembly_line_id
+                            )?.name || "N/A"}
+                        </Table.Cell>
                     </Table.Row>
                 ))}
             </Table.Body>
@@ -47,11 +63,13 @@ export default function MachinesPage({ params = {} }) {
     const [selectedMachineData, setSelectedMachineData] = useState();
     const [selectedALines, setSelectedAlines] = useState([]);
     const [search, setSearch] = useState("");
+    const [getCriticals, setGetCriticals] = useState(false);
     const debouncedSearch = useDebounce(search, 300);
     const machines = useMachines({
         selectedALines: selectedALines,
         search: search,
         debouncedSearch: debouncedSearch,
+        getCriticals: getCriticals,
     });
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -123,7 +141,32 @@ export default function MachinesPage({ params = {} }) {
     return (
         <main>
             <div className="search-bar">
-                <SelectAssemblyLine dataFromChild={handleAssemblyLineChange} />
+                <div className="search-line-critical">
+                    <SelectAssemblyLine
+                        dataFromChild={handleAssemblyLineChange}
+                    />
+                    {!getCriticals ? (
+                        <Button
+                            colorPalette="red"
+                            variant="outline"
+                            onClick={() => {
+                                setGetCriticals(true);
+                            }}
+                        >
+                            Filtrar por críticas
+                        </Button>
+                    ) : (
+                        <Button
+                            colorPalette="blue"
+                            variant="outline"
+                            onClick={() => {
+                                setGetCriticals(false);
+                            }}
+                        >
+                            Mostrar todas
+                        </Button>
+                    )}
+                </div>
                 <div className="search-input-machines">
                     <InputGroup
                         startElement={<IoSearch className="search-icon" />}

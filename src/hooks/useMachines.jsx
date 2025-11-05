@@ -7,15 +7,17 @@ export function useMachines(options = {}) {
         search = "",
         debouncedSearch,
         column = "*",
+        getCriticals,
     } = options;
     const [machines, setMachines] = useState([]);
 
     useEffect(() => {
-        getMachines(selectedALines, search, column).then(setMachines);
+        getMachines(selectedALines, search, column, getCriticals).then(setMachines);
     }, [
         JSON.stringify(selectedALines),
         debouncedSearch ? debouncedSearch : search,
         column,
+        getCriticals,
     ]);
     return machines;
 }

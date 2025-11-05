@@ -32,6 +32,11 @@
         flex-direction: column-reverse;
         gap: 5px;
     }
+    .search-line-critical {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
     
     .search-bar > * {
         width: 100%;
@@ -40,4 +45,9 @@
     .search-input-machines {
         max-width: 250px;
     }
+}
+
+.search-line-critical {
+    display: flex;
+    align-items: center;
 }

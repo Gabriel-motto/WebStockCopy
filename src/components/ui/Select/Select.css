@@ -89,7 +89,7 @@
 @media screen and (max-width: 768px) {
     .select-assembly-line {
         flex-direction: column;
-        width: 100%;
+        width: fit-content;
         align-items: center;
     }
 
