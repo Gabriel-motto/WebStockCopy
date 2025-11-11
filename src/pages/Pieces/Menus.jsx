@@ -662,6 +662,7 @@ export function PrintMenu({ piece, inStock, handleCancel }) {
                 >
                     <QrCode.Root
                         className="qr-code"
+                        size="sm"
                         value={`https://web-stock-peach.vercel.app/pieces/${piece.name}`}
                     >
                         <QrCode.Frame>
@@ -669,10 +670,16 @@ export function PrintMenu({ piece, inStock, handleCancel }) {
                         </QrCode.Frame>
                     </QrCode.Root>
                     <div className="print-info">
-                        <p>Serial: {serialSelected}</p>
-                        <p>Ref: {piece.name}</p>
-                        <p>Marca: {piece.brand}</p>
-                        <p>Tipo: {piece.type}</p>
+                        <div className="print-serial">
+
+                        <p>Serial: <br/> {serialSelected}</p>
+                        <p>Ref: <br/> {piece.name}</p>
+                        </div>
+                        <div className="print-brand">
+
+                        <p>Marca: <br/> {piece.brand}</p>
+                        <p>Tipo: <br/> {piece.type}</p>
+                        </div>
                     </div>
                 </div>
                 <Button

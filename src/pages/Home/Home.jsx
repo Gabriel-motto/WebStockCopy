@@ -66,7 +66,7 @@ export default function HomePage() {
             <div className="body">
                 <div className="rows upper-body">
                     <div className="titles upper-body-title"></div>
-                    <Button
+                    {/* <Button
                         className="videos-btn"
                         asChild
                     >
@@ -80,12 +80,12 @@ export default function HomePage() {
                         >
                             Vídeos de estándares
                         </a>
-                    </Button>
+                    </Button> */}
                 </div>
-                <div className="rows lower-body">
+                {/* <div className="rows lower-body">
                     <div className="titles lower-body-title"></div>
                     <MovementsTable />
-                </div>
+                </div> */}
             </div>
             <div className="footer"></div>
         </div>

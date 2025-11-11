@@ -18,8 +18,6 @@ import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx
 import { navigateTo } from "@/utils/Link.jsx";
 import { useAssemblyLines } from "@/hooks/useALine.jsx";
 
-//TODO maquinas criticas 2571, 2528, 3247, 2821, 2022, 2051, 3140, wa6135
-
 const DialogComponent = lazy(() =>
     import("../../components/dialog/Dialog.jsx")
 );

@@ -69,8 +69,6 @@ function Traceability({ data }) {
     const warehouses = useWarehousesStockPiece({ pieceId: data.id });
     const pieceSerials = usePieceSerials({ pieceId: data.id });
 
-    console.log(pieceSerials);
-
     return (
         <div className="traceability-body">
             <Accordion.Root collapsible>
@@ -87,46 +85,113 @@ function Traceability({ data }) {
                             <Accordion.ItemBody>
                                 <div className="serials-accordion">
                                     <Accordion.Root collapsible>
-                                        {pieceSerials?.map((serial) => (
-                                            <Accordion.Item
-                                                key={serial.id}
-                                                value={serial.serial_code}
-                                            >
-                                                <Accordion.ItemTrigger>
-                                                    {serial.serial_code}
-                                                    <Accordion.ItemIndicator />
-                                                </Accordion.ItemTrigger>
-                                                <Accordion.ItemContent>
-                                                    <Accordion.ItemBody>
-                                                        <div className="serial-details">
-                                                            <Text>
-                                                                <strong>
-                                                                    Estado:
-                                                                </strong>{" "}
-                                                                {serial.status}
-                                                            </Text>
-                                                            <Text>
-                                                                <strong>
-                                                                    Ubicación:
-                                                                </strong>{" "}
-                                                                {
-                                                                    serial.location
-                                                                }
-                                                            </Text>
-                                                            <Text>
-                                                                <strong>
-                                                                    Último
-                                                                    movimiento:
-                                                                </strong>{" "}
-                                                                {serial.last_movement
-                                                                    ? serial.last_movement
-                                                                    : "N/A"}
-                                                            </Text>
-                                                        </div>
-                                                    </Accordion.ItemBody>
-                                                </Accordion.ItemContent>
-                                            </Accordion.Item>
-                                        ))}
+                                        {pieceSerials?.map(
+                                            (serial) =>
+                                                serial.current_machine ===
+                                                    m.machine_id && (
+                                                    <Accordion.Item
+                                                        key={serial.id}
+                                                        value={
+                                                            serial.serial_code
+                                                        }
+                                                    >
+                                                        <Accordion.ItemTrigger>
+                                                            {serial.serial_code}
+                                                            <Accordion.ItemIndicator />
+                                                        </Accordion.ItemTrigger>
+                                                        <Accordion.ItemContent>
+                                                            <Accordion.ItemBody>
+                                                                <div className="serial-details">
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Estado:
+                                                                        </strong>{" "}
+                                                                        {
+                                                                            serial.status
+                                                                        }
+                                                                    </Text>
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Ubicación:
+                                                                        </strong>{" "}
+                                                                        {
+                                                                            serial.location
+                                                                        }
+                                                                    </Text>
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Último
+                                                                            movimiento:
+                                                                        </strong>{" "}
+                                                                        {serial.last_movement
+                                                                            ? serial.last_movement
+                                                                            : "N/A"}
+                                                                    </Text>
+                                                                </div>
+                                                            </Accordion.ItemBody>
+                                                        </Accordion.ItemContent>
+                                                    </Accordion.Item>
+                                                )
+                                        )}
+                                    </Accordion.Root>
+                                </div>
+                            </Accordion.ItemBody>
+                        </Accordion.ItemContent>
+                    </Accordion.Item>
+                ))}
+                {warehouses?.data.map((w) => (
+                    <Accordion.Item
+                        key={w.warehouse}
+                        value={w.warehouse}
+                    >
+                        <Accordion.ItemTrigger>
+                            Almacen: {w.warehouse}
+                            <Accordion.ItemIndicator />
+                        </Accordion.ItemTrigger>
+                        <Accordion.ItemContent>
+                            <Accordion.ItemBody>
+                                <div className="serials-accordion">
+                                    <Accordion.Root collapsible>
+                                        {pieceSerials?.map(
+                                            (serial) =>
+                                                serial.current_warehouse ===
+                                                    w.warehouse_id && (
+                                                    <Accordion.Item
+                                                        key={serial.id}
+                                                        value={
+                                                            serial.serial_code
+                                                        }
+                                                    >
+                                                        <Accordion.ItemTrigger>
+                                                            {serial.serial_code}
+                                                            <Accordion.ItemIndicator />
+                                                        </Accordion.ItemTrigger>
+                                                        <Accordion.ItemContent>
+                                                            <Accordion.ItemBody>
+                                                                <div className="serial-details">
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Estado:
+                                                                        </strong>{" "}
+                                                                        {
+                                                                            serial.status
+                                                                        }
+                                                                    </Text>
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Último
+                                                                            movimiento:
+                                                                        </strong>{" "}
+                                                                        {serial.last_movement
+                                                                            ? serial.last_movement
+                                                                            : "N/A"}
+                                                                    </Text>
+                                                                </div>
+                                                            </Accordion.ItemBody>
+                                                        </Accordion.ItemContent>
+                                                    </Accordion.Item>
+                                                )
+                                        )}
                                     </Accordion.Root>
                                 </div>
                             </Accordion.ItemBody>

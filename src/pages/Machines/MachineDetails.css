@@ -5,10 +5,11 @@
 
 .summary-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
-    width: 20%;
+    width: 100%;
     margin: 1rem;
+    gap: 1rem;
 }
 
 .summary-header > .header-separator {
