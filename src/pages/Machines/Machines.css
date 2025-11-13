@@ -19,7 +19,7 @@
 .fallback {
     display: "flex";
     justify-content: "center";
-    align-Items: "center";
+    align-items: "center";
     height: "100vh";
     width: "100vw";
 }
@@ -37,7 +37,7 @@
         align-items: center;
         justify-content: space-around;
     }
-    
+
     .search-bar > * {
         width: 100%;
     }
@@ -49,15 +49,15 @@
 
 .filter-critical-button {
     min-width: 150px;
-    border: .1px solid #fecaca;
+    border: 0.1px solid #fecaca;
     border-radius: 4px;
-    padding: .45rem;
+    padding: 0.45rem;
     color: #a61939;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
 }
 
 .filter-critical-button::after {
-    content: 'Mostrar críticas';
+    content: "Mostrar críticas";
 }
 
 .filter-critical-button:hover {
@@ -67,15 +67,15 @@
 
 .filter-critical-button-active {
     min-width: 150px;
-    border: .5px solid #bfdbfe;
+    border: 0.5px solid #bfdbfe;
     border-radius: 4px;
-    padding: .45rem;
+    padding: 0.45rem;
     color: #175ec5;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
 }
 
 .filter-critical-button-active::after {
-    content: 'Mostrar todas';
+    content: "Mostrar todas";
 }
 
 .filter-critical-button-active:hover {
