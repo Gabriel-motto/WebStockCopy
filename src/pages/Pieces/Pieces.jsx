@@ -13,6 +13,7 @@ import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx
 import { navigateTo } from "@/utils/Link.jsx";
 import { Toaster, toaster } from "@/components/ui/toaster.jsx";
 import NewPiece from "./NewPiece.jsx";
+import { MdSearchOff } from "react-icons/md";
 
 const tabData = [
     {
@@ -181,7 +182,7 @@ function PiecesPage({ params = {} }) {
                     />
                 </Suspense>
             ) : search !== "" ? (
-                <EmptyError description="No hay piezas que coincidan con la búsqueda" />
+                <EmptyError indicator={<MdSearchOff />} description="No hay piezas que coincidan con la búsqueda" />
             ) : null}
             <DialogComponent
                 size="cover"

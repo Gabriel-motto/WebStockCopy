@@ -17,6 +17,7 @@ import "./Machines.css";
 import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx";
 import { navigateTo } from "@/utils/Link.jsx";
 import { useAssemblyLines } from "@/hooks/useALine.jsx";
+import { MdSearchOff } from "react-icons/md";
 
 const DialogComponent = lazy(() =>
     import("../../components/dialog/Dialog.jsx")
@@ -24,7 +25,6 @@ const DialogComponent = lazy(() =>
 
 function MachinesTable({ machines, handleClick }) {
     const ALines = useAssemblyLines();
-    console.log(ALines);
 
     return (
         <Table.Root interactive>
@@ -70,10 +70,12 @@ export default function MachinesPage({ params = {} }) {
         getCriticals: getCriticals,
     });
 
+    console.log(selectedALines);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const siblings = 2; // Número de páginas antes y después de la actual
-    const totalPages = Math.ceil(machines.length / pageSize);
+    const totalPages = Math.ceil(machines?.length / pageSize);
 
     // Si cambias páginaSize resetea a 1
     const handleSizeChange = (size) => {
@@ -84,7 +86,7 @@ export default function MachinesPage({ params = {} }) {
     // Define slice
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
-    const pageMachines = machines.slice(start, end);
+    const pageMachines = machines?.slice(start, end);
 
     const handleAssemblyLineChange = (value) => {
         setSelectedAlines(value);
@@ -139,32 +141,15 @@ export default function MachinesPage({ params = {} }) {
     return (
         <main>
             <div className="search-bar">
-                <div className="search-line-critical">
-                    <SelectAssemblyLine
-                        dataFromChild={handleAssemblyLineChange}
-                    />
-                    {!getCriticals ? (
-                        <Button
-                            colorPalette="red"
-                            variant="outline"
-                            onClick={() => {
-                                setGetCriticals(true);
-                            }}
-                        >
-                            Filtrar por críticas
-                        </Button>
-                    ) : (
-                        <Button
-                            colorPalette="blue"
-                            variant="outline"
-                            onClick={() => {
-                                setGetCriticals(false);
-                            }}
-                        >
-                            Mostrar todas
-                        </Button>
-                    )}
-                </div>
+                <SelectAssemblyLine dataFromChild={handleAssemblyLineChange} />
+                <button
+                    type="button"
+                    onClick={() => {
+                        setGetCriticals(!getCriticals);
+                    }}
+                    className={getCriticals ? "filter-critical-button-active" : "filter-critical-button"}
+                >
+                </button>
                 <div className="search-input-machines">
                     <InputGroup
                         startElement={<IoSearch className="search-icon" />}
@@ -200,7 +185,7 @@ export default function MachinesPage({ params = {} }) {
                     />
                 </>
             ) : search !== "" ? (
-                <EmptyError description="Ninguna máquina coincide con la busqueda" />
+                <EmptyError indicator={<MdSearchOff />} description="Ninguna máquina coincide con la busqueda" />
             ) : null}
             <Suspense fallback={<LoadingScreenHelix />}>
                 <DialogComponent

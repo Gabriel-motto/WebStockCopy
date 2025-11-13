@@ -47,7 +47,38 @@
     }
 }
 
-.search-line-critical {
-    display: flex;
-    align-items: center;
+.filter-critical-button {
+    min-width: 150px;
+    border: .1px solid #fecaca;
+    border-radius: 4px;
+    padding: .45rem;
+    color: #a61939;
+    margin-right: .5rem;
+}
+
+.filter-critical-button::after {
+    content: 'Mostrar críticas';
+}
+
+.filter-critical-button:hover {
+    background-color: #fee2e2;
+    cursor: pointer;
+}
+
+.filter-critical-button-active {
+    min-width: 150px;
+    border: .5px solid #bfdbfe;
+    border-radius: 4px;
+    padding: .45rem;
+    color: #175ec5;
+    margin-right: .5rem;
+}
+
+.filter-critical-button-active::after {
+    content: 'Mostrar todas';
+}
+
+.filter-critical-button-active:hover {
+    background-color: #dbeafe;
+    cursor: pointer;
 }

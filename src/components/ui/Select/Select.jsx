@@ -12,7 +12,7 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
     const [selectedValues, setSelectedValues] = useState([]);
     const [search, setSearch] = useState("");
     const [showOptions, setShowOptions] = useState(false);
-    const assemblyLines = useAssemblyLines(search);
+    const assemblyLines = useAssemblyLines({search: search});
 
     const addSelectedValues = (newValue) => {
         setSelectedValues((prevValues) => [...prevValues, newValue]);
@@ -36,7 +36,7 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
     };
 
     useEffect(() => {
-        dataFromChild(selectedValues);
+        dataFromChild(selectedValues.map(line => line.id));
     }, [selectedValues]);
 
     const ref = useClickAway(() => {
@@ -49,11 +49,11 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
                 {assemblyLines.map((value, index) => (
                     <div
                         className="item"
-                        onClick={() => handleSelectClick(value.name)}
+                        onClick={() => handleSelectClick(value)}
                         key={index}
                     >
                         {value.name}
-                        {selectedValues.includes(value.name) ? (
+                        {selectedValues.includes(value) ? (
                             <FaCheck className="selected-icon" />
                         ) : null}
                     </div>
@@ -102,11 +102,11 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
                 {selectedValues.length > 0
                     ? selectedValues.map((value) => (
                           <div
-                              key={value}
+                              key={value.name}
                               className="item-filter"
                               onClick={() => handleFilterClose(value)}
                           >
-                              <Text truncate>{value}</Text>
+                              <Text truncate>{value.name}</Text>
                               <IoIosClose className="item-filter-icon" />
                           </div>
                       ))
