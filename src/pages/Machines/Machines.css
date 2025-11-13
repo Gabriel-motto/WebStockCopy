@@ -48,7 +48,7 @@
 }
 
 .filter-critical-button {
-    min-width: 150px;
+    width: 200px;
     border: 0.1px solid #fecaca;
     border-radius: 4px;
     padding: 0.45rem;
@@ -66,7 +66,7 @@
 }
 
 .filter-critical-button-active {
-    min-width: 150px;
+    width: 200px;
     border: 0.5px solid #bfdbfe;
     border-radius: 4px;
     padding: 0.45rem;
