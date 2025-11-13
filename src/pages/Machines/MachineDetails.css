@@ -63,5 +63,5 @@
 }
 
 .summary-image {
-    width: 80%;
+    max-height: 50vh;
 }
