@@ -70,8 +70,6 @@ export default function MachinesPage({ params = {} }) {
         getCriticals: getCriticals,
     });
 
-    console.log(selectedALines);
-
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const siblings = 2; // Número de páginas antes y después de la actual

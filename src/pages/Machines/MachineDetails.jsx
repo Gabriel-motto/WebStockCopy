@@ -65,8 +65,11 @@ function PieceInfoTable({ pieces }) {
                     <Table.Header>
                         <Table.Row>
                             <Table.ColumnHeader>Referencia</Table.ColumnHeader>
-                            <Table.ColumnHeader>Cantidad</Table.ColumnHeader>
-                            <Table.ColumnHeader>Descripción</Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center" >Cantidad</Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center" >Descripción</Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center" >Stock Mínimo</Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center" >Crítico</Table.ColumnHeader>
+                            <Table.ColumnHeader>Obsoleto</Table.ColumnHeader>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -77,13 +80,24 @@ function PieceInfoTable({ pieces }) {
                                 _hover={{ cursor: "pointer" }}
                             >
                                 <Table.Cell>{piece.name}</Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell textAlign="center" >
                                     <Text textStyle="xl">
                                         {pageAmounts[idx]}
                                     </Text>
                                 </Table.Cell>
                                 <Table.Cell>
                                     {piece.description || "Sin descripción"}
+                                </Table.Cell>
+                                <Table.Cell textAlign="center" >
+                                    {piece.min_stock || "No definido"}
+                                </Table.Cell>
+                                <Table.Cell textAlign="center" >
+                                    {piece.is_critical ? "Sí" : "No"}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {piece.availability === "obsolete" ? "Obsoleto" : 
+                                    piece.availability === "available" ? "Disponible" :
+                                    piece.availability === "limited" ? "Limitado" : "No disponible"}
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -109,8 +123,6 @@ function Summary({ data }) {
         bucket: "machines",
         baseName: data?.name,
     });
-
-    console.log(machineImage);
 
     return (
         <div className="machine-related-content">

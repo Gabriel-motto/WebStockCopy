@@ -55,7 +55,6 @@ export async function getWarehousesStockPiece(pieceId, column) {
 }
 
 export async function insertPiece(newPiece) {
-    console.log("Inserting piece:", newPiece);
 
     const { data: piece, error } = await supabase
         .from("pieces_new")
@@ -124,8 +123,6 @@ export async function deleteImage({ bucket, path }) {
     const { error: removeError } = await supabase.storage
         .from(bucket)
         .remove([path]);
-
-    console.log("Error deleting image:", removeError);
 }
 
 export async function insertRecentMovement({ values, pieceId }) {
@@ -185,7 +182,6 @@ export async function insertRecentMovement({ values, pieceId }) {
 }
 
 export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld) {
-    console.log("update", updatedPiece);
     const { data, error } = await supabase
         .from("pieces_new")
         .update({

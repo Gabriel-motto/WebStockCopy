@@ -1,8 +1,6 @@
 import supabase from "@/utils/supabase";
 
 export async function getPieceSerials(pieceId, column) {
-    console.log("piece", pieceId)
-    console.log("column", column)
     let query = supabase.from("piece_serials").select(column);
 
 

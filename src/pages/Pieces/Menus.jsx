@@ -24,7 +24,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
     const [showHint1, setShowHint1] = useState(false);
     const [showHint2, setShowHint2] = useState(false);
     const [formData, setFormData] = useState({
-        piece: piece,
+        piece: piece?.name,
         locationTypeFrom: "",
         locationFrom: "",
         location: { id: "", type: "" },
@@ -44,7 +44,6 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log(formData);
         handleCancel();
     }
 
@@ -94,7 +93,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
                             >
                                 <div className="custom-selector">
                                     <p className="selector-label">
-                                        Selecciona una opción
+                                        Selecciona la/s pieza/s a mover
                                     </p>
                                     <Separator
                                         orientation="vertical"
@@ -716,7 +715,6 @@ export function DeleteStockMenu({ piece, inStock, handleCancel }) {
             ...formData,
             [e.target.name]: e.target.value.toUpperCase(),
         });
-        console.log(e.target.value.toUpperCase());
     }
 
     function handleHintSelect(value, field) {

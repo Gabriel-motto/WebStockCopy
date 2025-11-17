@@ -73,137 +73,137 @@ function Traceability({ data }) {
     const pieceSerials = usePieceSerials({ pieceId: data.id });
 
     return (
-        <EmptyError indicator={<BsGearWideConnected />} title="PROXIMAMENTE" description="Página en desarrollo" />
-        // <div className="traceability-body">
-        //     <Accordion.Root collapsible>
-        //         {machines?.data.map((m) => (
-        //             <Accordion.Item
-        //                 key={m.machine}
-        //                 value={m.machine}
-        //             >
-        //                 <Accordion.ItemTrigger>
-        //                     Máquina: {m.machine}
-        //                     <Accordion.ItemIndicator />
-        //                 </Accordion.ItemTrigger>
-        //                 <Accordion.ItemContent>
-        //                     <Accordion.ItemBody>
-        //                         <div className="serials-accordion">
-        //                             <Accordion.Root collapsible>
-        //                                 {pieceSerials?.map(
-        //                                     (serial) =>
-        //                                         serial.current_machine ===
-        //                                             m.machine_id && (
-        //                                             <Accordion.Item
-        //                                                 key={serial.id}
-        //                                                 value={
-        //                                                     serial.serial_code
-        //                                                 }
-        //                                             >
-        //                                                 <Accordion.ItemTrigger>
-        //                                                     {serial.serial_code}
-        //                                                     <Accordion.ItemIndicator />
-        //                                                 </Accordion.ItemTrigger>
-        //                                                 <Accordion.ItemContent>
-        //                                                     <Accordion.ItemBody>
-        //                                                         <div className="serial-details">
-        //                                                             <Text>
-        //                                                                 <strong>
-        //                                                                     Estado:
-        //                                                                 </strong>{" "}
-        //                                                                 {
-        //                                                                     serial.status
-        //                                                                 }
-        //                                                             </Text>
-        //                                                             <Text>
-        //                                                                 <strong>
-        //                                                                     Ubicación:
-        //                                                                 </strong>{" "}
-        //                                                                 {
-        //                                                                     serial.location
-        //                                                                 }
-        //                                                             </Text>
-        //                                                             <Text>
-        //                                                                 <strong>
-        //                                                                     Último
-        //                                                                     movimiento:
-        //                                                                 </strong>{" "}
-        //                                                                 {serial.last_movement
-        //                                                                     ? serial.last_movement
-        //                                                                     : "N/A"}
-        //                                                             </Text>
-        //                                                         </div>
-        //                                                     </Accordion.ItemBody>
-        //                                                 </Accordion.ItemContent>
-        //                                             </Accordion.Item>
-        //                                         )
-        //                                 )}
-        //                             </Accordion.Root>
-        //                         </div>
-        //                     </Accordion.ItemBody>
-        //                 </Accordion.ItemContent>
-        //             </Accordion.Item>
-        //         ))}
-        //         {warehouses?.data.map((w) => (
-        //             <Accordion.Item
-        //                 key={w.warehouse}
-        //                 value={w.warehouse}
-        //             >
-        //                 <Accordion.ItemTrigger>
-        //                     Almacen: {w.warehouse}
-        //                     <Accordion.ItemIndicator />
-        //                 </Accordion.ItemTrigger>
-        //                 <Accordion.ItemContent>
-        //                     <Accordion.ItemBody>
-        //                         <div className="serials-accordion">
-        //                             <Accordion.Root collapsible>
-        //                                 {pieceSerials?.map(
-        //                                     (serial) =>
-        //                                         serial.current_warehouse ===
-        //                                             w.warehouse_id && (
-        //                                             <Accordion.Item
-        //                                                 key={serial.id}
-        //                                                 value={
-        //                                                     serial.serial_code
-        //                                                 }
-        //                                             >
-        //                                                 <Accordion.ItemTrigger>
-        //                                                     {serial.serial_code}
-        //                                                     <Accordion.ItemIndicator />
-        //                                                 </Accordion.ItemTrigger>
-        //                                                 <Accordion.ItemContent>
-        //                                                     <Accordion.ItemBody>
-        //                                                         <div className="serial-details">
-        //                                                             <Text>
-        //                                                                 <strong>
-        //                                                                     Estado:
-        //                                                                 </strong>{" "}
-        //                                                                 {
-        //                                                                     serial.status
-        //                                                                 }
-        //                                                             </Text>
-        //                                                             <Text>
-        //                                                                 <strong>
-        //                                                                     Último
-        //                                                                     movimiento:
-        //                                                                 </strong>{" "}
-        //                                                                 {serial.last_movement
-        //                                                                     ? serial.last_movement
-        //                                                                     : "N/A"}
-        //                                                             </Text>
-        //                                                         </div>
-        //                                                     </Accordion.ItemBody>
-        //                                                 </Accordion.ItemContent>
-        //                                             </Accordion.Item>
-        //                                         )
-        //                                 )}
-        //                             </Accordion.Root>
-        //                         </div>
-        //                     </Accordion.ItemBody>
-        //                 </Accordion.ItemContent>
-        //             </Accordion.Item>
-        //         ))}
-        //     </Accordion.Root>
-        // </div>
+        // <EmptyError indicator={<BsGearWideConnected />} title="PROXIMAMENTE" description="Página en desarrollo" />
+        <div className="traceability-body">
+            <Accordion.Root collapsible>
+                {machines?.data.map((m) => (
+                    <Accordion.Item
+                        key={m.machine}
+                        value={m.machine}
+                    >
+                        <Accordion.ItemTrigger>
+                            Máquina: {m.machine}
+                            <Accordion.ItemIndicator />
+                        </Accordion.ItemTrigger>
+                        <Accordion.ItemContent>
+                            <Accordion.ItemBody>
+                                <div className="serials-accordion">
+                                    <Accordion.Root collapsible>
+                                        {pieceSerials?.map(
+                                            (serial) =>
+                                                serial.current_machine ===
+                                                    m.machine_id && (
+                                                    <Accordion.Item
+                                                        key={serial.id}
+                                                        value={
+                                                            serial.serial_code
+                                                        }
+                                                    >
+                                                        <Accordion.ItemTrigger>
+                                                            {serial.serial_code}
+                                                            <Accordion.ItemIndicator />
+                                                        </Accordion.ItemTrigger>
+                                                        <Accordion.ItemContent>
+                                                            <Accordion.ItemBody>
+                                                                <div className="serial-details">
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Estado:
+                                                                        </strong>{" "}
+                                                                        {
+                                                                            serial.status
+                                                                        }
+                                                                    </Text>
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Ubicación:
+                                                                        </strong>{" "}
+                                                                        {
+                                                                            serial.location
+                                                                        }
+                                                                    </Text>
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Último
+                                                                            movimiento:
+                                                                        </strong>{" "}
+                                                                        {serial.last_movement
+                                                                            ? serial.last_movement
+                                                                            : "N/A"}
+                                                                    </Text>
+                                                                </div>
+                                                            </Accordion.ItemBody>
+                                                        </Accordion.ItemContent>
+                                                    </Accordion.Item>
+                                                )
+                                        )}
+                                    </Accordion.Root>
+                                </div>
+                            </Accordion.ItemBody>
+                        </Accordion.ItemContent>
+                    </Accordion.Item>
+                ))}
+                {warehouses?.data.map((w) => (
+                    <Accordion.Item
+                        key={w.warehouse}
+                        value={w.warehouse}
+                    >
+                        <Accordion.ItemTrigger>
+                            Almacen: {w.warehouse}
+                            <Accordion.ItemIndicator />
+                        </Accordion.ItemTrigger>
+                        <Accordion.ItemContent>
+                            <Accordion.ItemBody>
+                                <div className="serials-accordion">
+                                    <Accordion.Root collapsible>
+                                        {pieceSerials?.map(
+                                            (serial) =>
+                                                serial.current_warehouse ===
+                                                    w.warehouse_id && (
+                                                    <Accordion.Item
+                                                        key={serial.id}
+                                                        value={
+                                                            serial.serial_code
+                                                        }
+                                                    >
+                                                        <Accordion.ItemTrigger>
+                                                            {serial.serial_code}
+                                                            <Accordion.ItemIndicator />
+                                                        </Accordion.ItemTrigger>
+                                                        <Accordion.ItemContent>
+                                                            <Accordion.ItemBody>
+                                                                <div className="serial-details">
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Estado:
+                                                                        </strong>{" "}
+                                                                        {
+                                                                            serial.status
+                                                                        }
+                                                                    </Text>
+                                                                    <Text>
+                                                                        <strong>
+                                                                            Último
+                                                                            movimiento:
+                                                                        </strong>{" "}
+                                                                        {serial.last_movement
+                                                                            ? serial.last_movement
+                                                                            : "N/A"}
+                                                                    </Text>
+                                                                </div>
+                                                            </Accordion.ItemBody>
+                                                        </Accordion.ItemContent>
+                                                    </Accordion.Item>
+                                                )
+                                        )}
+                                    </Accordion.Root>
+                                </div>
+                            </Accordion.ItemBody>
+                        </Accordion.ItemContent>
+                    </Accordion.Item>
+                ))}
+            </Accordion.Root>
+        </div>
     );
 }
 
@@ -259,7 +259,7 @@ function Details({ data }) {
                 content={
                     selectedValue === "move" ? (
                         <MoveStockMenu
-                            piece={data.name}
+                            piece={data}
                             inStock={[...machines?.data, ...warehouses?.data]}
                             handleCancel={closeDialog}
                         />
@@ -492,7 +492,7 @@ function Details({ data }) {
                         <EmptyError
                             indicator={<CiImageOff />}
                             title="SIN IMAGEN"
-                            description="No hay imagenes disponibles"
+                            description={`No hay imagenes de la pieza ${data.name}`}
                         />
                     ) : (
                         <Zoom>
@@ -520,7 +520,7 @@ function Details({ data }) {
                         <EmptyError
                             indicator={<CiImageOff />}
                             title="SIN IMAGEN"
-                            description="No hay imagenes disponibles"
+                            description={`No hay imagenes de la pieza ${data.name}`}
                         />
                     ) : (
                         <Zoom>
