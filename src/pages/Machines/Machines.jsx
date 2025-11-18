@@ -32,7 +32,7 @@ function MachinesTable({ machines, handleClick }) {
                 <Table.Row>
                     <Table.ColumnHeader>Nombre</Table.ColumnHeader>
                     <Table.ColumnHeader>Descripción</Table.ColumnHeader>
-                    <Table.ColumnHeader>Línea</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="center" >Línea</Table.ColumnHeader>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -44,7 +44,7 @@ function MachinesTable({ machines, handleClick }) {
                     >
                         <Table.Cell>{machine.name}</Table.Cell>
                         <Table.Cell>{machine.description}</Table.Cell>
-                        <Table.Cell>
+                        <Table.Cell textAlign="center" >
                             {ALines.find(
                                 (ALine) => ALine.id === machine.assembly_line_id
                             )?.name || "N/A"}

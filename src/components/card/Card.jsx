@@ -58,7 +58,7 @@ export function CardImage({
                 className="body"
             >
                 <Card.Title
-                    className="title"
+                    className="card-title title"
                     fontWeight="medium"
                 >
                     {title}

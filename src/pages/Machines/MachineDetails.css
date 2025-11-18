@@ -65,3 +65,9 @@
 .summary-image {
     max-height: 50vh;
 }
+
+.piece-info-table {
+    font-size: large;
+    margin-left: 1rem;
+    font-weight: normal;
+}

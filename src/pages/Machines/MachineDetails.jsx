@@ -44,8 +44,9 @@ function PieceInfoTable({ pieces }) {
     // Define slice
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
-    const pageDetails = details.slice(start, end);
-    const pageAmounts = pieces.slice(start, end).map((p) => p.amount);
+    const pageDetails = details.sort((a,b) => a.id - b.id).slice(start, end);
+    const pageAmounts = pieces.sort((a,b) => a.id - b.id).slice(start, end).map((p) => p.amount);
+
 
     // On row click, navigate to piece details
     const handleClick = (piece) => {
@@ -54,13 +55,13 @@ function PieceInfoTable({ pieces }) {
 
     return (
         <div className="piece-related-content">
-            <div className="title">Piezas en la máquina</div>
+            <div className="piece-info-table title">Piezas en la máquina</div>
             <div className="piece-body">
                 <Table.Root stickyHeader interactive>
                     <Table.ColumnGroup>
-                        <Table.Column htmlWidth="10%" />
-                        <Table.Column htmlWidth="2%" />
-                        <Table.Column />
+                        <Table.Column/>
+                        <Table.Column/>
+                        <Table.Column/>
                     </Table.ColumnGroup>
                     <Table.Header>
                         <Table.Row>
@@ -69,7 +70,7 @@ function PieceInfoTable({ pieces }) {
                             <Table.ColumnHeader textAlign="center" >Descripción</Table.ColumnHeader>
                             <Table.ColumnHeader textAlign="center" >Stock Mínimo</Table.ColumnHeader>
                             <Table.ColumnHeader textAlign="center" >Crítico</Table.ColumnHeader>
-                            <Table.ColumnHeader>Obsoleto</Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center" >Disponibilidad</Table.ColumnHeader>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -94,7 +95,7 @@ function PieceInfoTable({ pieces }) {
                                 <Table.Cell textAlign="center" >
                                     {piece.is_critical ? "Sí" : "No"}
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell textAlign="center" >
                                     {piece.availability === "obsolete" ? "Obsoleto" : 
                                     piece.availability === "available" ? "Disponible" :
                                     piece.availability === "limited" ? "Limitado" : "No disponible"}

@@ -223,8 +223,8 @@ function Details({ data }) {
     });
 
     const chartData = [
-        { name: "En máquinas", value: pieceStock?.data[0].stock_in_machines },
-        { name: "En almacén", value: pieceStock?.data[0].stock_in_warehouses },
+        { name: "En máquinas", value: machines?.data.map(item => item.amount).reduce((a,b) => a + b, 0) },
+        { name: "En almacén", value: warehouses?.data.map(item => item.amount).reduce((a,b) => a + b, 0) },
     ];
 
     function handleSelectClick(value) {
@@ -233,6 +233,9 @@ function Details({ data }) {
             setShowDialog(true);
         }
     }
+
+    console.log(pieceStock?.data[0])
+    console.log(machines?.data)
 
     function closeDialog() {
         setShowDialog(false);
@@ -414,7 +417,7 @@ function Details({ data }) {
                     <div className="charts">
                         <Heading>
                             Stock total en máquinas/almacén:{" "}
-                            {pieceStock?.data[0].stock_total}
+                            {pieceStock?.data[0].amount}
                         </Heading>
                         <PopoverComponent
                             title="Localización de esta pieza"

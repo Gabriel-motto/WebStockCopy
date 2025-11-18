@@ -34,3 +34,8 @@
         display: none;
     }
 }
+
+.title {
+    font-size: x-large;
+    font-weight: bolder;
+}

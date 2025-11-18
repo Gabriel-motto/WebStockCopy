@@ -29,7 +29,7 @@ export async function getPieces(workshop, search, multiple, column, orderBy) {
 
 export async function getTotalStockPiece(pieceId, column) {
     let query = supabase
-        .from("v_stock_global")
+        .from("v_stock_total")
         .select(column)
         .eq("piece_id", pieceId);
 

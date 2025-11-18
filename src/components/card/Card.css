@@ -10,7 +10,7 @@
     height: 65px;
 }
 
-.title {
+.card-title {
     height: 50px;
 }
 
@@ -31,7 +31,7 @@
 }
 
 @media screen and (max-width: 768px) {
-    .title {
+    .card-title {
         font-size: large;
         font-weight:500;
     }
