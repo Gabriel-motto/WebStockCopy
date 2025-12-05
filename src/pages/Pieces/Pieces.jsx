@@ -12,8 +12,8 @@ import { EmptyError } from "@/components/ui/EmptyStates.jsx";
 import { LoadingScreenHelix } from "@/components/loadingScreen/LoadingScreen.jsx";
 import { navigateTo } from "@/utils/Link.jsx";
 import { Toaster, toaster } from "@/components/ui/toaster.jsx";
-import NewPiece from "./NewPiece.jsx";
 import { MdSearchOff } from "react-icons/md";
+import { NewPiece } from "./Menus.jsx";
 
 const tabData = [
     {

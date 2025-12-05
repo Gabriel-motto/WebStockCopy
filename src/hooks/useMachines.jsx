@@ -8,16 +8,18 @@ export function useMachines(options = {}) {
         debouncedSearch,
         column = "*",
         getCriticals,
+        id,
     } = options;
     const [machines, setMachines] = useState([]);
 
     useEffect(() => {
-        getMachines(selectedALines, search, column, getCriticals).then(setMachines);
+        getMachines(selectedALines, search, column, getCriticals, id).then(setMachines);
     }, [
         JSON.stringify(selectedALines),
         debouncedSearch ? debouncedSearch : search,
         column,
         getCriticals,
+        id,
     ]);
     return machines;
 }

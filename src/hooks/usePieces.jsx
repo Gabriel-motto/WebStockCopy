@@ -64,7 +64,8 @@ export function useWarehousesStockPiece(options = {}) {
     return stock;
 }
 
-export async function useInsertPiece({ values }) {
+export async function useInsertPiece(options = {}) {
+    const { values } = options;
     const promiseToaster = toaster.create({
         title: "Añadiendo pieza...",
         description: "Por favor, espera mientras se añade la pieza.",

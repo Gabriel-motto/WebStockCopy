@@ -70,7 +70,7 @@ export function CardImage({
                     {description}
                 </Card.Description>
             </Card.Body>
-            <Card.Footer className="footer">
+            <Card.Footer className="footer card-footer">
                 <Text
                     textStyle="2xl"
                     letterSpacing="tight"

@@ -8,7 +8,7 @@ import {
 } from "@/hooks/usePieces";
 import { PieChart, Pie, Tooltip, Legend, Cell } from "recharts";
 import { COLOR } from "@/utils/consts";
-import { CustomLink } from "@/utils/Link";
+import { CustomLink, navigateTo } from "@/utils/Link";
 import { PopoverComponent } from "@/components/ui/Popover-component";
 import { IoWarningOutline } from "react-icons/io5";
 import supabase from "@/utils/supabase";
@@ -234,9 +234,6 @@ function Details({ data }) {
         }
     }
 
-    console.log(pieceStock?.data[0])
-    console.log(machines?.data)
-
     function closeDialog() {
         setShowDialog(false);
     }
@@ -417,7 +414,7 @@ function Details({ data }) {
                     <div className="charts">
                         <Heading>
                             Stock total en máquinas/almacén:{" "}
-                            {pieceStock?.data[0].amount}
+                            {pieceStock?.data[0] ? pieceStock?.data[0].amount : 0}
                         </Heading>
                         <PopoverComponent
                             title="Localización de esta pieza"

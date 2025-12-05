@@ -1,7 +1,11 @@
 import supabase from "../utils/supabase";
 
-export async function getMachines(selectedALines, search, column, getCriticals) {
+export async function getMachines(selectedALines, search, column, getCriticals, id) {
     let query = supabase.from("machines_new").select(column);
+
+    if (id) {
+        query = query.eq("id", id);
+    }
 
     if (selectedALines.length > 0) {
         query = query.in("assembly_line_id", selectedALines);

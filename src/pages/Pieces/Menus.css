@@ -1,55 +1,37 @@
+/* Generales */
+
 .menus-container {
     width: 100%;
 }
-
-.move-location-cell {
-    position: relative;
-}
-
-.location-group {
-    display: flex;
-}
-
 .menus-label {
     font-weight: 600;
     margin-bottom: 5px;
 }
-
-.location-input {
-    margin: 0.25rem 0 0.5rem 0;
-}
-
-.location {
+.menus-cage {
     position: relative;
     flex: 1 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
 }
 
-.location > input {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0.5rem;
-    font-size: 1rem;
+.location-cage,
+.serial-cage {
+    margin: 0.25rem 0 0.5rem 0;
+    width: 100%;
 }
 
-.location > input:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-.footer {
+.menus-footer {
     display: flex;
-    justify-content: flex-end;
     gap: 0.5rem;
     margin-top: 1rem;
+    justify-content: center;
+    gap: 4rem;
 }
 
 .autofiller {
     display: none;
     position: absolute;
-    top: 6rem;
+    top: 4rem;
     left: 0.5rem;
     padding: 0.5rem;
     background-color: #fff;
@@ -66,43 +48,21 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    column-gap: .5rem;
-    row-gap: .25rem;
+    column-gap: 0.5rem;
+    row-gap: 0.25rem;
 }
 
-.input {    
-    flex: 1 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.input > input,
-.input > textarea,
-.input > select {
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.image-input {
     padding: 0.5rem;
     font-size: 1rem;
 }
 
-.input > textarea {
-    height: 90px;
-}
-
-.input > input:focus,
-.input > textarea:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-.amount-input > input {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0.5rem;
-    font-size: 1rem;
+.amount-cage > input {
     width: 15%;
     text-align: center;
 }
+
+/* print menu */
 
 .print-content {
     display: flex;
@@ -111,30 +71,15 @@
     border: solid 2px black;
     align-items: center;
     justify-content: center;
-    padding: .25rem;
+    padding: 0.25rem;
 }
 .qr-code {
-    padding: .25rem;
+    padding: 0.25rem;
 }
-
 .print-info {
     display: flex;
-    gap: .5rem;
+    gap: 0.5rem;
 }
-
-.brand-input,
-.type-input,
-.workshop-input,
-.availability-input,
-.min-stock-input,
-.buy-price-input,
-.repair-price-input,
-.supplier-input,
-.alt-piece-input,
-.is-critical-input {
-    flex: 1 1 48%;
-}
-
 .print-menu-container {
     display: flex;
     flex-direction: column;
@@ -142,17 +87,73 @@
     justify-content: center;
     gap: 1rem;
 }
-
 .print-menu-body {
     display: none;
 }
-
 .print-menu-body > Button {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
     width: 50%;
     left: 25%;
 }
 
+.brand-edit-cage,
+.type-edit-cage,
+.workshop-edit-cage,
+.availability-edit-cage,
+.min-stock-edit-cage,
+.buy-price-edit-cage,
+.repair-price-edit-cage,
+.supplier-edit-cage,
+.alt-piece-edit-cage,
+.is-critical-edit-cage {
+    flex: 1 1 48%;
+}
+
 .show {
     display: block;
+}
+
+.body-move-stock {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* insert menu */
+.insert-piece-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.name-insert-cage,
+.brand-insert-cage,
+.type-insert-cage,
+.workshop-insert-cage,
+.isCritical-insert-cage {
+    flex: 1;
+}
+
+.buyPrice-insert-cage,
+.repairPrice-insert-cage {
+    flex: 1 1 49%;
+}
+.supplier-insert-cage,
+.availability-insert-cage,
+.min-stock-insert-cage,
+.altPiece-insert-cage {
+    flex: 1;
+}
+
+.image-piece-insert-cage,
+.image-data-card-insert-cage {
+    flex: 1;
+}
+
+.insert-menu-footer {
+    width: 100%;
+}
+
+.insert-menu-footer > Button {
+    width: 90px;
 }

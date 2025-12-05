@@ -10,11 +10,11 @@ export function HintPanel({ hintData, onSelect }) {
             {hintData.length !== 0 ? (
                 hintData.map((item) => (
                     <div
-                        key={item.name}
+                        key={item}
                         className="hint-item"
                         onMouseDown={(e) => handleClick(item, e)}
                     >
-                        <p>{item.name}</p>
+                        <p>{item}</p>
                     </div>
                 ))
             ) : (

@@ -7,6 +7,7 @@ import { HStack, Separator, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useAssemblyLines } from "@/hooks/useALine";
+import { navigateTo } from "@/utils/Link";
 
 export function SelectAssemblyLine({ dataFromChild, ...props }) {
     const [selectedValues, setSelectedValues] = useState([]);

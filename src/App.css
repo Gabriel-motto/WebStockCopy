@@ -39,3 +39,21 @@
     font-size: x-large;
     font-weight: bolder;
 }
+
+.input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.footer {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}

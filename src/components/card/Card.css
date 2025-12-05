@@ -14,7 +14,7 @@
     height: 50px;
 }
 
-.footer {
+.card-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
