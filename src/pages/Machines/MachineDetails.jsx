@@ -45,13 +45,16 @@ function PieceInfoTable({ pieces }) {
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
     const pageDetails = details.sort((a,b) => a.id - b.id).slice(start, end);
-    const pageAmounts = pieces.sort((a,b) => a.id - b.id).slice(start, end).map((p) => p.amount);
+    const pageAmounts = pieces.sort((a,b) => a.piece_id - b.piece_id).slice(start, end).map((p) => p.amount);
 
 
     // On row click, navigate to piece details
     const handleClick = (piece) => {
         navigateTo(`/pieces/${piece.name}`);
     };
+
+    console.log("details", details.sort((a,b) => a.id - b.id));
+    console.log("amounts", pieces.sort((a,b) => a.id - b.id));
 
     return (
         <div className="piece-related-content">
