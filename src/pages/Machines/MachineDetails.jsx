@@ -99,7 +99,8 @@ function PieceInfoTable({ pieces }) {
                                     {piece.is_critical ? "Sí" : "No"}
                                 </Table.Cell>
                                 <Table.Cell textAlign="center" >
-                                    {piece.availability === "obsolete" ? "Obsoleto" : 
+                                    {piece.availability === null ? "Sin definir" :
+                                    piece.availability === "obsolete" ? "Obsoleto" : 
                                     piece.availability === "available" ? "Disponible" :
                                     piece.availability === "limited" ? "Limitado" : "No disponible"}
                                 </Table.Cell>
