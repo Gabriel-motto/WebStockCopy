@@ -38,7 +38,7 @@ export function MoveStockMenu({ piece, inStock, handleCancel }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        formData.note &&
+        formData.note ||
             (formData.note = `Movimiento de serial ${formData.serial} hacia ${formData.location}`);
         updatePieceSerials({
             values: formData,
@@ -837,8 +837,8 @@ export function NewPiece({ handleCancel }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        values.note && (values.note = `Nueva pieza añadida: ${values.name}`);
-        useInsertPiece(values);
+        values.note || (values.note = `Nueva pieza añadida: ${values.name}`);
+        useInsertPiece({values: values});
         handleCancel();
     }
 
@@ -868,6 +868,8 @@ export function NewPiece({ handleCancel }) {
 
         setValues({ ...values, dataCard: { path: path, file: file } });
     }
+
+    console.log(values);
 
     return (
         <div className="menus-container insert-container">
@@ -1161,8 +1163,20 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage note-insert-cage">
-                    <label htmlFor="note" className="menus-label">Nota (Opcional)</label>
-                    <textarea type="text" name="note" id="note" className="input note-insert-input" />
+                    <label
+                        htmlFor="note"
+                        className="menus-label"
+                    >
+                        Nota (Opcional)
+                    </label>
+                    <textarea
+                        type="text"
+                        name="note"
+                        id="note"
+                        className="input note-insert-input"
+                        onChange={handleFormChange}
+                        placeholder={`Nueva pieza añadida: ${values.name || "XXX"}`}
+                    />
                 </div>
                 <div className="menus-footer insert-menu-footer">
                     <Button
