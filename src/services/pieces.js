@@ -223,3 +223,19 @@ export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld) {
             });
     }
 }
+
+export async function getPieceTypes(search = "") {
+    const query = supabase
+        .from("v_piece_types")
+        .select()
+        .order("type", { ascending: true })
+        .throwOnError();
+        
+    if(search) {
+        query.ilike("name", `%${search}%`);
+    }
+
+    const { data: types, error } = await query;
+
+    return types;
+}

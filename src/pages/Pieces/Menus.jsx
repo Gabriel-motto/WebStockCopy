@@ -5,7 +5,7 @@ import { Button, QrCode, Separator } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import "./Menus.css";
 import { useReactToPrint } from "react-to-print";
-import { useUpdatePiece, useInsertPiece } from "@/hooks/usePieces";
+import { useUpdatePiece, useInsertPiece, useGetPieceTypes } from "@/hooks/usePieces";
 import {
     useInsertPieceSerials,
     usePieceSerials,
@@ -14,7 +14,7 @@ import {
 import { useClickAway } from "@uidotdev/usehooks";
 import { IoIosArrowDown } from "react-icons/io";
 
-export function MoveStockMenu({ piece, inStock, handleCancel }) {
+export function MoveStockMenu({ piece, handleCancel }) {
     const [showHint1, setShowHint1] = useState(false);
     const [showHint2, setShowHint2] = useState(false);
     const [formData, setFormData] = useState({
@@ -455,6 +455,7 @@ export function EditStockMenu({
                         id="pieceImage"
                         onChange={handlePieceImageUpload}
                         accept="image/*"
+                        capture="environment"
                     />
                 </div>
                 <div className="image-data-card-edit-cage menus-cage">
@@ -471,6 +472,7 @@ export function EditStockMenu({
                         id="dataCard"
                         onChange={handleDataCardUpload}
                         accept="image/*"
+                        capture="environment"
                     />
                 </div>
             </div>
@@ -835,6 +837,8 @@ export function NewPiece({ handleCancel }) {
         dataCard: { path: null, file: null },
     });
 
+    const types = useGetPieceTypes(values.type || "");
+
     function handleSubmit(e) {
         e.preventDefault();
         values.note || (values.note = `Nueva pieza añadida: ${values.name}`);
@@ -868,8 +872,6 @@ export function NewPiece({ handleCancel }) {
 
         setValues({ ...values, dataCard: { path: path, file: file } });
     }
-
-    console.log(values);
 
     return (
         <div className="menus-container insert-container">
@@ -1144,6 +1146,7 @@ export function NewPiece({ handleCancel }) {
                         id="pieceImage"
                         onChange={handlePieceImageUpload}
                         accept="image/*"
+                        capture="environment"
                     />
                 </div>
                 <div className="menus-cage image-data-card-insert-cage">
@@ -1160,6 +1163,7 @@ export function NewPiece({ handleCancel }) {
                         id="dataCard"
                         onChange={handleDataCardUpload}
                         accept="image/*"
+                        capture="environment"
                     />
                 </div>
                 <div className="menus-cage note-insert-cage">

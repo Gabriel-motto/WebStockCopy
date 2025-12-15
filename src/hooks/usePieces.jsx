@@ -9,6 +9,7 @@ import {
     updatePiece,
     deleteImage,
     insertImage,
+    getPieceTypes,
 } from "../services/pieces";
 import supabase from "@/utils/supabase";
 import { toaster } from "@/components/ui/toaster";
@@ -86,9 +87,7 @@ export async function useInsertPiece(options = {}) {
         toaster.create({
             title: `Error ${error.code} al añadir pieza`,
             description: `${
-                error.code === "23505"
-                    ? "La pieza ya existe."
-                    : error.message
+                error.code === "23505" ? "La pieza ya existe." : error.message
             }`,
             type: "error",
         });
@@ -156,4 +155,14 @@ export function useImageName(options = {}) {
     }, [bucket, baseName]);
 
     return imageUrl;
+}
+
+export function useGetPieceTypes(search) {
+    const [types, setTypes] = useState([]);
+
+    useEffect(() => {
+        getPieceTypes(search).then(setTypes);
+    }, [search]);
+
+    return types;
 }
