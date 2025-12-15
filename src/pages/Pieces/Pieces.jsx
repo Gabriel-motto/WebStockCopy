@@ -179,6 +179,7 @@ function PiecesPage({ params = {} }) {
                         onPageChange={setCurrentPage}
                         onPageSizeChange={handleSizeChange}
                         siblingCount={siblings}
+                        totalElements={pieces.length}
                     />
                 </Suspense>
             ) : search !== "" ? (

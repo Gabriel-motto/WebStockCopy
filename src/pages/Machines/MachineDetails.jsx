@@ -10,6 +10,7 @@ import { navigateTo } from "@/utils/Link";
 import Zoom from "react-medium-image-zoom";
 import supabase from "@/utils/supabase";
 import { useReactToPrint } from "react-to-print";
+import { CiImageOff } from "react-icons/ci";
 
 const tabData = [
     {
@@ -75,7 +76,10 @@ function PieceInfoTable({ pieces, machine }) {
                     interactive
                     ref={contentRef}
                 >
-                    <Table.Caption captionSide="top" className="print-machine-pieces-title">
+                    <Table.Caption
+                        captionSide="top"
+                        className="print-machine-pieces-title"
+                    >
                         Piezas en la máquina {machine}
                     </Table.Caption>
                     <Table.ColumnGroup>
@@ -171,20 +175,26 @@ function Summary({ data }) {
             </div>
             <Separator size="md" />
             <div className="machine-details-body">
-                <Zoom>
-                    <Image
-                        className="summary-image"
-                        src={
-                            machineImage === null || machineImage?.length === 0
-                                ? undefined
-                                : supabase.storage
-                                      .from("machines")
-                                      .getPublicUrl(machineImage[0]?.name).data
-                                      .publicUrl
-                        }
-                        alt={`Máquina: ${data.name}`}
+                {machineImage?.length > 0 ? (
+                    <Zoom>
+                        <Image
+                            className="summary-image"
+                            src={
+                                supabase.storage
+                                    .from("machines")
+                                    .getPublicUrl(machineImage[0]?.name).data
+                                    .publicUrl
+                            }
+                            alt={`Máquina: ${data.name}`}
+                        />
+                    </Zoom>
+                ) : (
+                    <EmptyError
+                        indicator={<CiImageOff />}
+                        title="SIN IMAGEN"
+                        description={`No hay imagenes de la máquina ${data.name}`}
                     />
-                </Zoom>
+                )}
             </div>
         </div>
     );
@@ -205,11 +215,14 @@ export default function MachineDetails({ data }) {
                 defaultValue={"summary"}
                 dataFromChild={handleTabChange}
             />
-            <main className="container">
+            <main className="machine-details-container">
                 {selectedTab === "summary" ? (
                     <Summary data={data} />
                 ) : (
-                    <PieceInfoTable pieces={pieces} machine={data.name} />
+                    <PieceInfoTable
+                        pieces={pieces}
+                        machine={data.name}
+                    />
                 )}
             </main>
         </>

@@ -180,6 +180,7 @@ export default function MachinesPage({ params = {} }) {
                         onPageChange={setCurrentPage}
                         onPageSizeChange={handleSizeChange}
                         siblingCount={siblings}
+                        totalElements={machines.length}
                     />
                 </>
             ) : search !== "" ? (
