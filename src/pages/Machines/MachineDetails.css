@@ -66,8 +66,24 @@
     max-height: 50vh;
 }
 
-.piece-info-table {
+.machine-pieces-title {
     font-size: large;
     margin-left: 1rem;
     font-weight: normal;
+}
+
+.piece-info-table {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.print-machine-pieces-title {
+    visibility: hidden;
+}
+
+@media print {
+    .print-machine-pieces-title {
+        visibility: visible;
+    }
 }

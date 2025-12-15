@@ -1,5 +1,5 @@
 import "./MachineDetails.css";
-import { Image, Separator, Table, Text } from "@chakra-ui/react";
+import { Button, Image, Separator, Table, Text } from "@chakra-ui/react";
 import { useSelectedMachine } from "@/hooks/useMachines";
 import { useImageName, usePieces } from "@/hooks/usePieces";
 import { useState, useMemo, useRef } from "react";
@@ -9,6 +9,7 @@ import { EmptyError } from "@/components/ui/EmptyStates";
 import { navigateTo } from "@/utils/Link";
 import Zoom from "react-medium-image-zoom";
 import supabase from "@/utils/supabase";
+import { useReactToPrint } from "react-to-print";
 
 const tabData = [
     {
@@ -21,9 +22,11 @@ const tabData = [
     },
 ];
 
-function PieceInfoTable({ pieces }) {
+function PieceInfoTable({ pieces, machine }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const contentRef = useRef();
+    const reactToPrintFn = useReactToPrint({ contentRef });
     const siblings = 2; // Número de páginas antes y después de la actual
 
     // Recalcula cuando cambien props
@@ -44,36 +47,60 @@ function PieceInfoTable({ pieces }) {
     // Define slice
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
-    const pageDetails = details.sort((a,b) => a.id - b.id).slice(start, end);
-    const pageAmounts = pieces.sort((a,b) => a.piece_id - b.piece_id).slice(start, end).map((p) => p.amount);
-
+    const pageDetails = details.sort((a, b) => a.id - b.id).slice(start, end);
+    const pageAmounts = pieces
+        .sort((a, b) => a.piece_id - b.piece_id)
+        .slice(start, end)
+        .map((p) => p.amount);
 
     // On row click, navigate to piece details
     const handleClick = (piece) => {
         navigateTo(`/pieces/${piece.name}`);
     };
 
-    console.log("details", details.sort((a,b) => a.id - b.id));
-    console.log("amounts", pieces.sort((a,b) => a.id - b.id));
-
     return (
         <div className="piece-related-content">
-            <div className="piece-info-table title">Piezas en la máquina</div>
+            <div className="piece-info-table">
+                <div className="title machine-pieces-title">
+                    Piezas en la máquina
+                </div>
+                <div className="machine-pieces-print">
+                    <Button onClick={reactToPrintFn}>Imprimir tabla</Button>
+                </div>
+            </div>
+
             <div className="piece-body">
-                <Table.Root stickyHeader interactive>
+                <Table.Root
+                    stickyHeader
+                    interactive
+                    ref={contentRef}
+                >
+                    <Table.Caption captionSide="top" className="print-machine-pieces-title">
+                        Piezas en la máquina {machine}
+                    </Table.Caption>
                     <Table.ColumnGroup>
-                        <Table.Column/>
-                        <Table.Column/>
-                        <Table.Column/>
+                        <Table.Column />
+                        <Table.Column />
+                        <Table.Column />
                     </Table.ColumnGroup>
                     <Table.Header>
                         <Table.Row>
                             <Table.ColumnHeader>Referencia</Table.ColumnHeader>
-                            <Table.ColumnHeader textAlign="center" >Cantidad</Table.ColumnHeader>
-                            <Table.ColumnHeader textAlign="center" >Descripción</Table.ColumnHeader>
-                            <Table.ColumnHeader textAlign="center" >Stock Mínimo</Table.ColumnHeader>
-                            <Table.ColumnHeader textAlign="center" >Crítico</Table.ColumnHeader>
-                            <Table.ColumnHeader textAlign="center" >Disponibilidad</Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center">
+                                Cantidad
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center">
+                                Descripción
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center">
+                                Stock Mínimo
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center">
+                                Crítico
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="center">
+                                Disponibilidad
+                            </Table.ColumnHeader>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -84,7 +111,7 @@ function PieceInfoTable({ pieces }) {
                                 _hover={{ cursor: "pointer" }}
                             >
                                 <Table.Cell>{piece.name}</Table.Cell>
-                                <Table.Cell textAlign="center" >
+                                <Table.Cell textAlign="center">
                                     <Text textStyle="xl">
                                         {pageAmounts[idx]}
                                     </Text>
@@ -92,17 +119,22 @@ function PieceInfoTable({ pieces }) {
                                 <Table.Cell>
                                     {piece.description || "Sin descripción"}
                                 </Table.Cell>
-                                <Table.Cell textAlign="center" >
-                                    {piece.min_stock || "No definido"}
+                                <Table.Cell textAlign="center">
+                                    {piece.min_stock || "Sin definir"}
                                 </Table.Cell>
-                                <Table.Cell textAlign="center" >
+                                <Table.Cell textAlign="center">
                                     {piece.is_critical ? "Sí" : "No"}
                                 </Table.Cell>
-                                <Table.Cell textAlign="center" >
-                                    {piece.availability === null ? "Sin definir" :
-                                    piece.availability === "obsolete" ? "Obsoleto" : 
-                                    piece.availability === "available" ? "Disponible" :
-                                    piece.availability === "limited" ? "Limitado" : "No disponible"}
+                                <Table.Cell textAlign="center">
+                                    {piece.availability === null
+                                        ? "Sin definir"
+                                        : piece.availability === "obsolete"
+                                        ? "Obsoleto"
+                                        : piece.availability === "available"
+                                        ? "Disponible"
+                                        : piece.availability === "limited"
+                                        ? "Limitado"
+                                        : "No disponible"}
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -116,6 +148,7 @@ function PieceInfoTable({ pieces }) {
                     onPageChange={setCurrentPage}
                     onPageSizeChange={handleSizeChange}
                     siblingCount={siblings}
+                    totalElements={pieces.length}
                 />
             </div>
             <div className="additional-content"></div>
@@ -142,13 +175,12 @@ function Summary({ data }) {
                     <Image
                         className="summary-image"
                         src={
-                            machineImage === null ||
-                            machineImage?.length === 0
+                            machineImage === null || machineImage?.length === 0
                                 ? undefined
                                 : supabase.storage
                                       .from("machines")
-                                      .getPublicUrl(machineImage[0]?.name)
-                                      .data.publicUrl
+                                      .getPublicUrl(machineImage[0]?.name).data
+                                      .publicUrl
                         }
                         alt={`Máquina: ${data.name}`}
                     />
@@ -177,7 +209,7 @@ export default function MachineDetails({ data }) {
                 {selectedTab === "summary" ? (
                     <Summary data={data} />
                 ) : (
-                    <PieceInfoTable pieces={pieces} />
+                    <PieceInfoTable pieces={pieces} machine={data.name} />
                 )}
             </main>
         </>

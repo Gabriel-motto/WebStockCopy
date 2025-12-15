@@ -598,7 +598,7 @@ export function AddStockMenu({ piece, handleCancel }) {
     );
 }
 
-export function PrintMenu({ piece, inStock, handleCancel }) {
+export function PrintMenu({ piece }) {
     const contentRef = useRef();
     const reactToPrintFn = useReactToPrint({ contentRef });
     const [serialSelected, setSerialSelected] = useState();

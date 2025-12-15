@@ -10,6 +10,7 @@ export default function PaginationControls({
     onPageChange,
     onPageSizeChange,
     siblingCount = 2,
+    totalElements,
 }) {
     const paginationRange = usePagination({
         totalPages,
@@ -72,11 +73,11 @@ export default function PaginationControls({
                         onChange={(e) =>
                             onPageSizeChange(Number(e.target.value))
                         }>
-                        {[10, 25, 50, 100].map((size) => (
+                        {[10, 25, 50, 100, totalElements].map((size, idx) => (
                             <option
-                                key={size}
+                                key={idx}
                                 value={size}>
-                                {size}
+                                {size === totalElements ? "Todas" : size}
                             </option>
                         ))}
                     </select>{" "}
