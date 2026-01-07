@@ -1,18 +1,22 @@
 import supabase from "@/utils/supabase";
 
-export async function getRecentPieceMovements(machine, piece, warehouse) {
+export async function getRecentPieceMovements(machine, pieceId, warehouse, serial) {
     let query = supabase.from("piece_actions").select();
 
     if (machine !== "all") {
         query = query.eq("machine", machine);
     }
 
-    if (piece) {
-        query = query.ilike("piece", `%${piece}%`);
+    if (pieceId) {
+        query = query.eq("piece_id", pieceId);
     }
 
-    if (warehouse.length !== 0) {
-        query = query.in("warehouse", warehouse);
+    if (warehouse) {
+        query = query.eq("warehouse", warehouse);
+    }
+
+    if (serial) {
+        query = query.ilike("piece_serial", `%${serial}%`);
     }
 
     return await query;

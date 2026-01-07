@@ -2,18 +2,12 @@ import { getRecentPieceMovements } from "@/services/recentPieceMovements";
 import { useEffect, useState } from "react";
 
 export function useRecentPieceMovements(options = {}) {
-    const { machine = "all", piece = "", warehouse = [] } = options;
+    const { machine = "all", pieceId = "", warehouse = "", serial = "" } = options;
     const [movements, setMovements] = useState([]);
 
     useEffect(() => {
-        getRecentPieceMovements(machine, piece, warehouse)
-            .then(({ data }) => {
-                setMovements(data);
-            })
-            .catch((error) => {
-                console.error("Error fetching recent movements:", error);
-            });
-    }, [machine, piece, warehouse]);
+        getRecentPieceMovements(machine, pieceId, warehouse, serial).then(setMovements);
+    }, [machine, pieceId, warehouse, serial]);
 
     return movements;
 }

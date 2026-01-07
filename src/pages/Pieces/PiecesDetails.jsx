@@ -29,6 +29,8 @@ import { usePieceSerials } from "@/hooks/usePieceSerials";
 import { EmptyError } from "@/components/ui/EmptyStates";
 import { CiImageOff } from "react-icons/ci";
 import { BsGearWideConnected } from "react-icons/bs";
+import { useRecentPieceMovements } from "@/hooks/useRecentPieceMovements";
+import { format } from "date-fns";
 
 const tabData = [
     {
@@ -71,9 +73,24 @@ function Traceability({ data }) {
     const machines = useMachinesStockPiece({ pieceId: data.id });
     const warehouses = useWarehousesStockPiece({ pieceId: data.id });
     const pieceSerials = usePieceSerials({ pieceId: data.id });
+    const recentMovements = useRecentPieceMovements({ pieceId: data.id });
+    const recentMachineMovements = recentMovements.data?.filter(
+        (movement) => movement.machine_to !== null
+    );
+    const recentWarehouseMovements = recentMovements.data?.filter(
+        (movement) => movement.warehouse_to !== null
+    );
+
+    console.log(recentMovements?.data);
+
+    const lastMachineDate = new Date(recentMachineMovements?.[0]?.occurred_at);
+    const lastWarehouseDate = new Date(
+        recentWarehouseMovements?.[0]?.occurred_at
+    );
+
+    console.log(recentMachineMovements);
 
     return (
-        // <EmptyError indicator={<BsGearWideConnected />} title="PROXIMAMENTE" description="Página en desarrollo" />
         <div className="traceability-body">
             <Accordion.Root collapsible>
                 {machines?.data.map((m) => (
@@ -82,7 +99,13 @@ function Traceability({ data }) {
                         value={m.machine}
                     >
                         <Accordion.ItemTrigger>
-                            Máquina: {m.machine}
+                            Máquina: {m.machine} -{" "}
+                            {
+                                pieceSerials?.filter(
+                                    (serial) =>
+                                        serial.current_machine === m.machine_id
+                                ).length
+                            }
                             <Accordion.ItemIndicator />
                         </Accordion.ItemTrigger>
                         <Accordion.ItemContent>
@@ -106,31 +129,44 @@ function Traceability({ data }) {
                                                         <Accordion.ItemContent>
                                                             <Accordion.ItemBody>
                                                                 <div className="serial-details">
-                                                                    <Text>
+                                                                    <p>
                                                                         <strong>
-                                                                            Estado:
+                                                                            Movimientos
+                                                                            totales:
                                                                         </strong>{" "}
                                                                         {
-                                                                            serial.status
+                                                                            recentMovements?.data?.filter(
+                                                                                (
+                                                                                    movement
+                                                                                ) =>
+                                                                                    movement.piece_serial ===
+                                                                                    serial.serial_code
+                                                                            )
+                                                                                .length
                                                                         }
-                                                                    </Text>
-                                                                    <Text>
-                                                                        <strong>
-                                                                            Ubicación:
-                                                                        </strong>{" "}
-                                                                        {
-                                                                            serial.location
-                                                                        }
-                                                                    </Text>
-                                                                    <Text>
+                                                                    </p>
+                                                                    <p>
                                                                         <strong>
                                                                             Último
                                                                             movimiento:
                                                                         </strong>{" "}
-                                                                        {serial.last_movement
-                                                                            ? serial.last_movement
+                                                                        {recentMachineMovements?.length !==
+                                                                        0
+                                                                            ? format(
+                                                                                  lastMachineDate,
+                                                                                  "dd/MM/yyyy HH:mm"
+                                                                              )
                                                                             : "N/A"}
-                                                                    </Text>
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>
+                                                                            Información
+                                                                            adicional:
+                                                                        </strong>{" "}
+                                                                        {
+                                                                            recentMachineMovements?.[0]?.note || " N/A"
+                                                                        }
+                                                                    </p>
                                                                 </div>
                                                             </Accordion.ItemBody>
                                                         </Accordion.ItemContent>
@@ -173,23 +209,44 @@ function Traceability({ data }) {
                                                         <Accordion.ItemContent>
                                                             <Accordion.ItemBody>
                                                                 <div className="serial-details">
-                                                                    <Text>
+                                                                    <p>
                                                                         <strong>
-                                                                            Estado:
+                                                                            Movimientos
+                                                                            totales:
                                                                         </strong>{" "}
                                                                         {
-                                                                            serial.status
+                                                                            recentMovements?.data?.filter(
+                                                                                (
+                                                                                    movement
+                                                                                ) =>
+                                                                                    movement.piece_serial ===
+                                                                                    serial.serial_code
+                                                                            )
+                                                                                .length
                                                                         }
-                                                                    </Text>
-                                                                    <Text>
+                                                                    </p>
+                                                                    <p>
                                                                         <strong>
                                                                             Último
                                                                             movimiento:
                                                                         </strong>{" "}
-                                                                        {serial.last_movement
-                                                                            ? serial.last_movement
+                                                                        {recentWarehouseMovements?.length !==
+                                                                        0
+                                                                            ? format(
+                                                                                  lastWarehouseDate,
+                                                                                  "dd/MM/yyyy HH:mm"
+                                                                              )
                                                                             : "N/A"}
-                                                                    </Text>
+                                                                    </p>
+                                                                    <p>
+                                                                        <strong>
+                                                                            Información
+                                                                            adicional:
+                                                                        </strong>{" "}
+                                                                        {
+                                                                            recentWarehouseMovements?.[0]?.note || " N/A"
+                                                                        }
+                                                                    </p>
                                                                 </div>
                                                             </Accordion.ItemBody>
                                                         </Accordion.ItemContent>
@@ -223,8 +280,18 @@ function Details({ data }) {
     });
 
     const chartData = [
-        { name: "En máquinas", value: machines?.data.map(item => item.amount).reduce((a,b) => a + b, 0) },
-        { name: "En almacén", value: warehouses?.data.map(item => item.amount).reduce((a,b) => a + b, 0) },
+        {
+            name: "En máquinas",
+            value: machines?.data
+                .map((item) => item.amount)
+                .reduce((a, b) => a + b, 0),
+        },
+        {
+            name: "En almacén",
+            value: warehouses?.data
+                .map((item) => item.amount)
+                .reduce((a, b) => a + b, 0),
+        },
     ];
 
     function handleSelectClick(value) {
@@ -414,7 +481,9 @@ function Details({ data }) {
                     <div className="charts">
                         <Heading>
                             Stock total en máquinas/almacén:{" "}
-                            {pieceStock?.data[0] ? pieceStock?.data[0].amount : 0}
+                            {pieceStock?.data[0]
+                                ? pieceStock?.data[0].amount
+                                : 0}
                         </Heading>
                         <PopoverComponent
                             title="Localización de esta pieza"
@@ -488,57 +557,50 @@ function Details({ data }) {
                     <div className="piece-in-machines"></div>
                 </div>
                 <div className="right-side">
-                    {pieceImageName?.length === 0 ? (
+                    {pieceImageName?.length > 0 ? (
+                        <Zoom>
+                            <Image
+                                className="image-dialog piece-image"
+                                src={
+                                    supabase.storage
+                                        .from("pieces")
+                                        .getPublicUrl(pieceImageName?.[0]?.name)
+                                        .data?.publicUrl
+                                }
+                                alt={`Producto con referencia: ${data.name}`}
+                            />
+                        </Zoom>
+                    ) : (
                         <EmptyError
                             indicator={<CiImageOff />}
                             title="SIN IMAGEN"
                             description={`No hay imagenes de la pieza ${data.name}`}
                         />
-                    ) : (
-                        <Zoom>
-                            <Image
-                                className="image-dialog piece-image"
-                                src={
-                                    pieceImageName === null ||
-                                    pieceImageName?.length === 0
-                                        ? undefined
-                                        : supabase.storage
-                                              .from("pieces")
-                                              .getPublicUrl(
-                                                  pieceImageName[0]?.name
-                                              ).data.publicUrl
-                                }
-                                alt={`Producto con referencia: ${data.name}`}
-                            />
-                        </Zoom>
                     )}
                     <Separator
                         className="image-separator"
                         size="md"
                     />
-                    {pieceImageName?.length === 0 ? (
+                    {pieceImageName?.length > 0 ? (
+                        <Zoom>
+                            <Image
+                                className="image-dialog data-card-image"
+                                src={
+                                    supabase.storage
+                                        .from("pieces")
+                                        .getPublicUrl(
+                                            dataCardImageName?.[0]?.name
+                                        ).data.publicUrl
+                                }
+                                alt={`Producto con referencia: ${data.name}`}
+                            />
+                        </Zoom>
+                    ) : (
                         <EmptyError
                             indicator={<CiImageOff />}
                             title="SIN IMAGEN"
                             description={`No hay imagenes de la pieza ${data.name}`}
                         />
-                    ) : (
-                        <Zoom>
-                            <Image
-                                className="image-dialog data-card-image"
-                                src={
-                                    dataCardImageName === null ||
-                                    pieceImageName?.length === 0
-                                        ? undefined
-                                        : supabase.storage
-                                              .from("pieces")
-                                              .getPublicUrl(
-                                                  dataCardImageName[0]?.name
-                                              ).data.publicUrl
-                                }
-                                alt={`Producto con referencia: ${data.name}`}
-                            />
-                        </Zoom>
                     )}
                 </div>
             </div>
