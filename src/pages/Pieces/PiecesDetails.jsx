@@ -278,6 +278,10 @@ function Details({ data }) {
         bucket: "pieces",
         baseName: data?.name + "-data-card",
     });
+    const additionalImageName = useImageName({
+        bucket: "pieces",
+        baseName: data?.name + "-additional",
+    });
 
     const chartData = [
         {
@@ -336,6 +340,7 @@ function Details({ data }) {
                             handleCancel={closeDialog}
                             pieceImageOld={pieceImageName[0]}
                             dataCardOld={dataCardImageName[0]}
+                            additionalImageOld={additionalImageName[0]}
                         />
                     ) : selectedValue === "add" ? (
                         <AddStockMenu
@@ -581,7 +586,7 @@ function Details({ data }) {
                         className="image-separator"
                         size="md"
                     />
-                    {pieceImageName?.length > 0 ? (
+                    {dataCardImageName?.length > 0 ? (
                         <Zoom>
                             <Image
                                 className="image-dialog data-card-image"
@@ -599,7 +604,32 @@ function Details({ data }) {
                         <EmptyError
                             indicator={<CiImageOff />}
                             title="SIN IMAGEN"
-                            description={`No hay imagenes de la pieza ${data.name}`}
+                            description={`No hay imagenes de la etiqueta de la pieza ${data.name}`}
+                        />
+                    )}
+                    <Separator
+                        className="image-separator"
+                        size="md"
+                    />
+                    {additionalImageName?.length > 0 ? (
+                        <Zoom>
+                            <Image
+                                className="image-dialog additional-image"
+                                src={
+                                    supabase.storage
+                                        .from("pieces")
+                                        .getPublicUrl(
+                                            additionalImageName?.[0]?.name
+                                        ).data.publicUrl
+                                }
+                                alt={`Producto con referencia: ${data.name}`}
+                            />
+                        </Zoom>
+                    ) : (
+                        <EmptyError
+                            indicator={<CiImageOff />}
+                            title="SIN IMAGEN"
+                            description={`No hay imagenes adicionales de la pieza ${data.name}`}
                         />
                     )}
                 </div>

@@ -196,16 +196,18 @@ export function EditStockMenu({
     handleCancel,
     pieceImageOld,
     dataCardOld,
+    additionalImageOld,
 }) {
     const [formData, setFormData] = useState({
         ...pieceInfo,
         pieceImage: { path: "", file: null },
         dataCard: { path: "", file: null },
+        additionalImage: { path: "", file: null },
     });
 
     function handleSubmit(e) {
         e.preventDefault();
-        useUpdatePiece(formData, pieceImageOld?.name, dataCardOld?.name);
+        useUpdatePiece(formData, pieceImageOld?.name, dataCardOld?.name, additionalImageOld?.name);
         handleCancel();
     }
 
@@ -234,6 +236,16 @@ export function EditStockMenu({
         const path = `${formData.name}-data-card.${extFromFile}`;
 
         setFormData({ ...formData, dataCard: { path: path, file: file } });
+    }
+
+    function handleAdditionalImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const extFromFile = file?.type?.split("/")?.pop() || "";
+        const path = `${formData.name}-additional.${extFromFile}`;
+
+        setFormData({ ...formData, additionalImage: { path: path, file: file } });
     }
 
     return (
@@ -471,6 +483,23 @@ export function EditStockMenu({
                         name="dataCard"
                         id="dataCard"
                         onChange={handleDataCardUpload}
+                        accept="image/*"
+                        capture="environment"
+                    />
+                </div>
+                <div className="menus-cage image-additional-edit-cage">
+                    <label
+                        htmlFor="image-additional"
+                        className="menus-label"
+                    >
+                        Imagen adicional
+                    </label>
+                    <input
+                        className="image-input"
+                        type="file"
+                        name="additionalImage"
+                        id="additionalImage"
+                        onChange={handleAdditionalImageUpload}
                         accept="image/*"
                         capture="environment"
                     />
@@ -835,6 +864,7 @@ export function NewPiece({ handleCancel }) {
         note: null,
         pieceImage: { path: null, file: null },
         dataCard: { path: null, file: null },
+        additionalImage: { path: null, file: null },
     });
 
     const types = useGetPieceTypes(values.type || "");
@@ -871,6 +901,16 @@ export function NewPiece({ handleCancel }) {
         const path = `${values.name}-data-card.${extFromFile}`;
 
         setValues({ ...values, dataCard: { path: path, file: file } });
+    }
+
+    function handleAdditionalImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const extFromFile = file?.type?.split("/")?.pop() || "";
+        const path = `${values.name}-additional.${extFromFile}`;
+
+        setValues({ ...values, additionalImage: { path: path, file: file } });
     }
 
     return (
@@ -1162,6 +1202,23 @@ export function NewPiece({ handleCancel }) {
                         name="dataCard"
                         id="dataCard"
                         onChange={handleDataCardUpload}
+                        accept="image/*"
+                        capture="environment"
+                    />
+                </div>
+                <div className="menus-cage image-additional-insert-cage">
+                    <label
+                        htmlFor="image-additional"
+                        className="menus-label"
+                    >
+                        Imagen adicional
+                    </label>
+                    <input
+                        className="image-input"
+                        type="file"
+                        name="additionalImage"
+                        id="additionalImage"
+                        onChange={handleAdditionalImageUpload}
                         accept="image/*"
                         capture="environment"
                     />

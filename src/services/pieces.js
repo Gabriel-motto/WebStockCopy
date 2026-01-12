@@ -93,6 +93,14 @@ export async function insertPiece(newPiece) {
             upsert: true,
             contentType: newPiece.dataCard.file.type,
         });
+    
+    const { error: insertAdditionalImageError } = await supabase.storage
+        .from("pieces")
+        .upload(newPiece.additionalImage.path, newPiece.additionalImage.file, {
+            cacheControl: "3600",
+            upsert: true,
+            contentType: newPiece.additionalImage.file.type,
+        });
 }
 
 export async function getImageName(bucket, baseName, limit = 1) {
@@ -181,7 +189,7 @@ export async function insertRecentMovement({ values, pieceId }) {
     }
 }
 
-export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld) {
+export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld, additionalImageOld) {
     const { data, error } = await supabase
         .from("pieces_new")
         .update({
@@ -220,6 +228,17 @@ export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld) {
                 cacheControl: "3600",
                 upsert: true,
                 contentType: updatedPiece.dataCard.file.type,
+            });
+    }
+
+    if (updatedPiece.additionalImage.file !== null) {
+        deleteImage("pieces", additionalImageOld);
+        const { error: insertAdditionalImageError } = await supabase.storage
+            .from("pieces")
+            .update(updatedPiece.additionalImage.path, updatedPiece.additionalImage.file, {
+                cacheControl: "3600",
+                upsert: true,
+                contentType: updatedPiece.additionalImage.file.type,
             });
     }
 }
