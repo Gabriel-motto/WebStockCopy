@@ -78,32 +78,16 @@ export async function insertPiece(newPiece) {
         .select("id")
         .throwOnError();
 
-    const { error: insertImageError } = await supabase.storage
-        .from("pieces")
-        .upload(newPiece.pieceImage.path, newPiece.pieceImage.file, {
-            cacheControl: "3600",
-            upsert: true,
-            contentType: newPiece.pieceImage.file.type,
-        });
-
-    const { error: insertDataCardError } = await supabase.storage
-        .from("pieces")
-        .upload(newPiece.dataCard.path, newPiece.dataCard.file, {
-            cacheControl: "3600",
-            upsert: true,
-            contentType: newPiece.dataCard.file.type,
-        });
-    
-    const { error: insertAdditionalImageError } = await supabase.storage
-        .from("pieces")
-        .upload(newPiece.additionalImage.path, newPiece.additionalImage.file, {
-            cacheControl: "3600",
-            upsert: true,
-            contentType: newPiece.additionalImage.file.type,
-        });
+    insertImage("pieces", newPiece.pieceImage);
+    insertImage("pieces", newPiece.dataCard);
+    insertImage("pieces", newPiece.additionalImage);
 }
 
 export async function getImageName(bucket, baseName, limit = 1) {
+    if (baseName.includes("/")) {
+        baseName = baseName.replaceAll("/", "_");
+    }
+
     const query = supabase.storage.from(bucket).list("", {
         limit: limit,
         offset: 0,
@@ -116,15 +100,18 @@ export async function getImageName(bucket, baseName, limit = 1) {
     return image;
 }
 
-export async function insertImage({ bucket, path, file }) {
+export async function insertImage(bucket, image) {
+    if (image.path.includes("/")) {
+        image.path = image.path.replaceAll("/", "_");
+    }
+
     const { error: uploadImageError } = await supabase.storage
         .from(bucket)
-        .upload(path, file, {
+        .upload(image.path, image.file, {
             cacheControl: "3600",
             upsert: true,
-            contentType: file.type,
-        })
-        .throwOnError();
+            contentType: image.file.type,
+        });
 }
 
 export async function deleteImage({ bucket, path }) {
@@ -211,35 +198,17 @@ export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld, addi
 
     if (updatedPiece.pieceImage.file !== null) {
         deleteImage("pieces", pieceImageOld);
-        const { error: insertImageError } = await supabase.storage
-            .from("pieces")
-            .update(updatedPiece.pieceImage.path, updatedPiece.pieceImage.file, {
-                cacheControl: "3600",
-                upsert: true,
-                contentType: updatedPiece.pieceImage.file.type,
-            });
+        insertImage("pieces", updatedPiece.pieceImage);
     }
 
     if (updatedPiece.dataCard.file !== null) {
         deleteImage("pieces", dataCardOld);
-        const { error: insertDataCardError } = await supabase.storage
-            .from("pieces")
-            .update(updatedPiece.dataCard.path, updatedPiece.dataCard.file, {
-                cacheControl: "3600",
-                upsert: true,
-                contentType: updatedPiece.dataCard.file.type,
-            });
+        insertImage("pieces", updatedPiece.dataCard);
     }
 
     if (updatedPiece.additionalImage.file !== null) {
         deleteImage("pieces", additionalImageOld);
-        const { error: insertAdditionalImageError } = await supabase.storage
-            .from("pieces")
-            .update(updatedPiece.additionalImage.path, updatedPiece.additionalImage.file, {
-                cacheControl: "3600",
-                upsert: true,
-                contentType: updatedPiece.additionalImage.file.type,
-            });
+        insertImage("pieces", updatedPiece.additionalImage);
     }
 }
 
