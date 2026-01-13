@@ -5,7 +5,7 @@ import supabase from "@/utils/supabase";
 export async function getPieceSerials(pieceId, search, column, id) {
     let query = supabase.from("piece_serials").select(column);
 
-    if(id) {
+    if (id) {
         query = query.eq("id", id);
     }
 
@@ -25,16 +25,16 @@ export async function getPieceSerials(pieceId, search, column, id) {
 export async function insertPieceSerials(values, location, isMachine) {
     const insertData = isMachine
         ? {
-            piece_id: values.pieceId,
-            status: "active",
-            current_machine: location,
-            current_warehouse: null,
+              piece_id: values.pieceId,
+              status: "active",
+              current_machine: location,
+              current_warehouse: null,
           }
         : {
-            piece_id: values.pieceId,
-            status: "inactive",
-            current_warehouse: location,
-            current_machine: null,
+              piece_id: values.pieceId,
+              status: "inactive",
+              current_warehouse: location,
+              current_machine: null,
           };
 
     const { data: pieceSerial, error: insertError } = await supabase

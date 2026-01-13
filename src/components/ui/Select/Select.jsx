@@ -13,7 +13,7 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
     const [selectedValues, setSelectedValues] = useState([]);
     const [search, setSearch] = useState("");
     const [showOptions, setShowOptions] = useState(false);
-    const assemblyLines = useAssemblyLines({search: search});
+    const assemblyLines = useAssemblyLines({ search: search });
 
     const addSelectedValues = (newValue) => {
         setSelectedValues((prevValues) => [...prevValues, newValue]);
@@ -37,7 +37,7 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
     };
 
     useEffect(() => {
-        dataFromChild(selectedValues.map(line => line.id));
+        dataFromChild(selectedValues.map((line) => line.id));
     }, [selectedValues]);
 
     const ref = useClickAway(() => {

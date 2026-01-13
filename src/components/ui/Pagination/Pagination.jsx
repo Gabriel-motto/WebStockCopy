@@ -20,11 +20,15 @@ export default function PaginationControls({
 
     return (
         <div className="pagination-size-container">
-            <ButtonGroup variant="ghost" className="pagination">
+            <ButtonGroup
+                variant="ghost"
+                className="pagination"
+            >
                 {/* Botón Anterior */}
                 <Button
                     onClick={() => onPageChange(currentPage - 1)}
-                    disabled={currentPage === 1}>
+                    disabled={currentPage === 1}
+                >
                     <HiChevronLeft />
                 </Button>
 
@@ -35,7 +39,8 @@ export default function PaginationControls({
                             return (
                                 <span
                                     key={`dots-${idx}`}
-                                    style={{ padding: "0 0.5rem" }}>
+                                    style={{ padding: "0 0.5rem" }}
+                                >
                                     {page}
                                 </span>
                             );
@@ -50,7 +55,8 @@ export default function PaginationControls({
                                         page === currentPage
                                             ? "1px solid"
                                             : "hidden",
-                                }}>
+                                }}
+                            >
                                 {page}
                             </Button>
                         );
@@ -60,7 +66,8 @@ export default function PaginationControls({
                 {/* Botón Siguiente */}
                 <Button
                     onClick={() => onPageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}>
+                    disabled={currentPage === totalPages}
+                >
                     <HiChevronRight />
                 </Button>
             </ButtonGroup>
@@ -72,11 +79,13 @@ export default function PaginationControls({
                         value={pageSize}
                         onChange={(e) =>
                             onPageSizeChange(Number(e.target.value))
-                        }>
+                        }
+                    >
                         {[10, 25, 50, 100, totalElements].map((size, idx) => (
                             <option
                                 key={idx}
-                                value={size}>
+                                value={size}
+                            >
                                 {size === totalElements ? "Todas" : size}
                             </option>
                         ))}

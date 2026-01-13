@@ -31,11 +31,33 @@ export async function useInsertPieceSerials(options = {}) {
 
     try {
         for (let i = 0; i < values.amount; i++) {
-            const newSerial = await insertPieceSerials(values, location, isMachine);
-            const serial = await getPieceSerials(null, null, "serial_code", newSerial[0].id);
+            const newSerial = await insertPieceSerials(
+                values,
+                location,
+                isMachine
+            );
+            const serial = await getPieceSerials(
+                null,
+                null,
+                "serial_code",
+                newSerial[0].id
+            );
             values.serial = serial[0].serial_code;
-            insertRecentPieceMovementService(values, null, location, null, isMachine);
-            console.log("Inserting piece serial with values:", values, "to location:", location, "isMachine:", isMachine);
+            insertRecentPieceMovementService(
+                values,
+                null,
+                location,
+                null,
+                isMachine
+            );
+            console.log(
+                "Inserting piece serial with values:",
+                values,
+                "to location:",
+                location,
+                "isMachine:",
+                isMachine
+            );
         }
 
         toaster.dismiss(promiseToaster.id);
@@ -55,7 +77,8 @@ export async function useInsertPieceSerials(options = {}) {
 }
 
 export function updatePieceSerials(options = {}) {
-    const { values, locationFrom, locationTo, isMachineFrom, isMachineTo } = options;
+    const { values, locationFrom, locationTo, isMachineFrom, isMachineTo } =
+        options;
 
     const promiseToaster = toaster.create({
         title: "Actualizando stock...",
@@ -65,7 +88,13 @@ export function updatePieceSerials(options = {}) {
 
     try {
         updatePieceSerialsService(values, locationTo, isMachineTo);
-        insertRecentPieceMovementService(values, locationFrom, locationTo, isMachineFrom, isMachineTo);
+        insertRecentPieceMovementService(
+            values,
+            locationFrom,
+            locationTo,
+            isMachineFrom,
+            isMachineTo
+        );
 
         toaster.dismiss(promiseToaster.id);
         toaster.create({

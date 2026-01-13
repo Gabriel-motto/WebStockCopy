@@ -55,7 +55,6 @@ export async function getWarehousesStockPiece(pieceId, column) {
 }
 
 export async function insertPiece(newPiece) {
-
     const { data: piece, error } = await supabase
         .from("pieces_new")
         .insert([
@@ -77,10 +76,16 @@ export async function insertPiece(newPiece) {
         ])
         .select("id")
         .throwOnError();
-
-    insertImage("pieces", newPiece.pieceImage);
-    insertImage("pieces", newPiece.dataCard);
-    insertImage("pieces", newPiece.additionalImage);
+    
+    if (newPiece.pieceImage.file !== null) {
+        insertImage("pieces", newPiece.pieceImage);
+    }
+    if (newPiece.dataCard.file !== null) {
+        insertImage("pieces", newPiece.dataCard);
+    }
+    if (newPiece.additionalImage.file !== null) {
+        insertImage("pieces", newPiece.additionalImage);
+    }
 }
 
 export async function getImageName(bucket, baseName, limit = 1) {
@@ -176,7 +181,12 @@ export async function insertRecentMovement({ values, pieceId }) {
     }
 }
 
-export async function updatePiece(updatedPiece, pieceImageOld, dataCardOld, additionalImageOld) {
+export async function updatePiece(
+    updatedPiece,
+    pieceImageOld,
+    dataCardOld,
+    additionalImageOld
+) {
     const { data, error } = await supabase
         .from("pieces_new")
         .update({
@@ -218,9 +228,9 @@ export async function getPieceTypes(search = "") {
         .select()
         .order("type", { ascending: true })
         .throwOnError();
-        
-    if(search) {
-        query.ilike("name", `%${search}%`);
+
+    if (search) {
+        query.ilike("type", `%${search}%`);
     }
 
     const { data: types, error } = await query;

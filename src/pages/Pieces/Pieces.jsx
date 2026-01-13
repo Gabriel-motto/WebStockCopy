@@ -183,7 +183,10 @@ function PiecesPage({ params = {} }) {
                     />
                 </Suspense>
             ) : search !== "" ? (
-                <EmptyError indicator={<MdSearchOff />} description="No hay piezas que coincidan con la búsqueda" />
+                <EmptyError
+                    indicator={<MdSearchOff />}
+                    description="No hay piezas que coincidan con la búsqueda"
+                />
             ) : null}
             <DialogComponent
                 size="cover"

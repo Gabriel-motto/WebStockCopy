@@ -5,7 +5,11 @@ import { Button, QrCode, Separator } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import "./Menus.css";
 import { useReactToPrint } from "react-to-print";
-import { useUpdatePiece, useInsertPiece, useGetPieceTypes } from "@/hooks/usePieces";
+import {
+    useUpdatePiece,
+    useInsertPiece,
+    useGetPieceTypes,
+} from "@/hooks/usePieces";
 import {
     useInsertPieceSerials,
     usePieceSerials,
@@ -207,7 +211,12 @@ export function EditStockMenu({
 
     function handleSubmit(e) {
         e.preventDefault();
-        useUpdatePiece(formData, pieceImageOld?.name, dataCardOld?.name, additionalImageOld?.name);
+        useUpdatePiece(
+            formData,
+            pieceImageOld?.name,
+            dataCardOld?.name,
+            additionalImageOld?.name
+        );
         handleCancel();
     }
 
@@ -245,7 +254,10 @@ export function EditStockMenu({
         const extFromFile = file?.type?.split("/")?.pop() || "";
         const path = `${formData.name}-additional.${extFromFile}`;
 
-        setFormData({ ...formData, additionalImage: { path: path, file: file } });
+        setFormData({
+            ...formData,
+            additionalImage: { path: path, file: file },
+        });
     }
 
     return (
@@ -866,13 +878,17 @@ export function NewPiece({ handleCancel }) {
         dataCard: { path: null, file: null },
         additionalImage: { path: null, file: null },
     });
-
     const types = useGetPieceTypes(values.type || "");
+    const [showOptions, setShowOptions] = useState(false);
+
+    const ref = useClickAway(() => {
+        setShowOptions(false);
+    });
 
     function handleSubmit(e) {
         e.preventDefault();
         values.note || (values.note = `Nueva pieza añadida: ${values.name}`);
-        useInsertPiece({values: values});
+        useInsertPiece({ values: values });
         handleCancel();
     }
 
@@ -913,6 +929,14 @@ export function NewPiece({ handleCancel }) {
         setValues({ ...values, additionalImage: { path: path, file: file } });
     }
 
+    function handleHintSelect(value, field) {
+        setValues({
+            ...values,
+            [field]: value,
+        });
+        (document.getElementById("type").value = value)
+    }
+
     return (
         <div className="menus-container insert-container">
             <form
@@ -951,7 +975,10 @@ export function NewPiece({ handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div className="menus-cage type-insert-cage">
+                <div
+                    className="menus-cage type-insert-cage"
+                    ref={ref}
+                >
                     <label
                         htmlFor="type"
                         className="menus-label"
@@ -964,8 +991,22 @@ export function NewPiece({ handleCancel }) {
                         id="type"
                         name="type"
                         onChange={handleFormChange}
+                        onFocus={() => setShowOptions(true)}
+                        onBlur={() => setShowOptions(false)}
                         required
                     />
+                    <div
+                        className={`${
+                            showOptions ? "autofiller show" : "autofiller"
+                        }`}
+                    >
+                        <HintPanel
+                            hintData={types.map((item) => item.type)}
+                            onSelect={(value) => (
+                                handleHintSelect(value, "type")
+                            )}
+                        />
+                    </div>
                 </div>
                 <div className="menus-cage workshop-insert-cage">
                     <label
@@ -1236,7 +1277,9 @@ export function NewPiece({ handleCancel }) {
                         id="note"
                         className="input note-insert-input"
                         onChange={handleFormChange}
-                        placeholder={`Nueva pieza añadida: ${values.name || "XXX"}`}
+                        placeholder={`Nueva pieza añadida: ${
+                            values.name || "XXX"
+                        }`}
                     />
                 </div>
                 <div className="menus-footer insert-menu-footer">

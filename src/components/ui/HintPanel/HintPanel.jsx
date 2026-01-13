@@ -18,7 +18,7 @@ export function HintPanel({ hintData, onSelect }) {
                     </div>
                 ))
             ) : (
-                <p style={{color: "#aaa"}}>Sin resultados</p>
+                <p style={{ color: "#aaa" }}>Sin resultados</p>
             )}
         </div>
     );

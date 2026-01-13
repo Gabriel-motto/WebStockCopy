@@ -32,7 +32,9 @@ function MachinesTable({ machines, handleClick }) {
                 <Table.Row>
                     <Table.ColumnHeader>Nombre</Table.ColumnHeader>
                     <Table.ColumnHeader>Descripción</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="center" >Línea</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="center">
+                        Línea
+                    </Table.ColumnHeader>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -44,7 +46,7 @@ function MachinesTable({ machines, handleClick }) {
                     >
                         <Table.Cell>{machine.name}</Table.Cell>
                         <Table.Cell>{machine.description}</Table.Cell>
-                        <Table.Cell textAlign="center" >
+                        <Table.Cell textAlign="center">
                             {ALines.find(
                                 (ALine) => ALine.id === machine.assembly_line_id
                             )?.name || "N/A"}
@@ -145,9 +147,12 @@ export default function MachinesPage({ params = {} }) {
                     onClick={() => {
                         setGetCriticals(!getCriticals);
                     }}
-                    className={getCriticals ? "filter-critical-button-active" : "filter-critical-button"}
-                >
-                </button>
+                    className={
+                        getCriticals
+                            ? "filter-critical-button-active"
+                            : "filter-critical-button"
+                    }
+                ></button>
                 <div className="search-input-machines">
                     <InputGroup
                         startElement={<IoSearch className="search-icon" />}
@@ -184,7 +189,10 @@ export default function MachinesPage({ params = {} }) {
                     />
                 </>
             ) : search !== "" ? (
-                <EmptyError indicator={<MdSearchOff />} description="Ninguna máquina coincide con la busqueda" />
+                <EmptyError
+                    indicator={<MdSearchOff />}
+                    description="Ninguna máquina coincide con la busqueda"
+                />
             ) : null}
             <Suspense fallback={<LoadingScreenHelix />}>
                 <DialogComponent

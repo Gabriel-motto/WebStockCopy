@@ -163,9 +163,9 @@ function Traceability({ data }) {
                                                                             Información
                                                                             adicional:
                                                                         </strong>{" "}
-                                                                        {
-                                                                            recentMachineMovements?.[0]?.note || " N/A"
-                                                                        }
+                                                                        {recentMachineMovements?.[0]
+                                                                            ?.note ||
+                                                                            " N/A"}
                                                                     </p>
                                                                 </div>
                                                             </Accordion.ItemBody>
@@ -243,9 +243,9 @@ function Traceability({ data }) {
                                                                             Información
                                                                             adicional:
                                                                         </strong>{" "}
-                                                                        {
-                                                                            recentWarehouseMovements?.[0]?.note || " N/A"
-                                                                        }
+                                                                        {recentWarehouseMovements?.[0]
+                                                                            ?.note ||
+                                                                            " N/A"}
                                                                     </p>
                                                                 </div>
                                                             </Accordion.ItemBody>

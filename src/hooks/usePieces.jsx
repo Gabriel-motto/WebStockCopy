@@ -94,7 +94,12 @@ export async function useInsertPiece(options = {}) {
     }
 }
 
-export async function useUpdatePiece(updatedPiece, pieceImageOld, dataCardOld, additionalImageOld) {
+export async function useUpdatePiece(
+    updatedPiece,
+    pieceImageOld,
+    dataCardOld,
+    additionalImageOld
+) {
     const promiseToaster = toaster.create({
         title: "Modificando pieza...",
         description: "Por favor, espera mientras se modifica la pieza.",
@@ -102,7 +107,12 @@ export async function useUpdatePiece(updatedPiece, pieceImageOld, dataCardOld, a
     });
 
     try {
-        updatePiece(updatedPiece, pieceImageOld, dataCardOld, additionalImageOld);
+        updatePiece(
+            updatedPiece,
+            pieceImageOld,
+            dataCardOld,
+            additionalImageOld
+        );
 
         toaster.dismiss(promiseToaster.id);
         toaster.create({
