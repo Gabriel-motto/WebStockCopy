@@ -117,14 +117,27 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
     );
 }
 
-export function CustomSelect({ dataFromChild, content, ...props }) {
+export function CustomSelect({
+    dataFromChild,
+    content,
+    label = "Selecciona una opción",
+    showSelected = false,
+    ...props
+}) {
     const [showOptions, setShowOptions] = useState(false);
     const [selectedValue, setSelectedValue] = useState(null);
 
-    useEffect(() => {
-        dataFromChild(selectedValue);
-        setSelectedValue(null);
-    }, [selectedValue]);
+    // useEffect(() => {
+    //     dataFromChild(selectedValue);
+    // }, [selectedValue]);
+
+    const handleClick = (value) => {
+        dataFromChild(value);
+        value === selectedValue
+            ? setSelectedValue(null)
+            : setSelectedValue(value);
+        setShowOptions(false);
+    };
 
     const ref = useClickAway(() => {
         setShowOptions(false);
@@ -138,7 +151,7 @@ export function CustomSelect({ dataFromChild, content, ...props }) {
             onClick={() => setShowOptions(!showOptions)}
         >
             <div className="custom-selector">
-                <p className="selector-label">Selecciona una opción</p>
+                <p className="selector-label">{label}</p>
                 <Separator
                     orientation="vertical"
                     height="5"
@@ -160,11 +173,13 @@ export function CustomSelect({ dataFromChild, content, ...props }) {
                         }`}
                         key={index}
                         onClick={() => {
-                            setSelectedValue(item.value);
-                            setShowOptions(false);
+                            handleClick(item.value);
                         }}
                     >
                         {item.label}
+                        {showSelected && selectedValue?.includes(item.value) ? (
+                            <FaCheck className="selected-icon" />
+                        ) : null}
                     </div>
                 ))}
             </div>

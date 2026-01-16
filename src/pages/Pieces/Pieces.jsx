@@ -14,6 +14,7 @@ import { navigateTo } from "@/utils/Link.jsx";
 import { Toaster, toaster } from "@/components/ui/toaster.jsx";
 import { MdSearchOff } from "react-icons/md";
 import { NewPiece } from "./Menus.jsx";
+import { CustomSelect } from "@/components/ui/Select/Select.jsx";
 
 const tabData = [
     {
@@ -39,12 +40,13 @@ function PiecesPage({ params = {} }) {
     const [showDetailsDialog, setShowDetailsDialog] = useState(false);
     const [selectedCardData, setSelectedCardData] = useState(null);
     const debouncedSearch = useDebounce(search, 300);
+    const [selectedFilterValue, setSelectedFilterValue] = useState(null);
     const pieces = usePieces({
         workshop: workshop.value,
         search: search,
         debouncedSearch: debouncedSearch,
+        filter: selectedFilterValue,
     });
-
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const siblings = 2; // Número de páginas antes y después de la actual
@@ -99,6 +101,12 @@ function PiecesPage({ params = {} }) {
         setCurrentPage(1);
     };
 
+    function handleSelectClick(value) {
+        value === selectedFilterValue
+            ? setSelectedFilterValue(null)
+            : setSelectedFilterValue(value);
+    }
+
     const inputRef = (useRef < HTMLInputElement) | (null > null);
 
     const endElement = search ? (
@@ -132,28 +140,51 @@ function PiecesPage({ params = {} }) {
                     defaultValue={"all"}
                     dataFromChild={handleWorkshopChange}
                 />
-                <div className="search-button">
-                    <InputGroup
-                        startElement={<IoSearch className="search-icon" />}
-                        endElement={endElement}
-                    >
-                        <Input
-                            className="search-machines"
-                            placeholder="Buscar..."
-                            variant="flushed"
-                            value={search}
-                            onChange={handleSearch}
+                <div className="search-group">
+                    <div className="filter">
+                        <CustomSelect
+                            className="custom-select-filter"
+                            label="Filtrar por"
+                            dataFromChild={handleSelectClick}
+                            showSelected={true}
+                            content={[
+                                { value: "name", label: "Referencia" },
+                                { value: "type", label: "Tipo" },
+                                { value: "brand", label: "Marca" },
+                                { value: "description", label: "Descripción" },
+                                { value: "supplier", label: "Proveedor" },
+                                { value: "alternative_piece", label: "Alternativa"}
+                            ]}
                         />
-                    </InputGroup>
-                    <Button
-                        className="dialog-button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={setShowNewDialog}
-                    >
-                        Añadir pieza
-                    </Button>
+                    </div>
+                    <div className="search-input">
+                        <InputGroup
+                            startElement={<IoSearch className="search-icon" />}
+                            endElement={endElement}
+                        >
+                            <Input
+                                className="search-machines"
+                                placeholder="Buscar..."
+                                variant="flushed"
+                                value={search}
+                                onChange={handleSearch}
+                            />
+                        </InputGroup>
+                    </div>
                 </div>
+                <div className="pieces-counter">
+                    {pieces.length === 5000
+                        ? `${pieces.length}+ piezas`
+                        : `${pieces.length} piezas`}
+                </div>
+                <Button
+                    className="dialog-button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={setShowNewDialog}
+                >
+                    Añadir pieza
+                </Button>
             </div>
             {totalPages !== 0 ? (
                 <Suspense fallback={<LoadingScreenHelix />}>

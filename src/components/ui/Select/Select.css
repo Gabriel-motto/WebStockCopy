@@ -181,3 +181,7 @@
 .show {
     display: block;
 }
+
+.selected-icon {
+    margin-left: 10px;
+}

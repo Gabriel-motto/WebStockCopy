@@ -1,7 +1,14 @@
 import { useImageName } from "@/hooks/usePieces";
 import supabase from "../utils/supabase";
 
-export async function getPieces(workshop, search, multiple, column, orderBy) {
+export async function getPieces(
+    workshop,
+    search,
+    multiple,
+    column,
+    orderBy,
+    filter
+) {
     let query = supabase.from("pieces_new").select(column);
 
     if (workshop !== "all") {
@@ -13,9 +20,13 @@ export async function getPieces(workshop, search, multiple, column, orderBy) {
     }
 
     if (search) {
-        query = query.or(
-            `name.ilike.%${search}%,description.ilike.%${search}%`
-        );
+        if (filter) {
+            query = query.ilike(`${filter}`, `%${search}%`);
+        } else {
+            query = query.or(
+                `name.ilike.%${search}%,description.ilike.%${search}%,brand.ilike.%${search}%,type.ilike.%${search}%,supplier.ilike.%${search}%`
+            );
+        }
     }
 
     if (orderBy) {
@@ -76,7 +87,7 @@ export async function insertPiece(newPiece) {
         ])
         .select("id")
         .throwOnError();
-    
+
     if (newPiece.pieceImage.file !== null) {
         insertImage("pieces", newPiece.pieceImage);
     }

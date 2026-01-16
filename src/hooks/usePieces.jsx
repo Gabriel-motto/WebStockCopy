@@ -21,13 +21,14 @@ export function usePieces(options = {}) {
         multiple = [],
         debouncedSearch,
         column = "*",
+        filter = "",
         orderBy = { column: "is_critical", ascending: false },
     } = options;
     const [pieces, setPieces] = useState([]);
 
     useEffect(() => {
-        getPieces(workshop, search, multiple, column, orderBy).then(setPieces);
-    }, [workshop, debouncedSearch, JSON.stringify(multiple)]);
+        getPieces(workshop, search, multiple, column, orderBy, filter).then(setPieces);
+    }, [workshop, debouncedSearch, JSON.stringify(multiple)], filter);
 
     return pieces;
 }
