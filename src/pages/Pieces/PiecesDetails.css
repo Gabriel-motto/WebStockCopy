@@ -61,35 +61,36 @@
 }
 
 .data-boxes {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-auto-rows: minmax(50px, auto);
+    grid-template-columns: repeat(6, 1fr);
     gap: 1rem;
     margin-bottom: 1.5rem;
-}
-
-.data-boxes > * {
-    flex: 1 100%;
-}
-
-.data-box {
-    border: solid 2px #000;
-    border-radius: 0.25rem;
 }
 
 .name-box,
 .brand-box,
 .type-box {
-    flex: 1;
+    grid-column: span 2;
+}
+
+.description-box,
+.additional-info-box {
+    grid-column: span 6;
 }
 
 .buy-price,
-.repair-price {
-    flex: 1;
-}
-
+.repair-price,
+.last-movements,
+.ref-piece-box,
 .supplier-box,
 .alt-piece-box {
-    flex: 1;
+    grid-column: span 3;
+}
+
+.data-box {
+    border: solid 2px #000;
+    border-radius: 0.25rem;
 }
 
 .label {

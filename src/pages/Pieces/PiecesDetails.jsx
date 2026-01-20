@@ -414,7 +414,7 @@ function Details({ data }) {
                         </div>
                         <div className="data-box description-box">
                             <Text className="label description-label">
-                                Descripción
+                                Descripción 
                             </Text>
                             <Text className="value description-value">
                                 {data?.description
@@ -450,6 +450,16 @@ function Details({ data }) {
                                 {data?.last_movements
                                     ? data.last_movements.join(", ")
                                     : "No hay últimos movimientos"}
+                            </Text>
+                        </div>
+                        <div className="data-box ref-piece-box">
+                            <Text className="label ref-piece-label">
+                                Pieza referenciada
+                            </Text>
+                            <Text className="value ref-piece-value">
+                                {data?.ref_piece
+                                    ? data.ref_piece
+                                    : "No es una pieza referenciada"}
                             </Text>
                         </div>
                         <div className="data-box supplier-box">

@@ -8,7 +8,8 @@
     padding-top: 20px;
 }
 
-.dialog-button:hover {
+.dialog-button:hover,
+.print-list-btn:hover {
     background-color: rgba(26, 43, 66, 0.9);
 }
 
@@ -52,10 +53,12 @@
     gap: 3rem;
 }
 
-.dialog-button {
+.piece-button-grp {
     position: absolute;
     right: 0;
     z-index: 1;
+    display: flex;
+    gap: 10px;
 }
 
 .custom-select-filter {
@@ -82,11 +85,24 @@
 
 .pieces-counter {
     position: absolute;
-    right: 150px;
+    right: 250px;
     top: 0;
     font-size: 14px;
-    color: #444;
+    color: var(--corp-yellow);
     font-weight: 500;
+    padding: 2px 5px 2px;
+    border-radius: .5rem;
+    background-color: var(--corp-blue);
+}
+
+.piece-list-print {
+    display: none;
+}
+
+@media print {
+    .piece-list-print {
+        display: block;
+    }
 }
 
 @media screen and (max-width: 768px) {

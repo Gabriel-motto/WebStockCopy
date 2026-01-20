@@ -1,5 +1,11 @@
 import { useState, lazy, Suspense, useRef, useEffect } from "react";
-import { Button, Input, InputGroup, CloseButton } from "@chakra-ui/react";
+import {
+    Button,
+    Input,
+    InputGroup,
+    CloseButton,
+    Table,
+} from "@chakra-ui/react";
 import { TabComponent } from "../../components/ui/tab-component.jsx";
 import DialogComponent from "../../components/dialog/Dialog.jsx";
 import { usePieces } from "../../hooks/usePieces";
@@ -15,6 +21,7 @@ import { Toaster, toaster } from "@/components/ui/toaster.jsx";
 import { MdSearchOff } from "react-icons/md";
 import { NewPiece } from "./Menus.jsx";
 import { CustomSelect } from "@/components/ui/Select/Select.jsx";
+import { useReactToPrint } from "react-to-print";
 
 const tabData = [
     {
@@ -33,7 +40,56 @@ const tabData = [
 
 const CardComponent = lazy(() => import("../../components/card/Card.jsx"));
 
-function PiecesPage({ params = {} }) {
+function PrintPiecesList({ contentRef, pieces, reactToPrintFn, isPrinting, setIsPrinting }) {
+    useEffect(() => {
+        if (isPrinting) {
+            reactToPrintFn();
+            setIsPrinting(false);
+        }
+    }, [isPrinting, reactToPrintFn, setIsPrinting]);
+
+    return (
+        <div
+            ref={contentRef}
+            className="piece-list-print"
+        >
+            <Table.Root>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.ColumnHeader>Referencia</Table.ColumnHeader>
+                        <Table.ColumnHeader>Marca</Table.ColumnHeader>
+                        <Table.ColumnHeader>Tipo</Table.ColumnHeader>
+                        <Table.ColumnHeader>Precio compra</Table.ColumnHeader>
+                        <Table.ColumnHeader>
+                            Precio reparacion
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader>Proveedor</Table.ColumnHeader>
+                        <Table.ColumnHeader>Alternativa</Table.ColumnHeader>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    {pieces.map((piece, index) => (
+                        <Table.Row key={index}>
+                            <Table.Cell>{piece.name}</Table.Cell>
+                            <Table.Cell>{piece.brand || "N/A"}</Table.Cell>
+                            <Table.Cell>{piece.type || "N/A"}</Table.Cell>
+                            <Table.Cell>{piece.buy_price || "N/A"}</Table.Cell>
+                            <Table.Cell>
+                                {piece.repair_price || "N/A"}
+                            </Table.Cell>
+                            <Table.Cell>{piece.supplier || "N/A"}</Table.Cell>
+                            <Table.Cell>
+                                {piece.alternative_piece || "N/A"}
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table.Root>
+        </div>
+    );
+}
+
+export default function PiecesPage({ params = {} }) {
     const [workshop, setWorkshop] = useState({ value: "all" });
     const [search, setSearch] = useState("");
     const [showNewDialog, setShowNewDialog] = useState(false);
@@ -47,6 +103,9 @@ function PiecesPage({ params = {} }) {
         debouncedSearch: debouncedSearch,
         filter: selectedFilterValue,
     });
+    const contentRef = useRef();
+    const reactToPrintFn = useReactToPrint({ contentRef });
+    const [isPrinting, setIsPrinting] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const siblings = 2; // Número de páginas antes y después de la actual
@@ -153,7 +212,10 @@ function PiecesPage({ params = {} }) {
                                 { value: "brand", label: "Marca" },
                                 { value: "description", label: "Descripción" },
                                 { value: "supplier", label: "Proveedor" },
-                                { value: "alternative_piece", label: "Alternativa"}
+                                {
+                                    value: "alternative_piece",
+                                    label: "Alternativa",
+                                },
                             ]}
                         />
                     </div>
@@ -172,19 +234,32 @@ function PiecesPage({ params = {} }) {
                         </InputGroup>
                     </div>
                 </div>
+
                 <div className="pieces-counter">
                     {pieces.length === 5000
                         ? `${pieces.length}+ piezas`
                         : `${pieces.length} piezas`}
                 </div>
-                <Button
-                    className="dialog-button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={setShowNewDialog}
-                >
-                    Añadir pieza
-                </Button>
+
+                <div className="piece-button-grp">
+                    <Button
+                        className="print-list-btn"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsPrinting(true)}
+                    >
+                        Imprimir lista
+                    </Button>
+
+                    <Button
+                        className="dialog-button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={setShowNewDialog}
+                    >
+                        Añadir pieza
+                    </Button>
+                </div>
             </div>
             {totalPages !== 0 ? (
                 <Suspense fallback={<LoadingScreenHelix />}>
@@ -234,8 +309,15 @@ function PiecesPage({ params = {} }) {
                 placement="center"
                 motionPreset="slide-in-bottom"
             />
+            {isPrinting && (
+                <PrintPiecesList
+                    contentRef={contentRef}
+                    pieces={pieces}
+                    reactToPrintFn={reactToPrintFn}
+                    isPrinting={isPrinting}
+                    setIsPrinting={setIsPrinting}
+                />
+            )}
         </div>
     );
 }
-
-export default PiecesPage;
