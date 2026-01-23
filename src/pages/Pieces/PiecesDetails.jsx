@@ -414,7 +414,7 @@ function Details({ data }) {
                         </div>
                         <div className="data-box description-box">
                             <Text className="label description-label">
-                                Descripción 
+                                Descripción
                             </Text>
                             <Text className="value description-value">
                                 {data?.description

@@ -85,18 +85,50 @@
 
 .pieces-counter {
     position: absolute;
-    right: 250px;
-    top: 0;
+    right: 0;
+    top: -1rem;
     font-size: 14px;
     color: var(--corp-yellow);
     font-weight: 500;
     padding: 2px 5px 2px;
-    border-radius: .5rem;
+    border-radius: 4px;
     background-color: var(--corp-blue);
 }
 
 .piece-list-print {
     display: none;
+}
+
+.filter-critical-btn {
+    border: 0.1px solid #fecaca;
+    padding: 0 0.75rem 0;
+    border-radius: 4px;
+    color: #a61939;
+}
+
+.filter-critical-btn::after {
+    content: "Mostrar críticas";
+}
+
+.filter-critical-btn:hover {
+    background-color: #fee2e2;
+    cursor: pointer;
+}
+
+.filter-critical-btn-active {
+    border: 0.5px solid #bfdbfe;
+    padding: 0 0.75rem 0;
+    border-radius: 4px;
+    color: #175ec5;
+}
+
+.filter-critical-btn-active::after {
+    content: "Mostrar todas";
+}
+
+.filter-critical-btn-active:hover {
+    background-color: #dbeafe;
+    cursor: pointer;
 }
 
 @media print {

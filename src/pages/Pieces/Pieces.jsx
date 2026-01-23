@@ -40,7 +40,13 @@ const tabData = [
 
 const CardComponent = lazy(() => import("../../components/card/Card.jsx"));
 
-function PrintPiecesList({ contentRef, pieces, reactToPrintFn, isPrinting, setIsPrinting }) {
+function PrintPiecesList({
+    contentRef,
+    pieces,
+    reactToPrintFn,
+    isPrinting,
+    setIsPrinting,
+}) {
     useEffect(() => {
         if (isPrinting) {
             reactToPrintFn();
@@ -65,6 +71,7 @@ function PrintPiecesList({ contentRef, pieces, reactToPrintFn, isPrinting, setIs
                         </Table.ColumnHeader>
                         <Table.ColumnHeader>Proveedor</Table.ColumnHeader>
                         <Table.ColumnHeader>Alternativa</Table.ColumnHeader>
+                        <Table.ColumnHeader>Crítica</Table.ColumnHeader>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -80,6 +87,9 @@ function PrintPiecesList({ contentRef, pieces, reactToPrintFn, isPrinting, setIs
                             <Table.Cell>{piece.supplier || "N/A"}</Table.Cell>
                             <Table.Cell>
                                 {piece.alternative_piece || "N/A"}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {piece.is_critical ? "Sí" : "No"}
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -97,11 +107,13 @@ export default function PiecesPage({ params = {} }) {
     const [selectedCardData, setSelectedCardData] = useState(null);
     const debouncedSearch = useDebounce(search, 300);
     const [selectedFilterValue, setSelectedFilterValue] = useState(null);
+    const [getCriticals, setGetCriticals] = useState(false);
     const pieces = usePieces({
         workshop: workshop.value,
         search: search,
         debouncedSearch: debouncedSearch,
         filter: selectedFilterValue,
+        getCriticals: getCriticals,
     });
     const contentRef = useRef();
     const reactToPrintFn = useReactToPrint({ contentRef });
@@ -242,6 +254,18 @@ export default function PiecesPage({ params = {} }) {
                 </div>
 
                 <div className="piece-button-grp">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setGetCriticals(!getCriticals);
+                        }}
+                        className={
+                            getCriticals
+                                ? "filter-critical-btn-active"
+                                : "filter-critical-btn"
+                        }
+                    ></button>
+
                     <Button
                         className="print-list-btn"
                         variant="ghost"

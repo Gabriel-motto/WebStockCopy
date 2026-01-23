@@ -7,9 +7,14 @@ export async function getPieces(
     multiple,
     column,
     orderBy,
-    filter
+    filter,
+    getCriticals
 ) {
     let query = supabase.from("pieces_new").select(column);
+
+    if (getCriticals) {
+        query = query.eq("is_critical", true);
+    }
 
     if (workshop !== "all") {
         query = query.eq("workshop", workshop);

@@ -13,6 +13,8 @@ import {
 } from "../services/pieces";
 import supabase from "@/utils/supabase";
 import { toaster } from "@/components/ui/toaster";
+import DialogComponent from "@/components/dialog/Dialog";
+import { AddStockMenu } from "@/pages/Pieces/Menus";
 
 export function usePieces(options = {}) {
     const {
@@ -23,12 +25,18 @@ export function usePieces(options = {}) {
         column = "*",
         filter = "",
         orderBy = { column: "is_critical", ascending: false },
+        getCriticals = false,
     } = options;
     const [pieces, setPieces] = useState([]);
 
-    useEffect(() => {
-        getPieces(workshop, search, multiple, column, orderBy, filter).then(setPieces);
-    }, [workshop, debouncedSearch, JSON.stringify(multiple)], filter);
+    useEffect(
+        () => {
+            getPieces(workshop, search, multiple, column, orderBy, filter, getCriticals).then(
+                setPieces,
+            );
+        },
+        [workshop, debouncedSearch, JSON.stringify(multiple), getCriticals, filter,],
+    );
 
     return pieces;
 }
@@ -92,14 +100,49 @@ export async function useInsertPiece(options = {}) {
             }`,
             type: "error",
         });
+        // if (error.code === "23505") {
+        //     return (
+        //         <div className="duplicate-piece-insert">
+        //             <AddAfterInsert
+        //                 title="La pieza ya existe"
+        //                 piece={values}
+        //             />
+        //         </div>
+        //     );
+        // }
     }
+}
+
+function AddAfterInsert({ title, piece}) {
+    const [showDialolg, setShowDialog] = useState(true);
+    
+    const closeDialog = () => {
+        setShowDialog(false);
+    };
+
+    return (
+        <div className="duplicate-piece-insert">
+            <DialogComponent
+                size="xs"
+                open={showDialolg}
+                close={closeDialog}
+                title={title}
+                content={
+                    <AddStockMenu
+                        piece={piece}
+                        handleCancel={closeDialog}
+                    />
+                }
+            />
+        </div>
+    );
 }
 
 export async function useUpdatePiece(
     updatedPiece,
     pieceImageOld,
     dataCardOld,
-    additionalImageOld
+    additionalImageOld,
 ) {
     const promiseToaster = toaster.create({
         title: "Modificando pieza...",
@@ -112,7 +155,7 @@ export async function useUpdatePiece(
             updatedPiece,
             pieceImageOld,
             dataCardOld,
-            additionalImageOld
+            additionalImageOld,
         );
 
         toaster.dismiss(promiseToaster.id);
