@@ -72,7 +72,7 @@ function Traceability({ data }) {
     const pieceStock = useTotalStockPiece({ pieceId: data.id });
     const machines = useMachinesStockPiece({ pieceId: data.id });
     const warehouses = useWarehousesStockPiece({ pieceId: data.id });
-    const pieceSerials = usePieceSerials({ pieceId: data.id });
+    const { serials: pieceSerials } = usePieceSerials({ pieceId: data.id });
     const recentMovements = useRecentPieceMovements({ pieceId: data.id });
     const recentMachineMovements = recentMovements.data?.filter(
         (movement) => movement.machine_to !== null

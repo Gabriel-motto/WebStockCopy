@@ -29,11 +29,11 @@ export function MoveStockMenu({ piece, handleCancel }) {
         action: "move",
         note: null,
     });
-    const pieceSerials = usePieceSerials({
+    const { serials: pieceSerials } = usePieceSerials({
         pieceId: piece?.id,
         search: formData.serial,
     });
-    const machines = useMachines({
+    const { machines } = useMachines({
         search: formData.location,
     });
     const warehouses = useWarehouse({
@@ -544,7 +544,7 @@ export function AddStockMenu({ piece, handleCancel }) {
         location: "",
         note: "",
     });
-    const machines = useMachines({
+    const { machines } = useMachines({
         search: formData.location,
     });
     const warehouses = useWarehouse({
@@ -645,7 +645,7 @@ export function PrintMenu({ piece }) {
     const contentRef = useRef();
     const reactToPrintFn = useReactToPrint({ contentRef });
     const [serialSelected, setSerialSelected] = useState();
-    const pieceSerials = usePieceSerials({
+    const { serials: pieceSerials } = usePieceSerials({
         pieceId: piece?.id,
     });
     const [showOptions, setShowOptions] = useState(false);
@@ -750,7 +750,7 @@ export function DeleteStockMenu({ piece, inStock, handleCancel }) {
         amount: 1,
         action: "add",
     });
-    const machines = useMachines({
+    const { machines } = useMachines({
         columns: "name",
     });
 

@@ -22,6 +22,8 @@ import { MdSearchOff } from "react-icons/md";
 import { NewPiece } from "./Menus.jsx";
 import { CustomSelect } from "@/components/ui/Select/Select.jsx";
 import { useReactToPrint } from "react-to-print";
+import { usePieceSerials } from "@/hooks/usePieceSerials.jsx";
+import { useMachines } from "@/hooks/useMachines.jsx";
 
 const tabData = [
     {
@@ -71,6 +73,7 @@ function PrintPiecesList({
                         </Table.ColumnHeader>
                         <Table.ColumnHeader>Proveedor</Table.ColumnHeader>
                         <Table.ColumnHeader>Alternativa</Table.ColumnHeader>
+                        <Table.ColumnHeader>Referenciada</Table.ColumnHeader>
                         <Table.ColumnHeader>Crítica</Table.ColumnHeader>
                     </Table.Row>
                 </Table.Header>
@@ -89,7 +92,112 @@ function PrintPiecesList({
                                 {piece.alternative_piece || "N/A"}
                             </Table.Cell>
                             <Table.Cell>
+                                {piece.ref_piece || "Sin referenciar"}
+                            </Table.Cell>
+                            <Table.Cell>
                                 {piece.is_critical ? "Sí" : "No"}
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table.Root>
+        </div>
+    );
+}
+
+function PrintPiecesMachinesList({
+    contentRef,
+    pieces,
+    reactToPrintFn,
+    isPrinting,
+    setIsPrinting,
+}) {
+    const [isLoadingData, setIsLoadingData] = useState(true);
+    const { serials: pieceSerials, loading: loadingSerials } = usePieceSerials({
+        multipleId: pieces.map((p) => p.id),
+        column: "piece_id, current_machine",
+    });
+    const filteredSerials = pieceSerials.filter(
+        (s) => s.current_machine !== null,
+    );
+    const { machines, loading: loadingMachines } = useMachines({
+        multipleId: filteredSerials.map((s) => s.current_machine),
+        column: "id, name",
+    });
+    const filteredMachines = machines.filter((m) =>
+        filteredSerials
+            .filter((s) => pieces.map((p) => p.id).includes(s.piece_id))
+            .map((s) => s.current_machine)
+            .includes(m.id),
+    );
+
+    useEffect(() => {
+        if (filteredMachines.length > 0) {
+            setIsLoadingData(false);
+        }
+    }, [filteredMachines]);
+
+    useEffect(() => {
+        if (
+            isPrinting &&
+            !loadingSerials &&
+            !loadingMachines &&
+            !isLoadingData
+        ) {
+            reactToPrintFn();
+            setIsPrinting(false);
+        }
+    }, [
+        isPrinting,
+        reactToPrintFn,
+        setIsPrinting,
+        loadingSerials,
+        loadingMachines,
+        isLoadingData,
+    ]);
+
+    return (
+        <div
+            ref={contentRef}
+            className="piece-machine-list-print"
+        >
+            <Table.Root>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.ColumnHeader>
+                            Referencia pieza
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="center">
+                            Cantidad en máquinas
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="center">
+                            Instalada en
+                        </Table.ColumnHeader>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    {pieces.map((piece, index) => (
+                        <Table.Row key={index}>
+                            <Table.Cell>{piece.name}</Table.Cell>
+                            <Table.Cell textAlign="center">
+                                {
+                                    filteredSerials.filter(
+                                        (s) => s.piece_id === piece.id,
+                                    ).length
+                                }
+                            </Table.Cell>
+                            <Table.Cell textAlign="center">
+                                {filteredMachines
+                                    .filter((m) =>
+                                        filteredSerials
+                                            .filter(
+                                                (s) => s.piece_id === piece.id,
+                                            )
+                                            .map((s) => s.current_machine)
+                                            .includes(m.id),
+                                    )
+                                    .map((m) => m.name)
+                                    .join(", ") || "N/A"}
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -118,6 +226,8 @@ export default function PiecesPage({ params = {} }) {
     const contentRef = useRef();
     const reactToPrintFn = useReactToPrint({ contentRef });
     const [isPrinting, setIsPrinting] = useState(false);
+    const [isPrintingPieceMachines, setIsPrintingPieceMachines] =
+        useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const siblings = 2; // Número de páginas antes y después de la actual
@@ -178,6 +288,12 @@ export default function PiecesPage({ params = {} }) {
             : setSelectedFilterValue(value);
     }
 
+    function handleSelectPrint(value) {
+        value === "pieces"
+            ? setIsPrinting(true)
+            : setIsPrintingPieceMachines(true);
+    }
+
     const inputRef = (useRef < HTMLInputElement) | (null > null);
 
     const endElement = search ? (
@@ -214,7 +330,7 @@ export default function PiecesPage({ params = {} }) {
                 <div className="search-group">
                     <div className="filter">
                         <CustomSelect
-                            className="custom-select-filter"
+                            className="custom-select-filter custom-select"
                             label="Filtrar por"
                             dataFromChild={handleSelectClick}
                             showSelected={true}
@@ -266,14 +382,27 @@ export default function PiecesPage({ params = {} }) {
                         }
                     ></button>
 
-                    <Button
+                    <CustomSelect
+                        className="custom-select-print custom-select"
+                        label="Imprimir"
+                        dataFromChild={handleSelectPrint}
+                        content={[
+                            { value: "pieces", label: "Piezas" },
+                            {
+                                value: "pieces-machines",
+                                label: "Piezas-Máquinas",
+                            },
+                        ]}
+                    />
+
+                    {/* <Button
                         className="print-list-btn"
                         variant="ghost"
                         size="sm"
                         onClick={() => setIsPrinting(true)}
                     >
                         Imprimir lista
-                    </Button>
+                    </Button> */}
 
                     <Button
                         className="dialog-button"
@@ -340,6 +469,15 @@ export default function PiecesPage({ params = {} }) {
                     reactToPrintFn={reactToPrintFn}
                     isPrinting={isPrinting}
                     setIsPrinting={setIsPrinting}
+                />
+            )}
+            {isPrintingPieceMachines && (
+                <PrintPiecesMachinesList
+                    contentRef={contentRef}
+                    pieces={pieces}
+                    reactToPrintFn={reactToPrintFn}
+                    isPrinting={isPrintingPieceMachines}
+                    setIsPrinting={setIsPrintingPieceMachines}
                 />
             )}
         </div>

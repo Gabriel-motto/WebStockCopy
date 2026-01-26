@@ -9,19 +9,27 @@ export function useMachines(options = {}) {
         column = "*",
         getCriticals,
         id,
+        multipleId,
     } = options;
     const [machines, setMachines] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getMachines(selectedALines, search, column, getCriticals, id).then(setMachines);
+        setLoading(true);
+        getMachines(selectedALines, search, column, getCriticals, id, multipleId).then((data) => {
+            setMachines(data);
+            setLoading(false);
+        });
     }, [
         JSON.stringify(selectedALines),
+        JSON.stringify(multipleId),
+        search,
         debouncedSearch ? debouncedSearch : search,
         column,
         getCriticals,
         id,
     ]);
-    return machines;
+    return { machines, loading };
 }
 
 export function useSelectedMachine(options = {}) {

@@ -2,11 +2,15 @@ import { useMachines } from "@/hooks/useMachines";
 import { useWarehouse } from "@/hooks/useWarehouse";
 import supabase from "@/utils/supabase";
 
-export async function getPieceSerials(pieceId, search, column, id) {
+export async function getPieceSerials(pieceId, search, column, id, multipleId) {
     let query = supabase.from("piece_serials").select(column);
 
     if (id) {
         query = query.eq("id", id);
+    }
+
+    if (multipleId) {
+        query = query.in("piece_id", multipleId);
     }
 
     if (pieceId) {

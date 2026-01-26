@@ -65,7 +65,7 @@ export default function MachinesPage({ params = {} }) {
     const [search, setSearch] = useState("");
     const [getCriticals, setGetCriticals] = useState(false);
     const debouncedSearch = useDebounce(search, 300);
-    const machines = useMachines({
+    const { machines } = useMachines({
         selectedALines: selectedALines,
         search: search,
         debouncedSearch: debouncedSearch,

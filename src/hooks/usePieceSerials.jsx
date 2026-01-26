@@ -10,14 +10,19 @@ import { useMachines } from "./useMachines";
 import { insertRecentPieceMovementService } from "@/services/recentPieceMovements";
 
 export function usePieceSerials(options = {}) {
-    const { pieceId, search, column = "*" } = options;
+    const { pieceId, search, column = "*", multipleId } = options;
     const [serials, setSerials] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getPieceSerials(pieceId, search, column).then(setSerials);
-    }, [pieceId, search, column]);
+        setLoading(true);
+        getPieceSerials(pieceId, search, column, null, multipleId).then((data) => {
+            setSerials(data);
+            setLoading(false);
+        });
+    }, [pieceId, search, column, JSON.stringify(multipleId)]);
 
-    return serials;
+    return { serials, loading };
 }
 
 export async function useInsertPieceSerials(options = {}) {

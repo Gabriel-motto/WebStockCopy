@@ -61,25 +61,25 @@
     gap: 10px;
 }
 
-.custom-select-filter {
+.custom-select {
     height: 40px;
     border-bottom: 1px solid #e4e4e7;
     color: #666;
     font-size: 14px;
 }
 
-.custom-select-filter > .custom-selector {
+.custom-select > .custom-selector {
     padding: 10px 10px 0 10px;
 }
 
-.custom-select-filter > .custom-options {
+.custom-select > .custom-options {
     max-height: 150px;
     max-width: max-content;
     top: 50px;
     color: black;
 }
 
-.custom-select-filter > .custom-options > .custom-item {
+.custom-select > .custom-options > .custom-item {
     font-size: 14px;
 }
 
@@ -95,7 +95,8 @@
     background-color: var(--corp-blue);
 }
 
-.piece-list-print {
+.piece-list-print,
+.piece-machine-list-print {
     display: none;
 }
 
@@ -132,7 +133,8 @@
 }
 
 @media print {
-    .piece-list-print {
+    .piece-list-print,
+    .piece-machine-list-print {
         display: block;
     }
 }
