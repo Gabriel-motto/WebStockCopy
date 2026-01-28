@@ -2,14 +2,18 @@ import { getWarehouses, getWarehouseStock } from "@/services/warehouse";
 import { useEffect, useState } from "react";
 
 export function useWarehouse(options = {}) {
-    const { search = "", column = "*" } = options;
+    const { search = "", column = "*", multipleId } = options;
     const [warehouses, setWarehouses] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getWarehouses(search, column).then(setWarehouses);
-    }, [search, column]);
-
-    return warehouses;
+        setLoading(true);
+        getWarehouses(search, column, multipleId).then((data) => {
+            setWarehouses(data);
+            setLoading(false);
+        });
+    }, [search, column, JSON.stringify(multipleId)]);
+    return { warehouses, loading };
 }
 
 export function useWarehouseStock(options = {}) {

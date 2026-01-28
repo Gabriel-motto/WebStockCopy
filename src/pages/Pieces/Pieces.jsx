@@ -24,6 +24,7 @@ import { CustomSelect } from "@/components/ui/Select/Select.jsx";
 import { useReactToPrint } from "react-to-print";
 import { usePieceSerials } from "@/hooks/usePieceSerials.jsx";
 import { useMachines } from "@/hooks/useMachines.jsx";
+import { useWarehouse } from "@/hooks/useWarehouse.jsx";
 
 const tabData = [
     {
@@ -115,27 +116,33 @@ function PrintPiecesMachinesList({
     const [isLoadingData, setIsLoadingData] = useState(true);
     const { serials: pieceSerials, loading: loadingSerials } = usePieceSerials({
         multipleId: pieces.map((p) => p.id),
-        column: "piece_id, current_machine",
+        column: "piece_id, current_machine, current_warehouse",
     });
-    const filteredSerials = pieceSerials.filter(
-        (s) => s.current_machine !== null,
-    );
     const { machines, loading: loadingMachines } = useMachines({
-        multipleId: filteredSerials.map((s) => s.current_machine),
+        multipleId: pieceSerials.filter((s) => s.current_machine !== null).map((s) => s.current_machine),
         column: "id, name",
     });
     const filteredMachines = machines.filter((m) =>
-        filteredSerials
+        pieceSerials
             .filter((s) => pieces.map((p) => p.id).includes(s.piece_id))
             .map((s) => s.current_machine)
             .includes(m.id),
     );
+    const { warehouses, loading: loadingWarehouses } = useWarehouse({
+        multipleId: pieceSerials.filter((s) => s.current_warehouse !== null).map((s) => s.current_warehouse),
+        column: "id, name",
+    });
+    const filteredWarehouses = warehouses.filter((w) =>
+        pieceSerials
+            .map((s) => s.current_warehouse)
+            .includes(w.id),
+    );
 
     useEffect(() => {
-        if (filteredMachines.length > 0) {
+        if (filteredMachines.length > 0 && filteredWarehouses.length > 0) {
             setIsLoadingData(false);
         }
-    }, [filteredMachines]);
+    }, [filteredMachines, filteredWarehouses]);
 
     useEffect(() => {
         if (
@@ -168,7 +175,7 @@ function PrintPiecesMachinesList({
                             Referencia pieza
                         </Table.ColumnHeader>
                         <Table.ColumnHeader textAlign="center">
-                            Cantidad en máquinas
+                            Cantidad en total
                         </Table.ColumnHeader>
                         <Table.ColumnHeader textAlign="center">
                             Instalada en
@@ -181,7 +188,7 @@ function PrintPiecesMachinesList({
                             <Table.Cell>{piece.name}</Table.Cell>
                             <Table.Cell textAlign="center">
                                 {
-                                    filteredSerials.filter(
+                                    pieceSerials.filter(
                                         (s) => s.piece_id === piece.id,
                                     ).length
                                 }
@@ -189,7 +196,7 @@ function PrintPiecesMachinesList({
                             <Table.Cell textAlign="center">
                                 {filteredMachines
                                     .filter((m) =>
-                                        filteredSerials
+                                        pieceSerials
                                             .filter(
                                                 (s) => s.piece_id === piece.id,
                                             )
@@ -197,7 +204,19 @@ function PrintPiecesMachinesList({
                                             .includes(m.id),
                                     )
                                     .map((m) => m.name)
-                                    .join(", ") || "N/A"}
+                                    .join(", ")}
+                                {(filteredMachines.length > 0 && filteredWarehouses.length > 0) ? ", " : ""}
+                                {filteredWarehouses
+                                    .filter((w) =>
+                                        pieceSerials
+                                            .filter(
+                                                (s) => s.piece_id === piece.id,
+                                            )
+                                            .map((s) => s.current_warehouse)
+                                            .includes(w.id),
+                                    )
+                                    .map((w) => w.name)
+                                    .join(", ")}
                             </Table.Cell>
                         </Table.Row>
                     ))}

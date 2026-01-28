@@ -1,10 +1,14 @@
 import supabase from "@/utils/supabase";
 
-export async function getWarehouses(search, column) {
+export async function getWarehouses(search, column, multipleId) {
     let query = supabase.from("warehouses_new").select(column);
 
     if (search) {
         query = query.or(`name.ilike.%${search}%`);
+    }
+
+    if (multipleId && multipleId.length > 0) {
+        query = query.in("id", multipleId);
     }
 
     const { data: warehouses } = await query;
