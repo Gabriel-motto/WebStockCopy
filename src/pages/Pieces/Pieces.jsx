@@ -128,21 +128,12 @@ function PrintPiecesMachinesList({
             .map((s) => s.current_machine)
             .includes(m.id),
     );
-    const { warehouses, loading: loadingWarehouses } = useWarehouse({
-        multipleId: pieceSerials.filter((s) => s.current_warehouse !== null).map((s) => s.current_warehouse),
-        column: "id, name",
-    });
-    const filteredWarehouses = warehouses.filter((w) =>
-        pieceSerials
-            .map((s) => s.current_warehouse)
-            .includes(w.id),
-    );
 
     useEffect(() => {
-        if (filteredMachines.length > 0 && filteredWarehouses.length > 0) {
+        if (filteredMachines.length > 0) {
             setIsLoadingData(false);
         }
-    }, [filteredMachines, filteredWarehouses]);
+    }, [filteredMachines]);
 
     useEffect(() => {
         if (
@@ -205,18 +196,6 @@ function PrintPiecesMachinesList({
                                     )
                                     .map((m) => m.name)
                                     .join(", ")}
-                                {(filteredMachines.length > 0 && filteredWarehouses.length > 0) ? ", " : ""}
-                                {filteredWarehouses
-                                    .filter((w) =>
-                                        pieceSerials
-                                            .filter(
-                                                (s) => s.piece_id === piece.id,
-                                            )
-                                            .map((s) => s.current_warehouse)
-                                            .includes(w.id),
-                                    )
-                                    .map((w) => w.name)
-                                    .join(", ")}
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -241,6 +220,7 @@ export default function PiecesPage({ params = {} }) {
         debouncedSearch: debouncedSearch,
         filter: selectedFilterValue,
         getCriticals: getCriticals,
+        orderBy: { column: "name", ascending: true },
     });
     const contentRef = useRef();
     const reactToPrintFn = useReactToPrint({ contentRef });

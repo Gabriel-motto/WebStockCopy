@@ -38,7 +38,7 @@ export async function getPieces(
         query = query.order(orderBy.column, { ascending: orderBy.ascending });
     }
 
-    const { data: pieces } = await query;
+    const { data: pieces } = await query.order("is_critical", { ascending: true });
 
     return pieces;
 }

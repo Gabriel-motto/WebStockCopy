@@ -36,7 +36,7 @@ export function MoveStockMenu({ piece, handleCancel }) {
     const { machines } = useMachines({
         search: formData.location,
     });
-    const warehouses = useWarehouse({
+    const { warehouses } = useWarehouse({
         search: formData.location,
     });
 
@@ -93,10 +93,7 @@ export function MoveStockMenu({ piece, handleCancel }) {
     return (
         <div className="move-stock-container menus-container">
             <div className="body-move-stock">
-                <form
-                    className="move-form"
-                    onSubmit={handleSubmit}
-                >
+                <form className="move-form" onSubmit={handleSubmit}>
                     <div className="move-menus-cage">
                         <div className="menus-cage serial-cage">
                             <p className="menus-label serial-label">
@@ -175,10 +172,7 @@ export function MoveStockMenu({ piece, handleCancel }) {
                         </div>
                     </div>
                     <div className="footer-move-stock menus-footer">
-                        <Button
-                            colorPalette="blue"
-                            type="submit"
-                        >
+                        <Button colorPalette="blue" type="submit">
                             Aceptar
                         </Button>
                         <Button
@@ -294,16 +288,10 @@ export function EditStockMenu({
                         value={formData.workshop}
                         onChange={handleFormChange}
                     >
-                        <option
-                            name="workshop"
-                            value="E"
-                        >
+                        <option name="workshop" value="E">
                             Eléctrico
                         </option>
-                        <option
-                            name="workshop"
-                            value="M"
-                        >
+                        <option name="workshop" value="M">
                             Mecánico
                         </option>
                     </select>
@@ -322,28 +310,16 @@ export function EditStockMenu({
                         }
                         onChange={handleFormChange}
                     >
-                        <option
-                            name="availability"
-                            value="available"
-                        >
+                        <option name="availability" value="available">
                             Disponible
                         </option>
-                        <option
-                            name="availability"
-                            value="obsolete"
-                        >
+                        <option name="availability" value="obsolete">
                             Obsoleto
                         </option>
-                        <option
-                            name="availability"
-                            value="unavailable"
-                        >
+                        <option name="availability" value="unavailable">
                             No disponible
                         </option>
-                        <option
-                            name="availability"
-                            value="limited"
-                        >
+                        <option name="availability" value="limited">
                             Limitado
                         </option>
                     </select>
@@ -425,16 +401,10 @@ export function EditStockMenu({
                         value={formData.is_critical}
                         onChange={handleFormChange}
                     >
-                        <option
-                            name="is_critical"
-                            value={false}
-                        >
+                        <option name="is_critical" value={false}>
                             No
                         </option>
-                        <option
-                            name="is_critical"
-                            value={true}
-                        >
+                        <option name="is_critical" value={true}>
                             Sí
                         </option>
                     </select>
@@ -466,10 +436,7 @@ export function EditStockMenu({
                     ></textarea>
                 </div>
                 <div className="image-piece-edit-cage menus-cage">
-                    <label
-                        className="menus-label"
-                        htmlFor="image-piece"
-                    >
+                    <label className="menus-label" htmlFor="image-piece">
                         Imagen pieza
                     </label>
                     <input
@@ -483,10 +450,7 @@ export function EditStockMenu({
                     />
                 </div>
                 <div className="image-data-card-edit-cage menus-cage">
-                    <label
-                        className="menus-label"
-                        htmlFor="image-data-card"
-                    >
+                    <label className="menus-label" htmlFor="image-data-card">
                         Imagen etiqueta
                     </label>
                     <input
@@ -500,10 +464,7 @@ export function EditStockMenu({
                     />
                 </div>
                 <div className="menus-cage image-additional-edit-cage">
-                    <label
-                        htmlFor="image-additional"
-                        className="menus-label"
-                    >
+                    <label htmlFor="image-additional" className="menus-label">
                         Imagen adicional
                     </label>
                     <input
@@ -518,16 +479,10 @@ export function EditStockMenu({
                 </div>
             </div>
             <div className="edit-footer menus-footer">
-                <Button
-                    colorPalette="blue"
-                    onClick={handleSubmit}
-                >
+                <Button colorPalette="blue" onClick={handleSubmit}>
                     Aceptar
                 </Button>
-                <Button
-                    colorPalette="red"
-                    onClick={handleCancel}
-                >
+                <Button colorPalette="red" onClick={handleCancel}>
                     Cancelar
                 </Button>
             </div>
@@ -547,7 +502,7 @@ export function AddStockMenu({ piece, handleCancel }) {
     const { machines } = useMachines({
         search: formData.location,
     });
-    const warehouses = useWarehouse({
+    const { warehouses } = useWarehouse({
         search: formData.location,
     });
 
@@ -624,16 +579,10 @@ export function AddStockMenu({ piece, handleCancel }) {
                 </div>
             </div>
             <div className="add-menu-footer menus-footer">
-                <Button
-                    colorPalette="blue"
-                    onClick={handleSubmit}
-                >
+                <Button colorPalette="blue" onClick={handleSubmit}>
                     Aceptar
                 </Button>
-                <Button
-                    colorPalette="red"
-                    onClick={handleCancel}
-                >
+                <Button colorPalette="red" onClick={handleCancel}>
                     Cancelar
                 </Button>
             </div>
@@ -698,10 +647,7 @@ export function PrintMenu({ piece }) {
                     serialSelected ? "print-menu-body show" : "print-menu-body"
                 }`}
             >
-                <div
-                    ref={contentRef}
-                    className="print-content"
-                >
+                <div ref={contentRef} className="print-content">
                     <QrCode.Root
                         className="qr-code"
                         size="sm"
@@ -730,10 +676,7 @@ export function PrintMenu({ piece }) {
                         </div>
                     </div>
                 </div>
-                <Button
-                    colorPalette="blue"
-                    onClick={reactToPrintFn}
-                >
+                <Button colorPalette="blue" onClick={reactToPrintFn}>
                     Imprimir etiqueta
                 </Button>
             </div>
@@ -840,16 +783,10 @@ export function DeleteStockMenu({ piece, inStock, handleCancel }) {
                 </div>
             </div>
             <div className="delete-menu-footer menus-footer">
-                <Button
-                    colorPalette="blue"
-                    onClick={handleSubmit}
-                >
+                <Button colorPalette="blue" onClick={handleSubmit}>
                     Enviar petición
                 </Button>
-                <Button
-                    colorPalette="red"
-                    onClick={handleCancel}
-                >
+                <Button colorPalette="red" onClick={handleCancel}>
                     Cancelar
                 </Button>
             </div>
@@ -934,20 +871,14 @@ export function NewPiece({ handleCancel }) {
             ...values,
             [field]: value,
         });
-        (document.getElementById("type").value = value)
+        document.getElementById("type").value = value;
     }
 
     return (
         <div className="menus-container insert-container">
-            <form
-                onSubmit={handleSubmit}
-                className="insert-piece-form"
-            >
+            <form onSubmit={handleSubmit} className="insert-piece-form">
                 <div className="menus-cage name-insert-cage">
-                    <label
-                        htmlFor="name"
-                        className="menus-label"
-                    >
+                    <label htmlFor="name" className="menus-label">
                         Referencia
                     </label>
                     <input
@@ -960,10 +891,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage brand-insert-cage">
-                    <label
-                        htmlFor="brand"
-                        className="menus-label"
-                    >
+                    <label htmlFor="brand" className="menus-label">
                         Marca
                     </label>
                     <input
@@ -975,14 +903,8 @@ export function NewPiece({ handleCancel }) {
                         onChange={handleFormChange}
                     />
                 </div>
-                <div
-                    className="menus-cage type-insert-cage"
-                    ref={ref}
-                >
-                    <label
-                        htmlFor="type"
-                        className="menus-label"
-                    >
+                <div className="menus-cage type-insert-cage" ref={ref}>
+                    <label htmlFor="type" className="menus-label">
                         Tipo
                     </label>
                     <input
@@ -1002,17 +924,14 @@ export function NewPiece({ handleCancel }) {
                     >
                         <HintPanel
                             hintData={types.map((item) => item.type)}
-                            onSelect={(value) => (
+                            onSelect={(value) =>
                                 handleHintSelect(value, "type")
-                            )}
+                            }
                         />
                     </div>
                 </div>
                 <div className="menus-cage workshop-insert-cage">
-                    <label
-                        htmlFor="workshop"
-                        className="menus-label"
-                    >
+                    <label htmlFor="workshop" className="menus-label">
                         Taller
                     </label>
                     <select
@@ -1023,25 +942,16 @@ export function NewPiece({ handleCancel }) {
                         defaultValue="M"
                         onChange={handleFormChange}
                     >
-                        <option
-                            name="workshop"
-                            value="M"
-                        >
+                        <option name="workshop" value="M">
                             Mecánica
                         </option>
-                        <option
-                            name="workshop"
-                            value="E"
-                        >
+                        <option name="workshop" value="E">
                             Electrónica
                         </option>
                     </select>
                 </div>
                 <div className="menus-cage isCritical-insert-cage">
-                    <label
-                        htmlFor="isCritical"
-                        className="menus-label"
-                    >
+                    <label htmlFor="isCritical" className="menus-label">
                         Es crítica
                     </label>
                     <select
@@ -1052,25 +962,16 @@ export function NewPiece({ handleCancel }) {
                         defaultValue={false}
                         onChange={handleFormChange}
                     >
-                        <option
-                            name="isCritical"
-                            value={false}
-                        >
+                        <option name="isCritical" value={false}>
                             No
                         </option>
-                        <option
-                            name="isCritical"
-                            value={true}
-                        >
+                        <option name="isCritical" value={true}>
                             Sí
                         </option>
                     </select>
                 </div>
                 <div className="menus-cage description-insert-cage">
-                    <label
-                        htmlFor="description"
-                        className="menus-label"
-                    >
+                    <label htmlFor="description" className="menus-label">
                         Descripción
                     </label>
                     <textarea
@@ -1081,10 +982,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage repairPrice-insert-cage">
-                    <label
-                        htmlFor="repairPrice"
-                        className="menus-label"
-                    >
+                    <label htmlFor="repairPrice" className="menus-label">
                         Precio de reparación
                     </label>
                     <input
@@ -1097,10 +995,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage buyPrice-insert-cage">
-                    <label
-                        htmlFor="buyPrice"
-                        className="menus-label"
-                    >
+                    <label htmlFor="buyPrice" className="menus-label">
                         Precio de compra
                     </label>
                     <input
@@ -1113,10 +1008,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage supplier-insert-cage">
-                    <label
-                        htmlFor="supplier"
-                        className="menus-label"
-                    >
+                    <label htmlFor="supplier" className="menus-label">
                         Proveedor
                     </label>
                     <input
@@ -1128,10 +1020,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage availability-insert-cage">
-                    <label
-                        htmlFor="availability"
-                        className="menus-label"
-                    >
+                    <label htmlFor="availability" className="menus-label">
                         Disponibilidad
                     </label>
                     <select
@@ -1142,37 +1031,22 @@ export function NewPiece({ handleCancel }) {
                         onChange={handleFormChange}
                         defaultValue="available"
                     >
-                        <option
-                            name="availability"
-                            value="available"
-                        >
+                        <option name="availability" value="available">
                             Disponible
                         </option>
-                        <option
-                            name="availability"
-                            value="obsolete"
-                        >
+                        <option name="availability" value="obsolete">
                             Obsoleto
                         </option>
-                        <option
-                            name="availability"
-                            value="unavailable"
-                        >
+                        <option name="availability" value="unavailable">
                             No disponible
                         </option>
-                        <option
-                            name="availability"
-                            value="limited"
-                        >
+                        <option name="availability" value="limited">
                             Limitado
                         </option>
                     </select>
                 </div>
                 <div className="menus-cage min-stock-insert-cage">
-                    <label
-                        htmlFor="minStock"
-                        className="menus-label"
-                    >
+                    <label htmlFor="minStock" className="menus-label">
                         Stock mínimo
                     </label>
                     <input
@@ -1184,10 +1058,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage altPiece-insert-cage">
-                    <label
-                        htmlFor="altPiece"
-                        className="menus-label"
-                    >
+                    <label htmlFor="altPiece" className="menus-label">
                         Pieza alternativa
                     </label>
                     <input
@@ -1199,10 +1070,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage additionalInfo-insert-cage">
-                    <label
-                        htmlFor="additionalInfo"
-                        className="menus-label"
-                    >
+                    <label htmlFor="additionalInfo" className="menus-label">
                         Información adicional
                     </label>
                     <textarea
@@ -1214,10 +1082,7 @@ export function NewPiece({ handleCancel }) {
                 </div>
 
                 <div className="menus-cage image-piece-insert-cage">
-                    <label
-                        htmlFor="image-piece"
-                        className="menus-label"
-                    >
+                    <label htmlFor="image-piece" className="menus-label">
                         Imagen pieza
                     </label>
                     <input
@@ -1231,10 +1096,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage image-data-card-insert-cage">
-                    <label
-                        htmlFor="image-data-card"
-                        className="menus-label"
-                    >
+                    <label htmlFor="image-data-card" className="menus-label">
                         Imagen etiqueta
                     </label>
                     <input
@@ -1248,10 +1110,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage image-additional-insert-cage">
-                    <label
-                        htmlFor="image-additional"
-                        className="menus-label"
-                    >
+                    <label htmlFor="image-additional" className="menus-label">
                         Imagen adicional
                     </label>
                     <input
@@ -1265,10 +1124,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-cage note-insert-cage">
-                    <label
-                        htmlFor="note"
-                        className="menus-label"
-                    >
+                    <label htmlFor="note" className="menus-label">
                         Nota (Opcional)
                     </label>
                     <textarea
@@ -1283,11 +1139,7 @@ export function NewPiece({ handleCancel }) {
                     />
                 </div>
                 <div className="menus-footer insert-menu-footer">
-                    <Button
-                        colorPalette="blue"
-                        variant="outline"
-                        type="submit"
-                    >
+                    <Button colorPalette="blue" variant="outline" type="submit">
                         Añadir
                     </Button>
                     <Button
