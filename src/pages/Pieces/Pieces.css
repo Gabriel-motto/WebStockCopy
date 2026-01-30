@@ -66,6 +66,7 @@
     border-bottom: 1px solid #e4e4e7;
     color: #666;
     font-size: 14px;
+    cursor: pointer;
 }
 
 .custom-select > .custom-selector {

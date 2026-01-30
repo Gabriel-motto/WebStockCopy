@@ -58,10 +58,7 @@ function PrintPiecesList({
     }, [isPrinting, reactToPrintFn, setIsPrinting]);
 
     return (
-        <div
-            ref={contentRef}
-            className="piece-list-print"
-        >
+        <div ref={contentRef} className="piece-list-print">
             <Table.Root>
                 <Table.Header>
                     <Table.Row>
@@ -119,14 +116,16 @@ function PrintPiecesMachinesList({
         column: "piece_id, current_machine, current_warehouse",
     });
     const { machines, loading: loadingMachines } = useMachines({
-        multipleId: pieceSerials.filter((s) => s.current_machine !== null).map((s) => s.current_machine),
+        multipleId: pieceSerials
+            .filter((s) => s.current_machine !== null)
+            .map((s) => s.current_machine),
         column: "id, name",
     });
     const filteredMachines = machines.filter((m) =>
         pieceSerials
             .filter((s) => pieces.map((p) => p.id).includes(s.piece_id))
             .map((s) => s.current_machine)
-            .includes(m.id),
+            .includes(m.id)
     );
 
     useEffect(() => {
@@ -155,10 +154,7 @@ function PrintPiecesMachinesList({
     ]);
 
     return (
-        <div
-            ref={contentRef}
-            className="piece-machine-list-print"
-        >
+        <div ref={contentRef} className="piece-machine-list-print">
             <Table.Root>
                 <Table.Header>
                     <Table.Row>
@@ -180,7 +176,7 @@ function PrintPiecesMachinesList({
                             <Table.Cell textAlign="center">
                                 {
                                     pieceSerials.filter(
-                                        (s) => s.piece_id === piece.id,
+                                        (s) => s.piece_id === piece.id
                                     ).length
                                 }
                             </Table.Cell>
@@ -189,10 +185,10 @@ function PrintPiecesMachinesList({
                                     .filter((m) =>
                                         pieceSerials
                                             .filter(
-                                                (s) => s.piece_id === piece.id,
+                                                (s) => s.piece_id === piece.id
                                             )
                                             .map((s) => s.current_machine)
-                                            .includes(m.id),
+                                            .includes(m.id)
                                     )
                                     .map((m) => m.name)
                                     .join(", ")}
@@ -393,15 +389,6 @@ export default function PiecesPage({ params = {} }) {
                             },
                         ]}
                     />
-
-                    {/* <Button
-                        className="print-list-btn"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setIsPrinting(true)}
-                    >
-                        Imprimir lista
-                    </Button> */}
 
                     <Button
                         className="dialog-button"

@@ -11,6 +11,7 @@ import Zoom from "react-medium-image-zoom";
 import supabase from "@/utils/supabase";
 import { useReactToPrint } from "react-to-print";
 import { CiImageOff } from "react-icons/ci";
+import { insertImage } from "@/services/pieces";
 
 const tabData = [
     {
@@ -71,11 +72,7 @@ function PieceInfoTable({ pieces, machine }) {
             </div>
 
             <div className="piece-body">
-                <Table.Root
-                    stickyHeader
-                    interactive
-                    ref={contentRef}
-                >
+                <Table.Root stickyHeader interactive ref={contentRef}>
                     <Table.Caption
                         captionSide="top"
                         className="print-machine-pieces-title"
@@ -166,12 +163,36 @@ function Summary({ data }) {
         baseName: data?.name,
     });
 
+    function handlePieceImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const extFromFile = file?.type?.split("/")?.pop() || "";
+        const path = `${data.name}.${extFromFile}`;
+
+        console.log({file, path})
+
+        insertImage("machines", { file: file, path: path });
+    }
+
     return (
         <div className="machine-related-content">
             <div className="summary-header">
                 <div className="summary-title">{data.name}</div>
                 <div className="header-separator"></div>
                 <div className="summary-description">{data.description}</div>
+                <Button className="add-machine-image" variant="ghost" asChild>
+                    <label htmlFor="pieceImage">Añadir foto</label>
+                </Button>
+                <input
+                    className="machine-image-input"
+                    type="file"
+                    name="pieceImage"
+                    id="pieceImage"
+                    onChange={handlePieceImageUpload}
+                    accept="image/*"
+                    capture="environment"
+                />
             </div>
             <Separator size="md" />
             <div className="machine-details-body">
@@ -219,10 +240,7 @@ export default function MachineDetails({ data }) {
                 {selectedTab === "summary" ? (
                     <Summary data={data} />
                 ) : (
-                    <PieceInfoTable
-                        pieces={pieces}
-                        machine={data.name}
-                    />
+                    <PieceInfoTable pieces={pieces} machine={data.name} />
                 )}
             </main>
         </>

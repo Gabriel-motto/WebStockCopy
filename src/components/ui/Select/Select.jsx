@@ -49,7 +49,7 @@ export function SelectAssemblyLine({ dataFromChild, ...props }) {
             <>
                 {assemblyLines.map((value, index) => (
                     <div
-                        className="item"
+                        className="line-item"
                         onClick={() => handleSelectClick(value)}
                         key={index}
                     >
