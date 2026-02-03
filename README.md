@@ -1,12 +1,6 @@
-# React + Vite
+# Stock-Web
+**_---Esta es una copia de un proyecto real, adaptada con datos de ejemplo, realizado durante mi proceso de becario en GKN Automotive.---_**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+El proyecto surge de la necesidad de mantener control sobre el stockage de los elementos necesarios para el mantenimiento de todas las máquinas de la fábrica, manteniendo un diseño simple y eficiente para recortar tiempos a la hora de buscar todas las ubicaciones de la pieza necesaria.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Desarrollado con Vite en React.js, deploy con Vercel y BBDD en Supabase con PostgreSQL, usando vistas y funciones para facilitar el tratado de datos en el front.

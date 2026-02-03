@@ -319,8 +319,6 @@ function Details({ data }) {
                         ? "Mover pieza"
                         : selectedValue === "edit"
                         ? "Editar datos"
-                        : selectedValue === "delete"
-                        ? "Eliminar stock"
                         : selectedValue === "add"
                         ? "Añadir stock"
                         : selectedValue === "print"
@@ -353,12 +351,6 @@ function Details({ data }) {
                             inStock={[...machines?.data, ...warehouses?.data]}
                             handleCancel={closeDialog}
                         />
-                    ) : selectedValue === "delete" ? (
-                        <DeleteStockMenu
-                            piece={data.name}
-                            inStock={[...machines?.data, ...warehouses?.data]}
-                            handleCancel={closeDialog}
-                        />
                     ) : null
                 }
                 open={showDialog}
@@ -387,7 +379,6 @@ function Details({ data }) {
                         { value: "edit", label: "Editar datos" },
                         { value: "add", label: "Añadir stock" },
                         { value: "print", label: "Imprimir etiqueta" },
-                        { value: "delete", label: "Eliminar stock" },
                     ]}
                 />
             </div>
