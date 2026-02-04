@@ -392,7 +392,7 @@ export default function PiecesPage({ params = {} }) {
 
                     <Button
                         className="dialog-button"
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={setShowNewDialog}
                     >
@@ -409,7 +409,7 @@ export default function PiecesPage({ params = {} }) {
                                 onClick={() => handleOnClickCard(piece)}
                                 key={index}
                                 title={piece.name}
-                                image="/assets/GNK_logo_azul.png"
+                                image="src/assets/ExampleLogo.png"
                                 description={piece.description}
                                 footer={piece.brand}
                                 isCritical={piece.is_critical}

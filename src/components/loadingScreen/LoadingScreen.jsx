@@ -10,7 +10,7 @@ export function LoadingScreenHelix() {
             <Helix
                 size="150"
                 speed="2.5"
-                color={COLOR.CORPBLUE}
+                color={COLOR.SECONDARYCOLOR}
             />
         </div>
     );
@@ -22,7 +22,7 @@ export function LoadingScreenDotWave() {
             <DotWave
                 size="75"
                 speed="1"
-                color={COLOR.CORPBLUE}
+                color={COLOR.SECONDARYCOLOR}
             />
         </div>
     );

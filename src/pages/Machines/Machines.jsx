@@ -139,7 +139,7 @@ export default function MachinesPage({ params = {} }) {
     ) : null;
 
     return (
-        <main>
+        <div className="machines-container">
             <div className="search-bar">
                 <SelectAssemblyLine dataFromChild={handleAssemblyLineChange} />
                 <button
@@ -211,6 +211,6 @@ export default function MachinesPage({ params = {} }) {
                     motionPreset="slide-in-bottom"
                 />
             </Suspense>
-        </main>
+        </div>
     );
 }

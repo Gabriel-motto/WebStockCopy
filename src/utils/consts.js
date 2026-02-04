@@ -36,6 +36,8 @@ export const ROUTES = [
 ]
 
 export const COLOR = {
-    CORPYELLOW: "#FBBA00",
-    CORPBLUE: "#1A2B42",
+    PRIMARYCOLOR: "#60A5FA",
+    SECONDARYCOLOR: "#1F2937",
+    BACKGROUNDCOLOR: "#4B5563",
+    TEXTCOLOR: "#F9FAFB",
 }

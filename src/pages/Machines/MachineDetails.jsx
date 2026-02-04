@@ -67,7 +67,7 @@ function PieceInfoTable({ pieces, machine }) {
                     Piezas en la máquina
                 </div>
                 <div className="machine-pieces-print">
-                    <Button onClick={reactToPrintFn}>Imprimir tabla</Button>
+                    <Button className="print-machine-button" onClick={reactToPrintFn}>Imprimir tabla</Button>
                 </div>
             </div>
 

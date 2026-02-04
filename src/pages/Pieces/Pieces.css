@@ -1,16 +1,24 @@
+.pieces-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: max-content;
+    padding: 20px;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 15px;
     justify-content: center;
     width: 100%;
-    height: 75%;
+    height: 100%;
     padding-top: 20px;
 }
 
 .dialog-button:hover,
 .print-list-btn:hover {
-    background-color: rgba(26, 43, 66, 0.9);
+    background-color: var(--background-color);
 }
 
 .card:hover {
@@ -59,6 +67,7 @@
     z-index: 1;
     display: flex;
     gap: 10px;
+    align-items: end;
 }
 
 .custom-select {
@@ -89,11 +98,11 @@
     right: 0;
     top: -1rem;
     font-size: 14px;
-    color: var(--corp-yellow);
+    color: var(--text-color);
     font-weight: 500;
     padding: 2px 5px 2px;
     border-radius: 4px;
-    background-color: var(--corp-blue);
+    background-color: var(--background-color);
 }
 
 .piece-list-print,
@@ -106,6 +115,7 @@
     padding: 0 0.75rem 0;
     border-radius: 4px;
     color: #a61939;
+    height: 2.25rem;
 }
 
 .filter-critical-btn::after {

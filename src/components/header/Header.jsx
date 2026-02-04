@@ -1,7 +1,6 @@
 import "./Header.css";
 import { CollapsedSidebar } from "@/components/sidebar/Sidebar";
 
-// function UserAvatar({ handleClick }) {
 //     return (
 //         <Menu.Root>
 //             <Menu.Trigger asChild>
@@ -55,36 +54,18 @@ import { CollapsedSidebar } from "@/components/sidebar/Sidebar";
 // ];
 
 export default function Header() {
-    // const [isLogin, setIsLogin] = useState(false);
-
-    // const handleClick = () => {
-    //     setIsLogin(!isLogin);
-    // };
 
     return (
-        <div className="header-content">
+        <>
             <img
-                src="/assets/GNK_logo_blanco.png"
-                alt="GNK logo png sin fondo azul"
+                src="src/assets/ExampleLogo.pn"
+                alt="Example Logo"
                 className="header-logo"
             />
-            {/* <div className="header-login">
-                {isLogin ? (
-                    <UserAvatar handleClick={handleClick} />
-                ) : (
-                    <Button
-                        variant="plain"
-                        onClick={handleClick}
-                    >
-                        <IoPersonOutline />
-                        Login
-                    </Button>
-                )}
-            </div> */}
 
             <div className="burger-menu">
                 <CollapsedSidebar />
             </div>
-        </div>
+        </>
     );
 }

@@ -2,8 +2,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100vh;
-    background-color: rgba(26, 43, 66, 1);
+    height: 100%;
+    background-color: var(--secondary-color);
     padding-top: 5vh;
     z-index: 1;
     top: 0;
@@ -23,7 +23,7 @@
 }
 
 .button-text {
-    color: #fbba00;
+    color: var(--text-color);
     width: 60%;
     text-align: start;
 }

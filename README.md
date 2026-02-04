@@ -1,5 +1,6 @@
 # Stock-Web
-**_---Esta es una copia de un proyecto real, adaptada con datos de ejemplo, realizado durante mi proceso de becario en GKN Automotive.---_**
+> [!NOTE]
+> _Esta es una copia de un proyecto real, adaptada con datos de ejemplo, realizado durante mi proceso de becario en GKN Automotive, mientras realizaba diferentes tareas y funciones._
 
 El proyecto surge de la necesidad de mantener control sobre el stockage de los elementos necesarios para el mantenimiento de todas las máquinas de la fábrica, manteniendo un diseño simple y eficiente para recortar tiempos a la hora de buscar todas las ubicaciones de la pieza necesaria.
 

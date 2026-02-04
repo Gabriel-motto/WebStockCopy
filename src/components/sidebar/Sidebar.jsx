@@ -12,7 +12,7 @@ import { CustomLink } from "@/utils/Link.jsx";
 export default function Sidebar({}) {
     return (
         <div className="nav">
-            <IconContext.Provider value={{ color: COLOR.CORPYELLOW }}>
+            <IconContext.Provider value={{ color: COLOR.PRIMARYCOLOR }}>
                 <Tooltip
                     openDelay="500"
                     closeDelay="250"
@@ -75,7 +75,7 @@ export default function Sidebar({}) {
 export function CollapsedSidebar() {
     return (
         <Popover.Root size="xs" modal positioning={{ offset: { crossAxis: 0, mainAxis: 0 } }}>
-            <IconContext.Provider value={{ color: COLOR.CORPBLUE }}>
+            <IconContext.Provider value={{ color: COLOR.SECONDARYCOLOR }}>
                 <Popover.Trigger asChild>
                     <Button variant="plain">
                         <FaBars />
@@ -84,7 +84,7 @@ export function CollapsedSidebar() {
             </IconContext.Provider>
             <Portal>
                 <Popover.Positioner>
-                    <Popover.Content css={{ "--popover-bg": COLOR.CORPBLUE }}>
+                    <Popover.Content css={{ "--popover-bg": COLOR.SECONDARYCOLOR }}>
                         <Popover.Body><Sidebar/></Popover.Body>
                     </Popover.Content>
                 </Popover.Positioner>

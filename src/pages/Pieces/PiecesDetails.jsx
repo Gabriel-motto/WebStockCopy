@@ -544,8 +544,8 @@ function Details({ data }) {
                                                 key={`cell-${index}`}
                                                 fill={
                                                     index === 0
-                                                        ? COLOR.CORPBLUE
-                                                        : COLOR.CORPYELLOW
+                                                        ? COLOR.SECONDARYCOLOR
+                                                        : COLOR.PRIMARYCOLOR
                                                 }
                                             />
                                         ))}

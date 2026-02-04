@@ -52,6 +52,7 @@ export function CardImage({
                 src={image}
                 alt={`Producto con referencia: ${title}`}
                 padding="10px"
+                className="card-image"
             />
             <Card.Body
                 gap="2"

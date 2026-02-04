@@ -54,10 +54,7 @@
     top: 0;
     right: 1rem;
 }
-.add-machine-image:hover {
-    background-color: var(--corp-blue);
-    color: white;
-}
+
 .machine-image-input {
     display: none;
 }
@@ -104,4 +101,14 @@
     .print-machine-pieces-title {
         visibility: visible;
     }
+}
+
+.print-machine-button,
+.add-machine-image {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+.print-machine-button:hover,
+.add-machine-image:hover {
+    background-color: var(--secondary-color);
 }
