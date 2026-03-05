@@ -1,6 +1,6 @@
 import supabase from "@/utils/supabase";
 
-export async function getRecentPieceMovements(machine, pieceId, warehouse, serial) {
+export async function getRecentPieceMovements(machine, pieceId, warehouse, serial, orderBy, asc) {
     let query = supabase.from("piece_actions").select();
 
     if (machine !== "all") {
@@ -17,6 +17,10 @@ export async function getRecentPieceMovements(machine, pieceId, warehouse, seria
 
     if (serial) {
         query = query.ilike("piece_serial", `%${serial}%`);
+    }
+
+    if (orderBy) {
+        query = query.order(orderBy, {ascending: asc})
     }
 
     return await query;

@@ -70,3 +70,13 @@ export async function updatePieceSerialsService(values, location, isMachine) {
         .throwOnError();
     console.log("Updating piece serial with data:", updateData);
 }
+
+export async function updateRepairSerial(values) {
+    const { data, error } = await supabase
+        .from("piece_serials")
+        .update({ status: values.status })
+        .eq("serial_code", values.serial)
+        .throwOnError();
+
+    console.log("Updating piece serial with data:", values);
+}

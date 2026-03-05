@@ -1155,3 +1155,95 @@ export function NewPiece({ handleCancel }) {
         </div>
     );
 }
+
+export function ConfirmRepairMenu({ piece, serial, handleCancel }) {
+    const { serials: pieceSerials } = usePieceSerials({
+        pieceId: piece?.id,
+    });
+    const [values, setValues] = useState({
+        pieceId: piece.id,
+        serial: serial,
+        action: null,
+        status: null,
+        note: null,
+    });
+
+    function handleFormChange(e) {
+        setValues({
+            ...values,
+            [e.target.name]: e.target.value,
+        });
+    }
+
+    console.log(pieceSerials);
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        if (values.note === null) {
+            pieceSerials[0]?.status === "repairing"
+                ? (values.note = `Serial: ${serial || "XXX"} reparado`)
+                : (values.note = `Serial: ${
+                      serial || "XXX"
+                  } enviado a reparar`);
+        }
+        pieceSerials[0]?.status === "repairing"
+            ? ((values.action = "repair_out"),
+              pieceSerials[0]?.current_machine
+                  ? (values.status = "active")
+                  : (values.status = "inactive"))
+            : ((values.action = "repair_in"), (values.status = "repairing"));
+
+        console.log(values);
+
+        useUpdateRepairSerial({
+            values: values,
+            locationFrom: pieceSerials[0].current_machine
+                ? pieceSerials[0].current_machine
+                : pieceSerials[0].current_warehouse,
+            isMachineFrom: pieceSerials[0].current_machine,
+        });
+
+        handleCancel();
+    }
+
+    return (
+        <div className="send-to-repair-container">
+            <div className="menus-cage note-insert-cage">
+                <label
+                    htmlFor="note"
+                    className="menus-label"
+                >
+                    Nota (Opcional)
+                </label>
+                <textarea
+                    type="text"
+                    name="note"
+                    id="note"
+                    className="input note-insert-input"
+                    onChange={handleFormChange}
+                    placeholder={
+                        pieceSerials[0]?.status === "repairing"
+                            ? `Serial: ${serial || "XXX"} reparado`
+                            : `Serial: ${serial || "XXX"} enviado a reparar`
+                    }
+                />
+            </div>
+            <div className="menus-footer insert-menu-footer">
+                <Button
+                    colorPalette="blue"
+                    variant="outline"
+                    onClick={handleSubmit}
+                >
+                    Añadir
+                </Button>
+                <Button
+                    colorPalette="red"
+                    variant="outline"
+                    onClick={handleCancel}
+                >
+                    Cancelar
+                </Button>
+            </div>
+        </div>
+    );
+}

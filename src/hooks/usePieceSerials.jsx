@@ -3,6 +3,7 @@ import {
     getPieceSerials,
     insertPieceSerials,
     updatePieceSerialsService,
+    updateRepairSerial,
 } from "@/services/pieceSerials";
 import { useEffect, useState } from "react";
 import { useWarehouse } from "./useWarehouse";
@@ -111,6 +112,41 @@ export function updatePieceSerials(options = {}) {
         toaster.dismiss(promiseToaster.id);
         toaster.create({
             title: `Error ${error.code} al actualizar stock`,
+            description: error.message,
+            type: "error",
+        });
+    }
+}
+
+export function useUpdateRepairSerial(options = {}) {
+    const { values, locationFrom, isMachineFrom } = options;
+
+    const promiseToaster = toaster.create({
+        title: "Actualizando estado de reparación...",
+        description: "Por favor, espera mientras se actualiza el estado de reparación.",
+        type: "loading",
+    });
+
+    try {
+        updateRepairSerial(values);
+        insertRecentPieceMovementService(
+            values,
+            locationFrom,
+            locationFrom,
+            isMachineFrom,
+            isMachineFrom
+        );
+
+        toaster.dismiss(promiseToaster.id);
+        toaster.create({
+            title: "Estado de reparación actualizado",
+            description: "El estado de reparación se ha actualizado correctamente.",
+            type: "success",
+        });
+    } catch (error) {
+        toaster.dismiss(promiseToaster.id);
+        toaster.create({
+            title: `Error ${error.code} al actualizar estado de reparación`,
             description: error.message,
             type: "error",
         });

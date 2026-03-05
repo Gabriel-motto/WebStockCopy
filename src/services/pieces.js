@@ -8,7 +8,7 @@ export async function getPieces(
     column,
     orderBy,
     filter,
-    getCriticals
+    getCriticals,
 ) {
     let query = supabase.from("pieces_new").select(column);
 
@@ -29,7 +29,7 @@ export async function getPieces(
             query = query.ilike(`${filter}`, `%${search}%`);
         } else {
             query = query.or(
-                `name.ilike.%${search}%,description.ilike.%${search}%,brand.ilike.%${search}%,type.ilike.%${search}%,supplier.ilike.%${search}%`
+                `name.ilike.%${search}%,description.ilike.%${search}%,brand.ilike.%${search}%,type.ilike.%${search}%,supplier.ilike.%${search}%`,
             );
         }
     }
@@ -38,34 +38,37 @@ export async function getPieces(
         query = query.order(orderBy.column, { ascending: orderBy.ascending });
     }
 
-    const { data: pieces } = await query.order("is_critical", { ascending: true });
+    const { data: pieces } = await query.order("is_critical", {
+        ascending: true,
+    });
 
     return pieces;
 }
 
 export async function getTotalStockPiece(pieceId, column) {
-    let query = supabase
-        .from("v_stock_total")
-        .select(column)
-        .eq("piece_id", pieceId);
+    let query = supabase.from("v_stock_total").select(column);
+    if (pieceId) {
+        query = query.eq("piece_id", pieceId);
+    }
 
     return await query;
 }
 
 export async function getMachinesStockPiece(pieceId, column) {
-    let query = supabase
-        .from("v_stock_machines")
-        .select(column)
-        .eq("piece_id", pieceId);
+    let query = supabase.from("v_stock_machines").select(column);
+    if (pieceId) {
+        query = query.eq("piece_id", pieceId);
+    }
 
     return await query;
 }
 
 export async function getWarehousesStockPiece(pieceId, column) {
-    let query = supabase
-        .from("v_stock_warehouses")
-        .select(column)
-        .eq("piece_id", pieceId);
+    let query = supabase.from("v_stock_warehouses").select(column);
+
+    if (pieceId) {
+        query = query.eq("piece_id", pieceId);
+    }
 
     return await query;
 }
@@ -83,7 +86,7 @@ export async function insertPiece(newPiece) {
                 workshop: newPiece.workshop,
                 buy_price: newPiece.buyPrice,
                 repair_price: newPiece.repairPrice,
-                supplier: newPiece.supplier.toUpperCase(),
+                supplier: newPiece.supplier?.toUpperCase(),
                 alternative_piece: newPiece.altPiece,
                 additional_info: newPiece.additionalInfo,
                 availability: newPiece.availability,
@@ -201,7 +204,7 @@ export async function updatePiece(
     updatedPiece,
     pieceImageOld,
     dataCardOld,
-    additionalImageOld
+    additionalImageOld,
 ) {
     const { data, error } = await supabase
         .from("pieces_new")
@@ -217,7 +220,7 @@ export async function updatePiece(
             alternative_piece: updatedPiece.altPiece,
             is_critical: updatedPiece.is_critical,
             description: updatedPiece.description,
-            additional_info: updatedPiece.additionalInfo,
+            additional_info: updatedPiece.additional_info,
         })
         .eq("id", updatedPiece.id)
         .throwOnError();

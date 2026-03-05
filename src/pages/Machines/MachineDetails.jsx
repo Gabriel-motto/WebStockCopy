@@ -60,6 +60,15 @@ function PieceInfoTable({ pieces, machine }) {
         navigateTo(`/pieces/${piece.name}`);
     };
 
+    function handlePrint() {
+        const lastPageSize = pageSize;
+        setPageSize(pieces.length);
+        setTimeout(() => {
+            reactToPrintFn();
+            setPageSize(lastPageSize);
+        }, 500);
+    }
+
     return (
         <div className="piece-related-content">
             <div className="piece-info-table">
@@ -67,12 +76,21 @@ function PieceInfoTable({ pieces, machine }) {
                     Piezas en la máquina
                 </div>
                 <div className="machine-pieces-print">
-                    <Button className="print-machine-button" onClick={reactToPrintFn}>Imprimir tabla</Button>
+                    <Button
+                        className="print-machine-button"
+                        onClick={handlePrint}
+                    >
+                        Imprimir tabla
+                    </Button>
                 </div>
             </div>
 
             <div className="piece-body">
-                <Table.Root stickyHeader interactive ref={contentRef}>
+                <Table.Root
+                    stickyHeader
+                    interactive
+                    ref={contentRef}
+                >
                     <Table.Caption
                         captionSide="top"
                         className="print-machine-pieces-title"
@@ -130,12 +148,12 @@ function PieceInfoTable({ pieces, machine }) {
                                     {piece.availability === null
                                         ? "Sin definir"
                                         : piece.availability === "obsolete"
-                                        ? "Obsoleto"
-                                        : piece.availability === "available"
-                                        ? "Disponible"
-                                        : piece.availability === "limited"
-                                        ? "Limitado"
-                                        : "No disponible"}
+                                          ? "Obsoleto"
+                                          : piece.availability === "available"
+                                            ? "Disponible"
+                                            : piece.availability === "limited"
+                                              ? "Limitado"
+                                              : "No disponible"}
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -170,7 +188,7 @@ function Summary({ data }) {
         const extFromFile = file?.type?.split("/")?.pop() || "";
         const path = `${data.name}.${extFromFile}`;
 
-        console.log({file, path})
+        console.log({ file, path });
 
         insertImage("machines", { file: file, path: path });
     }
@@ -181,7 +199,11 @@ function Summary({ data }) {
                 <div className="summary-title">{data.name}</div>
                 <div className="header-separator"></div>
                 <div className="summary-description">{data.description}</div>
-                <Button className="add-machine-image" variant="ghost" asChild>
+                <Button
+                    className="add-machine-image"
+                    variant="ghost"
+                    asChild
+                >
                     <label htmlFor="pieceImage">Añadir foto</label>
                 </Button>
                 <input
@@ -240,7 +262,10 @@ export default function MachineDetails({ data }) {
                 {selectedTab === "summary" ? (
                     <Summary data={data} />
                 ) : (
-                    <PieceInfoTable pieces={pieces} machine={data.name} />
+                    <PieceInfoTable
+                        pieces={pieces}
+                        machine={data.name}
+                    />
                 )}
             </main>
         </>

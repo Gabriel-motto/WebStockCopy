@@ -409,7 +409,7 @@ export default function PiecesPage({ params = {} }) {
                                 onClick={() => handleOnClickCard(piece)}
                                 key={index}
                                 title={piece.name}
-                                image="src/assets/ExampleLogo.png"
+                                image="assets/ExampleLogo.png"
                                 description={piece.description}
                                 footer={piece.brand}
                                 isCritical={piece.is_critical}
@@ -434,7 +434,7 @@ export default function PiecesPage({ params = {} }) {
                 />
             ) : null}
             <DialogComponent
-                size="cover"
+                size="full"
                 scrollBehavior="inside"
                 title="Detalles de la pieza"
                 content={

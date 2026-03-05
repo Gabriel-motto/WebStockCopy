@@ -7,14 +7,16 @@ export function useRecentPieceMovements(options = {}) {
         pieceId = "",
         warehouse = "",
         serial = "",
+        orderBy = null,
+        asc = true,
     } = options;
     const [movements, setMovements] = useState([]);
 
     useEffect(() => {
-        getRecentPieceMovements(machine, pieceId, warehouse, serial).then(
+        getRecentPieceMovements(machine, pieceId, warehouse, serial, orderBy, asc).then(
             setMovements
         );
-    }, [machine, pieceId, warehouse, serial]);
+    }, [machine, pieceId, warehouse, serial, orderBy, asc]);
 
     return movements;
 }

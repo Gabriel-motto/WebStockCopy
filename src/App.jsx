@@ -12,7 +12,7 @@ function App() {
             <div className="page-container">
                 <div className="header">
                     <img
-                        src="src/assets/ExampleLogo.png"
+                        src="assets/ExampleLogo.png"
                         alt="Example Logo"
                         className="header-logo"
                     />

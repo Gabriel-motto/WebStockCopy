@@ -3,7 +3,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .titles {
@@ -16,7 +16,6 @@
 .main-title {
     color: #333;
     font-size: 2.5rem;
-    margin-bottom: 1.5rem;
 }
 
 .upper-body-title
@@ -43,22 +42,25 @@
     height: 100%;
 }
 
-.videos-btn {
-    background-color: #1A2B42;
-    color: #FBBA00;
-    font-size: xx-large;
-    padding: 2rem;
-}
-
-.videos-btn:hover {
-    background-color: #FBBA00;
-    color: #1A2B42;
-}
-
 .main-body {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     height: 60%;
+}
+.graphs-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.chart-title {
+    text-align: center;
+}
+
+.recharts-legend-item-text {
+    font-size: 15px;
 }

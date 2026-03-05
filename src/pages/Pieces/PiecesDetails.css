@@ -169,3 +169,25 @@
 .serial-details {
     margin-left: 1rem;
 }
+
+.send-repair-btn {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+.send-repair-btn:hover {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+.send-repair-btn::after {
+    content: "Enviar a reparar";
+}
+
+.repairing-btn::after {
+    content: "Finalizar reparación";
+}
