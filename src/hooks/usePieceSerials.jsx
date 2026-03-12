@@ -17,11 +17,13 @@ export function usePieceSerials(options = {}) {
 
     useEffect(() => {
         setLoading(true);
-        getPieceSerials(pieceId, search, column, null, multipleId).then((data) => {
+        getPieceSerials(pieceId, search, column, multipleId).then((data) => {
             setSerials(data);
             setLoading(false);
         });
     }, [pieceId, search, column, JSON.stringify(multipleId)]);
+
+    console.log(serials)
 
     return { serials, loading };
 }

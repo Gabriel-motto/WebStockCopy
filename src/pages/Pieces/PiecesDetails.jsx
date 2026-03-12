@@ -45,6 +45,13 @@ const tabData = [
 
 export default function PiecesDetails({ data }) {
     const [selectedTab, setSelectedTab] = useState("details");
+    const machines = useMachinesStockPiece({ pieceId: data.id });
+    const warehouses = useWarehousesStockPiece({ pieceId: data.id });
+    const recentMovements = useRecentPieceMovements({
+        pieceId: data.id,
+        orderBy: "occurred_at",
+        asc: false,
+    });
 
     function handleTabChange(e) {
         setSelectedTab(e.value);
@@ -59,26 +66,28 @@ export default function PiecesDetails({ data }) {
             />
             <main className="container">
                 {selectedTab === "details" ? (
-                    <Details data={data} />
+                    <Details
+                        data={data}
+                        machines={machines}
+                        warehouses={warehouses}
+                    />
                 ) : (
-                    <Traceability data={data} />
+                    <Traceability
+                        data={data}
+                        machines={machines}
+                        warehouses={warehouses}
+                        recentMovements={recentMovements}
+                    />
                 )}
             </main>
         </>
     );
 }
 
-function Traceability({ data }) {
+function Traceability({ data, machines, warehouses, recentMovements }) {
     const [showDialog, setShowDialog] = useState(false);
-    const machines = useMachinesStockPiece({ pieceId: data.id });
-    const warehouses = useWarehousesStockPiece({ pieceId: data.id });
     const { serials: pieceSerials } = usePieceSerials({ pieceId: data.id });
     const [serialSelected, setSerialSelected] = useState(null);
-    const recentMovements = useRecentPieceMovements({
-        pieceId: data.id,
-        orderBy: "occurred_at",
-        asc: false,
-    });
     const recentMachineMovements = recentMovements.data?.filter(
         (movement) => movement.machine_to !== null,
     );
@@ -94,6 +103,8 @@ function Traceability({ data }) {
     function closeDialog() {
         setShowDialog(false);
     }
+
+    console.log(pieceSerials)
 
     return (
         <div className="traceability-body">
@@ -115,7 +126,7 @@ function Traceability({ data }) {
                 motionPreset="slide-in-bottom"
             />
             <Accordion.Root collapsible>
-                {pieceSerials?.data.map((serial) => (
+                {pieceSerials?.map((serial) => (
                     <Accordion.Item
                         key={serial.serial_code}
                         value={serial.serial_code}
@@ -194,10 +205,8 @@ function Traceability({ data }) {
     );
 }
 
-function Details({ data }) {
+function Details({ data, machines, warehouses }) {
     const pieceStock = useTotalStockPiece({ pieceId: data.id });
-    const machines = useMachinesStockPiece({ pieceId: data.id });
-    const warehouses = useWarehousesStockPiece({ pieceId: data.id });
     const movements = useRecentPieceMovements({ pieceId: data.id });
     const [showDialog, setShowDialog] = useState(false);
     const [selectedValue, setSelectedValue] = useState(null);
