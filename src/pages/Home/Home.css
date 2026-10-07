@@ -51,10 +51,23 @@
 }
 .graphs-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
+    gap: 1.5rem;
     width: 100%;
     margin-top: 2rem;
+}
+
+/* the charts fill these boxes (ResponsiveContainer), so the box sets the size */
+.stock-chart {
+    width: 350px;
+    max-width: 100%;
+}
+
+.warehouse-chart {
+    width: 400px;
+    max-width: 100%;
 }
 
 .chart-title {
@@ -63,4 +76,17 @@
 
 .recharts-legend-item-text {
     font-size: 15px;
+}
+
+@media screen and (max-width: 768px) {
+    .graphs-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .graphs-container > * {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
 }

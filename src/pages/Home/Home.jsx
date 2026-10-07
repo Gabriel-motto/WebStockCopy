@@ -6,7 +6,15 @@ import { useMachines } from "@/hooks/useMachines";
 import { useWarehouse } from "@/hooks/useWarehouse";
 import { useMachinesStockPiece, useWarehousesStockPiece } from "@/hooks/usePieces";
 import { usePieceSerials } from "@/hooks/usePieceSerials";
-import { Cell, Label, Legend, Pie, PieChart, Tooltip } from "recharts";
+import {
+    Cell,
+    Label,
+    Legend,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip,
+} from "recharts";
 import { COLOR } from "@/utils/consts";
 import { LinearProgressBar } from "@/components/progressBar/ProgressBar";
 
@@ -51,41 +59,43 @@ function Graphs() {
         <div className="graphs-container">
             <div className="stock-chart">
                 <div className="title chart-title">Distribución de stock</div>
-                <PieChart
-                    width={350}
+                <ResponsiveContainer
+                    width="100%"
                     height={200}
                 >
-                    <Pie
-                        data={stockChartData}
-                        dataKey="value"
-                        nameKey="name"
-                        outerRadius="100%"
-                        innerRadius="80%"
-                        cornerRadius="50%"
-                        fill="#8884d8"
-                        paddingAngle={1}
-                        label
-                    >
-                        <Label
-                            position="center"
-                            fill="#666"
+                    <PieChart>
+                        <Pie
+                            data={stockChartData}
+                            dataKey="value"
+                            nameKey="name"
+                            outerRadius="100%"
+                            innerRadius="80%"
+                            cornerRadius="50%"
+                            fill="#8884d8"
+                            paddingAngle={1}
+                            label
                         >
-                            {`${machinesStockAmount + warehousesStockAmount} piezas`}
-                        </Label>
-                        {stockChartData.map((entry, index) => (
-                            <Cell
-                                key={`cell-${index}`}
-                                fill={
-                                    index === 0
-                                        ? COLOR.SECONDARYCOLOR
-                                        : COLOR.PRIMARYCOLOR
-                                }
-                            />
-                        ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                </PieChart>
+                            <Label
+                                position="center"
+                                fill="#666"
+                            >
+                                {`${machinesStockAmount + warehousesStockAmount} piezas`}
+                            </Label>
+                            {stockChartData.map((entry, index) => (
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={
+                                        index === 0
+                                            ? COLOR.SECONDARYCOLOR
+                                            : COLOR.PRIMARYCOLOR
+                                    }
+                                />
+                            ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                    </PieChart>
+                </ResponsiveContainer>
             </div>
             <LinearProgressBar
                 current={uniqueMachinesWithStock.length}
@@ -94,40 +104,42 @@ function Graphs() {
             />
             <div className="warehouse-chart">
                 <div className="title chart-title">Distribución en almacenes</div>
-                <PieChart
-                    width={400}
+                <ResponsiveContainer
+                    width="100%"
                     height={225}
                 >
-                    <Pie
-                        data={warehouseChartData}
-                        dataKey="value"
-                        nameKey="name"
-                        outerRadius="80%"
-                        innerRadius="60%"
-                        cornerRadius="50%"
-                        fill="#8884d8"
-                        label
-                    >
-                        <Label
-                            position="center"
-                            fill="#666"
+                    <PieChart>
+                        <Pie
+                            data={warehouseChartData}
+                            dataKey="value"
+                            nameKey="name"
+                            outerRadius="80%"
+                            innerRadius="60%"
+                            cornerRadius="50%"
+                            fill="#8884d8"
+                            label
                         >
-                            {`${warehouseChartData.reduce((sum, entry) => sum + entry.value, 0)} piezas`}
-                        </Label>
-                        {warehouseChartData.map((entry, index) => (
-                            <Cell
-                                key={`cell-${index}`}
-                                fill={
-                                    index % 2 === 0
-                                        ? COLOR.SECONDARYCOLOR
-                                        : COLOR.PRIMARYCOLOR
-                                }
-                            />
-                        ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                </PieChart>
+                            <Label
+                                position="center"
+                                fill="#666"
+                            >
+                                {`${warehouseChartData.reduce((sum, entry) => sum + entry.value, 0)} piezas`}
+                            </Label>
+                            {warehouseChartData.map((entry, index) => (
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={
+                                        index % 2 === 0
+                                            ? COLOR.SECONDARYCOLOR
+                                            : COLOR.PRIMARYCOLOR
+                                    }
+                                />
+                            ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                    </PieChart>
+                </ResponsiveContainer>
             </div>
         </div>
     );
