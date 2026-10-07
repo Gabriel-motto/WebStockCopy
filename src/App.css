@@ -27,7 +27,10 @@
 
 .main-panel {
     display: flex;
-    flex-grow: 1;
+    /* basis 0 so wide content (home charts) can't push the panel onto a new
+       wrapped line below the sidebar; it scrolls inside instead */
+    flex: 1 1 0;
+    min-width: 0;
     height: 85%;
     overflow: auto;
 }
@@ -43,6 +46,7 @@
         flex-direction: column;
         padding: 0;
         width: 100%;
+        flex-basis: 100%;
         margin: 0;
     }
     .sidebar {
