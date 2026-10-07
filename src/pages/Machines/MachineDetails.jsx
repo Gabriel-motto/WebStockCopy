@@ -33,10 +33,10 @@ function PieceInfoTable({ pieces, machine }) {
 
     // Recalcula cuando cambien props
     const refs = useMemo(() => pieces.map((p) => p.piece), [pieces]);
+    const details = usePieces({ multiple: refs });
     if (refs.length === 0) {
         return <EmptyError />;
     }
-    const details = usePieces({ multiple: refs });
 
     const totalPages = Math.ceil(pieces.length / pageSize);
 

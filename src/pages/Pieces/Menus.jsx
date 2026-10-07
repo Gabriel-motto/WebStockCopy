@@ -14,6 +14,7 @@ import {
     useInsertPieceSerials,
     usePieceSerials,
     updatePieceSerials,
+    useUpdateRepairSerial,
 } from "@/hooks/usePieceSerials";
 import { useClickAway } from "@uidotdev/usehooks";
 import { IoIosArrowDown } from "react-icons/io";

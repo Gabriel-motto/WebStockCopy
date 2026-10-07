@@ -283,7 +283,7 @@ function Details({ data, machines, warehouses }) {
                     selectedValue === "move" ? (
                         <MoveStockMenu
                             piece={data}
-                            inStock={[...machines?.data, ...warehouses?.data]}
+                            inStock={[...(machines?.data ?? []), ...(warehouses?.data ?? [])]}
                             handleCancel={closeDialog}
                         />
                     ) : selectedValue === "edit" ? (
@@ -302,7 +302,7 @@ function Details({ data, machines, warehouses }) {
                     ) : selectedValue === "print" ? (
                         <PrintMenu
                             piece={data}
-                            inStock={[...machines?.data, ...warehouses?.data]}
+                            inStock={[...(machines?.data ?? []), ...(warehouses?.data ?? [])]}
                             handleCancel={closeDialog}
                         />
                     ) : null
