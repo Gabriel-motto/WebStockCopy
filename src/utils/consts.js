@@ -1,6 +1,7 @@
 export const EVENTS = {
     PUSHSTATE: 'pushstate',
-    POPSTATE: 'popstate'
+    POPSTATE: 'popstate',
+    HASHCHANGE: 'hashchange'
 }
 
 

@@ -1,4 +1,6 @@
 import { EVENTS } from "./utils/consts";
+import { getCurrentPath } from "./utils/Link.jsx";
+import ErrorBoundary from "./components/errorBoundary/ErrorBoundary.jsx";
 import { useEffect, useState } from "react";
 
 function matchRoute(path, routePath) {
@@ -18,26 +20,34 @@ function matchRoute(path, routePath) {
 }
 
 export default function Router ({ routes= [], defaultComponent: DefaultComponent = () => <h1>404</h1>}) {
-    const [ currentPath, setCurrentPath ] = useState(window.location.pathname)
+    const [ currentPath, setCurrentPath ] = useState(getCurrentPath())
 
     useEffect(() => {
 
         const onLocationChange = () => {
-            setCurrentPath(window.location.pathname)
+            setCurrentPath(getCurrentPath())
         }
 
         window.addEventListener(EVENTS.PUSHSTATE, onLocationChange)
         window.addEventListener(EVENTS.POPSTATE, onLocationChange)
+        window.addEventListener(EVENTS.HASHCHANGE, onLocationChange)
 
         return () => {
             window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange)
             window.removeEventListener(EVENTS.POPSTATE, onLocationChange)
+            window.removeEventListener(EVENTS.HASHCHANGE, onLocationChange)
         }
     }, [])
 
     for (const { path, Component } of routes) {
         const { match, params } = matchRoute(currentPath, path);
-        if (match) return <Component params={params} />;
+        if (match) {
+            return (
+                <ErrorBoundary key={currentPath}>
+                    <Component params={params} />
+                </ErrorBoundary>
+            );
+        }
     }
     return <DefaultComponent />;
 }

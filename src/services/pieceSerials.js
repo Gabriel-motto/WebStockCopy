@@ -19,7 +19,7 @@ export async function getPieceSerials(pieceId, search, column, multipleId) {
 
     const { data: pieceSerials } = await query;
 
-    return pieceSerials;
+    return pieceSerials ?? [];
 }
 
 export async function insertPieceSerials(values, location, isMachine) {

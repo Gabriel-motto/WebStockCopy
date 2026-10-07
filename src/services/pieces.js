@@ -42,7 +42,7 @@ export async function getPieces(
         ascending: true,
     });
 
-    return pieces;
+    return pieces ?? [];
 }
 
 export async function getTotalStockPiece(pieceId, column) {
@@ -121,7 +121,7 @@ export async function getImageName(bucket, baseName, limit = 1) {
 
     const { data: image } = await query;
 
-    return image;
+    return image ?? [];
 }
 
 export async function insertImage(bucket, image) {

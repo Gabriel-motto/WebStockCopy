@@ -409,7 +409,7 @@ export default function PiecesPage({ params = {} }) {
                                 onClick={() => handleOnClickCard(piece)}
                                 key={index}
                                 title={piece.name}
-                                image="/assets/ExampleLogo.png"
+                                image={`${import.meta.env.BASE_URL}assets/ExampleLogo.png`}
                                 description={piece.description}
                                 footer={piece.brand}
                                 isCritical={piece.is_critical}

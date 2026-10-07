@@ -13,5 +13,5 @@ export async function getAssemblyLines( search, id ) {
 
     const { data: aLines } = await query;
 
-    return aLines;
+    return aLines ?? [];
 }

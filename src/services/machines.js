@@ -27,7 +27,7 @@ export async function getMachines(selectedALines, search, column, getCriticals, 
 
     const { data: machines } = await query;
 
-    return machines;
+    return machines ?? [];
 }
 
 export async function getPiecesFromMachines(machineId, column) {
@@ -35,5 +35,5 @@ export async function getPiecesFromMachines(machineId, column) {
         .from("v_stock_machines")
         .select(column)
         .eq("machine_id", machineId);
-    return pieces;
+    return pieces ?? [];
 }

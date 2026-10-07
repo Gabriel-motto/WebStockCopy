@@ -13,7 +13,7 @@ export async function getWarehouses(search, column, multipleId) {
 
     const { data: warehouses } = await query;
 
-    return warehouses;
+    return warehouses ?? [];
 }
 
 export async function getWarehouseStock(warehouseId, column) {
@@ -24,5 +24,5 @@ export async function getWarehouseStock(warehouseId, column) {
 
     const { data: stock } = await query;
 
-    return stock;
+    return stock ?? [];
 }
