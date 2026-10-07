@@ -65,9 +65,17 @@
     max-width: 100%;
 }
 
+.stock-chart .chart-canvas {
+    height: 200px;
+}
+
 .warehouse-chart {
     width: 400px;
     max-width: 100%;
+}
+
+.warehouse-chart .chart-canvas {
+    height: 225px;
 }
 
 .chart-title {
@@ -88,5 +96,10 @@
         width: 100%;
         max-width: 400px;
         margin: 0 auto;
+    }
+
+    /* the legend wraps to two lines here; keep room for the pie labels */
+    .warehouse-chart .chart-canvas {
+        height: 260px;
     }
 }
