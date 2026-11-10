@@ -2,6 +2,7 @@ import { EVENTS } from "./utils/consts";
 import { getCurrentPath } from "./utils/Link.jsx";
 import ErrorBoundary from "./components/errorBoundary/ErrorBoundary.jsx";
 import { useEffect, useState } from "react";
+import { capturePageview } from "./utils/analytics.js";
 
 function matchRoute(path, routePath) {
     if (path === routePath) return { match: true, params: {} };
@@ -38,6 +39,10 @@ export default function Router ({ routes= [], defaultComponent: DefaultComponent
             window.removeEventListener(EVENTS.HASHCHANGE, onLocationChange)
         }
     }, [])
+
+    useEffect(() => {
+        capturePageview()
+    }, [currentPath])
 
     for (const { path, Component } of routes) {
         const { match, params } = matchRoute(currentPath, path);
